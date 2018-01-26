@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="" />
+
+
+
+<meta name="description" content="参考学习《Bioinformatics. Data. Skills》，这里简要地整理下Linux用来处理数据文本的工具。具体命令详情请在Linux命令大全中搜索或者查阅其他相关资料。">
+<meta name="keywords" content="Linux,shell command">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux数据处理命令工具">
+<meta property="og:url" content="https://shixiangwang.github.io/2017/09/03/2017-09-03-Linux-data-analysis-tools/index.html">
+<meta property="og:site_name" content="Cloudberry">
+<meta property="og:description" content="参考学习《Bioinformatics. Data. Skills》，这里简要地整理下Linux用来处理数据文本的工具。具体命令详情请在Linux命令大全中搜索或者查阅其他相关资料。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-26T17:07:14.868Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux数据处理命令工具">
+<meta name="twitter:description" content="参考学习《Bioinformatics. Data. Skills》，这里简要地整理下Linux用来处理数据文本的工具。具体命令详情请在Linux命令大全中搜索或者查阅其他相关资料。">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Cloudberry" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Linux数据处理命令工具 | Cloudberry</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A site for writing</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/">分类</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:w_shixiang@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/ShixiangWang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 知乎" href="https://www.zhihu.com/people/wang-shi-xiang-65/activities" title="知乎"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/b6608e27dc74" title="简书"></a>
+                            
+                                <a class="fa Twitter" href="https://twitter.com/WangShxiang" title="Twitter"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OOP/">OOP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-command/">shell command</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.coding.me/yelee/">Yelee 主题使用说明</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">人该是自己生活的主宰，而不是别人手中的行货</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A site for writing</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/">分类</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:w_shixiang@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/ShixiangWang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 知乎" target="_blank" href="https://www.zhihu.com/people/wang-shi-xiang-65/activities" title="知乎"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/b6608e27dc74" title="简书"></a>
+                            
+                                <a class="fa Twitter" target="_blank" href="https://twitter.com/WangShxiang" title="Twitter"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2017-09-03-Linux-data-analysis-tools" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/" class="article-date">
+      <time datetime="2017-09-02T16:00:00.000Z" itemprop="datePublished">2017-09-03</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux数据处理命令工具
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell-command/">shell command</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>参考学习《Bioinformatics. Data. Skills》，这里简要地整理下Linux用来处理数据文本的工具。具体命令详情请在<a href="http://man.linuxde.net/" target="_blank" rel="noopener">Linux命令大全</a>中搜索或者查阅其他相关资料。</p>
+<a id="more"></a>
+<p><code>head</code>,<code>tail</code>查看文档头尾。<code>-n</code>选项可以指定行数。</p>
+<p><code>less</code>用来查阅文档，<code>q</code>退出，<code>space bar</code>翻页，<code>g</code>第一行，<code>G</code>最后一行，<code>j</code>下，<code>k</code>上,<code>/&lt;pattern&gt;</code>往下搜索模式，<code>?&lt;pattern&gt;</code>往上搜索模式，<code>n</code>前一个匹配字符，<code>N</code>后一个匹配字符。</p>
+<p><code>less</code>可以用于debug，查看中间输出结果。比如<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">step1 input.txt | step2 | step3 &gt; output.txt</span><br><span class="line"><span class="meta">#</span> step1,2,3为程序或命令名</span><br></pre></td></tr></table></figure></p>
+<p>可以写为<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">step1 input.txt | less</span><br><span class="line">step1 input.txt | step2 | less</span><br><span class="line">step1 input.txt | step2 | step3 | less</span><br></pre></td></tr></table></figure></p>
+<h2 id="纯文本信息汇总"><a href="#纯文本信息汇总" class="headerlink" title="纯文本信息汇总"></a>纯文本信息汇总</h2><p><code>wc</code>命令默认依次输出单词数、行数、总字符数。查看行数使用<code>wc -l</code>。<br>如果存在空行，空行会被计数。可以使用<code>grep</code>命令实现非空行计数<br><code>grep -c &quot;[^ \\n\\t]&quot; some_data.bed</code></p>
+<p><code>ls -lh</code>以易读形式查看文件大小。</p>
+<p>输出文件列数：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> -F指定分隔符，此处假定是table键分隔，默认空格键</span><br><span class="line">awk -F "\t" '&#123;print NF; exit&#125;' some_data.bed</span><br></pre></td></tr></table></figure></p>
+<h3 id="怎么去除注释的元数据行呢？怎么计数非注释行行数呢？"><a href="#怎么去除注释的元数据行呢？怎么计数非注释行行数呢？" class="headerlink" title="怎么去除注释的元数据行呢？怎么计数非注释行行数呢？"></a>怎么去除注释的元数据行呢？怎么计数非注释行行数呢？</h3><p>可以使用<code>tail</code>结合<code>awk</code>，试试gtf(基因组注释文件)<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ head -n 6 Homo_sapiens.GRCh37.75.gtf </span><br><span class="line"><span class="meta">#</span>!genome-build GRCh37.p13</span><br><span class="line"><span class="meta">#</span>!genome-version GRCh37</span><br><span class="line"><span class="meta">#</span>!genome-date 2009-02</span><br><span class="line"><span class="meta">#</span>!genome-build-accession NCBI:GCA_000001405.14</span><br><span class="line"><span class="meta">#</span>!genebuild-last-updated 2013-09</span><br><span class="line">1	pseudogene	gene	11869	14412	.	+	.	gene_id "ENSG00000223972"; gene_name "DDX11L1"; gene_source "ensembl_havana"; gene_biotype "pseudogene";</span><br></pre></td></tr></table></figure></p>
+<p>可以看到注释行是5行，我们利用<code>tail</code>试试去掉它<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 注意此处 -n后接的"+"号</span><br><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ tail -n +5 Homo_sapiens.GRCh37.75.gtf | head -n 1</span><br><span class="line"><span class="meta">#</span>!genebuild-last-updated 2013-09</span><br></pre></td></tr></table></figure></p>
+<p>发现还有一行没去掉<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ tail -n +6 Homo_sapiens.GRCh37.75.gtf | head -n 1</span><br><span class="line">1	pseudogene	gene	11869	14412	.	+	.	gene_id "ENSG00000223972"; gene_name "DDX11L1"; gene_source "ensembl_havana"; gene_biotype "pseudogene";</span><br></pre></td></tr></table></figure></p>
+<p>成功搞定，然后结合前面提到的<code>awk</code>命令即可计算行数。</p>
+<p>上面方法鲁棒性不够（人为地确定行数），一种更为通用的方法是<code>grep</code>结合<code>awk</code>命令<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -v "^#" Homo_sapiens.GRCh37.75.gtf | head -n 1</span><br><span class="line">1	pseudogene	gene	11869	14412	.	+	.	gene_id "ENSG00000223972"; gene_name "DDX11L1"; gene_source "ensembl_havana"; gene_biotype "pseudogene";</span><br></pre></td></tr></table></figure></p>
+<p>推荐使用这种。</p>
+<h2 id="Cut"><a href="#Cut" class="headerlink" title="Cut"></a>Cut</h2><p><code>cut</code>可以处理列数据，<code>-f</code>选项指定列，可以是一个范围（比如2-8），注意不能用它给列排序。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -v "^#" Homo_sapiens.GRCh37.75.gtf | head -n 10 | cut -f 3</span><br><span class="line">gene</span><br><span class="line">transcript</span><br><span class="line">exon</span><br><span class="line">exon</span><br><span class="line">exon</span><br><span class="line">transcript</span><br><span class="line">exon</span><br><span class="line">exon</span><br><span class="line">exon</span><br><span class="line">transcript</span><br><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -v "^#" Homo_sapiens.GRCh37.75.gtf | head -n 10 | cut -f 3-5</span><br><span class="line">gene	11869	14412</span><br><span class="line">transcript	11869	14409</span><br><span class="line">exon	11869	12227</span><br><span class="line">exon	12613	12721</span><br><span class="line">exon	13221	14409</span><br><span class="line">transcript	11872	14412</span><br><span class="line">exon	11872	12227</span><br><span class="line">exon	12613	12721</span><br><span class="line">exon	13225	14412</span><br><span class="line">transcript	11874	14409</span><br></pre></td></tr></table></figure></p>
+<p><code>-d</code>选项可以指定分隔符，比如<code>-d,</code>指定<code>,</code>为分隔符。</p>
+<p>使用<code>column</code>命令来格式化输出，上次的命令结果输出明显没对齐，我们把它对齐看看：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -v "^#" Homo_sapiens.GRCh37.75.gtf | head -n 10 | cut -f 3-5 | column -t</span><br><span class="line">gene        11869  14412</span><br><span class="line">transcript  11869  14409</span><br><span class="line">exon        11869  12227</span><br><span class="line">exon        12613  12721</span><br><span class="line">exon        13221  14409</span><br><span class="line">transcript  11872  14412</span><br><span class="line">exon        11872  12227</span><br><span class="line">exon        12613  12721</span><br><span class="line">exon        13225  14412</span><br><span class="line">transcript  11874  14409</span><br></pre></td></tr></table></figure></p>
+<p>注意，使用这个命令是为了好观察，不要把用它处理然后把结果传入文本（会导致程序处理文件效率降低，因为文本解析速度会下降）。</p>
+<p><code>cut</code>和<code>column</code>默认以<code>\t</code>为分隔符，这里也能够用<code>-s</code>选项指定。</p>
+<p>先把之前的tab分隔文件弄成逗号分隔文件，然后使用<code>-s</code>选项看看：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -v "^#" Homo_sapiens.GRCh37.75.gtf | head -n 10 | cut -f 3-5 |  awk '&#123;FS="\t";OFS=",";&#125;&#123;print $1,$2,$3&#125;'</span><br><span class="line">gene,11869,14412</span><br><span class="line">transcript,11869,14409</span><br><span class="line">exon,11869,12227</span><br><span class="line">exon,12613,12721</span><br><span class="line">exon,13221,14409</span><br><span class="line">transcript,11872,14412</span><br><span class="line">exon,11872,12227</span><br><span class="line">exon,12613,12721</span><br><span class="line">exon,13225,14412</span><br><span class="line">transcript,11874,14409</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -v "^#" Homo_sapiens.GRCh37.75.gtf | head -n 10 | cut -f 3-5 |  awk '&#123;FS="\t";OFS=",";&#125;&#123;print $1,$2,$3&#125;'| column -s "," -t</span><br><span class="line">gene        11869  14412</span><br><span class="line">transcript  11869  14409</span><br><span class="line">exon        11869  12227</span><br><span class="line">exon        12613  12721</span><br><span class="line">exon        13221  14409</span><br><span class="line">transcript  11872  14412</span><br><span class="line">exon        11872  12227</span><br><span class="line">exon        12613  12721</span><br><span class="line">exon        13225  14412</span><br><span class="line">transcript  11874  14409</span><br></pre></td></tr></table></figure></p>
+<h2 id="grep"><a href="#grep" class="headerlink" title="grep"></a>grep</h2><p><code>grep</code>处理速度非常之快，能用它尽量用它。<code>--color=auto</code>可以激活颜色（标记匹配文字），更方便查看。</p>
+<p><code>-v</code>选项排除匹配到的，<code>-w</code>进行完全匹配。这样可以防止，你想排除<code>abc</code>结果把<code>abc1</code>，<code>abcd</code>也排除掉了。</p>
+<p><code>-B</code>指定输出包括匹配到的前多少行，比如<code>-B1</code>就是前一行；<code>-A</code>指定输出包括匹配到的后多少行，比如<code>-A2</code>就是包括了后两行。<code>-C</code>指定输出包括匹配到的前后多少行。<br><code>grep</code>支持基本正则表达式，<code>-E</code>指定支持扩展表达式，或者用<code>egrep</code>命令。<br><code>-c</code>选项对匹配的行计数；<code>-o</code>选项只抽离输出匹配的部分<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -E -o 'gene_id "\w+"' Homo_sapiens.GRCh37.75.gtf | head -n 5</span><br><span class="line">gene_id "ENSG00000223972"</span><br><span class="line">gene_id "ENSG00000223972"</span><br><span class="line">gene_id "ENSG00000223972"</span><br><span class="line">gene_id "ENSG00000223972"</span><br><span class="line">gene_id "ENSG00000223972"</span><br></pre></td></tr></table></figure></p>
+<p>发现冗余项非常多，如果我们只要唯一的呢，怎么办？<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ grep -E -o 'gene_id "(\w+)"' Homo_sapiens.GRCh37.75.gtf | cut -f2 -d" "| sed 's/"//g' | sort | uniq | head -n 10</span><br><span class="line">ENSG00000000003</span><br><span class="line">ENSG00000000005</span><br><span class="line">ENSG00000000419</span><br><span class="line">ENSG00000000457</span><br><span class="line">ENSG00000000460</span><br><span class="line">ENSG00000000938</span><br><span class="line">ENSG00000000971</span><br><span class="line">ENSG00000001036</span><br><span class="line">ENSG00000001084</span><br><span class="line">ENSG00000001167</span><br></pre></td></tr></table></figure></p>
+<p>虽然我的笔记本呼啦啦作响，但是还是非常快就跑完了。</p>
+<h2 id="file查看文件编码"><a href="#file查看文件编码" class="headerlink" title="file查看文件编码"></a>file查看文件编码</h2><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ file regular_express.txt </span><br><span class="line">regular_express.txt: ASCII text, with CRLF, LF line terminators</span><br></pre></td></tr></table></figure>
+<p>常用的大型数据文件一般存为ASCII码形式（像几大基因bank的数据文件），而我们自己认为创建的常为UTF-8，所以有时候认为处理文件需要会碰到把UTF-8编码的字符插入到ASCII码文件里去了。遇到这种问题，我们可以用<code>hexdump -c</code>命令查看出错的地方（手边没有这样的文件，就不举例了）。</p>
+<h2 id="用sort对文本排序"><a href="#用sort对文本排序" class="headerlink" title="用sort对文本排序"></a>用sort对文本排序</h2><p>我们先创建一个bed格式文件来试试这个命令：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ cat test.bed </span><br><span class="line">chr1	26	39</span><br><span class="line">chr3	32	47</span><br><span class="line">chr1	40	50</span><br><span class="line">chr1	9	28</span><br><span class="line">chr2	35	54</span><br><span class="line">chr1	10	19</span><br><span class="line">wsx@wsx-ubuntu:~$ sort test.bed </span><br><span class="line">chr1	10	19</span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	40	50</span><br><span class="line">chr1	9	28</span><br><span class="line">chr2	35	54</span><br><span class="line">chr3	32	47</span><br></pre></td></tr></table></figure></p>
+<p>可以明显看到文本按照第一列进行了排序。<br>默认，<code>sort</code>用空格或tab键作为域（列）分隔符。如果我们用其他形式的分隔符，需要用<code>-t</code>选项指定。</p>
+<p>下面是对<code>bed</code>文件最通用的排序命令：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort -k1,1 -k2,2n test.bed </span><br><span class="line">chr1	9	28</span><br><span class="line">chr1	10	19</span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	40	50</span><br><span class="line">chr2	35	54</span><br><span class="line">chr3	32	47</span><br></pre></td></tr></table></figure></p>
+<p>基本操作<code>bedtools</code>软件都会先用这个命令对<code>bedtools</code>文件排序。<br>现在略加解释一下，<code>sort</code>用<code>-k</code>选项指定某列的排序方式。而每次使用<code>-k</code>选项都要带上指定列的范围(start, end)。如果只指定一列，就为(start,start)了，像上面命令的<code>-k1,1</code>就是。也许你会觉得<code>-k2,2n</code>很奇怪，这里的<code>n</code>指定程序把第二列当做数值对待。如果不做设定，都是当做字符对待（shell都是这么对待数值数据的）。所以总结其他这一行命令就是对第一列按照字符排序，第二列按照数值排序。</p>
+<p>我们可以用<code>-c</code>选项检查一个文件是不是已经按照过某种方式排过序了。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort -k1,1 -k2,2n test.bed | sort -k1,1 -k2,2 -c</span><br><span class="line">sort：-:2：无序： chr1	10	19</span><br><span class="line">wsx@wsx-ubuntu:~$ echo $?</span><br><span class="line">1</span><br><span class="line">wsx@wsx-ubuntu:~$ sort -k1,1 -k2,2n test.bed | sort -k1,1 -k2,2n -c</span><br><span class="line">wsx@wsx-ubuntu:~$ echo $?</span><br><span class="line">0</span><br></pre></td></tr></table></figure></p>
+<p>上面可以清楚地看到<code>sort</code>是怎么对待文件的（一般shell返回0表示成功执行）。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ tsfds</span><br><span class="line">tsfds：未找到命令</span><br><span class="line">wsx@wsx-ubuntu:~$ echo $?</span><br><span class="line">127</span><br><span class="line">wsx@wsx-ubuntu:~$ echo test</span><br><span class="line">test</span><br><span class="line">wsx@wsx-ubuntu:~$ echo $?</span><br><span class="line">0</span><br></pre></td></tr></table></figure></p>
+<p>shell的命令退出状态码表示了该命令执行的完成的某种情况。不同的状态码有不同的含义，具体可以百度查阅（我之前整理的shell笔记应该讲过，可以看看）。</p>
+<p>反向排序用<code>-r</code>选项。如果你只想反转一列，可以把它加在<code>-k</code>选项后。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort -k1,1 -k2,2nr test.bed </span><br><span class="line">chr1	40	50</span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	10	19</span><br><span class="line">chr1	9	28</span><br><span class="line">chr2	35	54</span><br><span class="line">chr3	32	47</span><br></pre></td></tr></table></figure>
+<p>现在我给<code>test.bed</code>加一行：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ cat test.bed </span><br><span class="line">chr1	26	39</span><br><span class="line">chr3	32	47</span><br><span class="line">chr1	40	50</span><br><span class="line">chr1	9	28</span><br><span class="line">chr2	35	54</span><br><span class="line">chr1	10	19</span><br><span class="line">chr11	22	56</span><br></pre></td></tr></table></figure></p>
+<p>你会发现有点奇怪<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort -k1,1 -k2,2n test.bed </span><br><span class="line">chr1	9	28</span><br><span class="line">chr1	10	19</span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	40	50</span><br><span class="line">chr11	22	56</span><br><span class="line">chr2	35	54</span><br><span class="line">chr3	32	47</span><br></pre></td></tr></table></figure></p>
+<p>怎么<code>chr11</code>在<code>chr2</code>前面？其实<code>sort</code>排序的方式有点像查字典。例子中，命令先比较<code>c</code>，然后比较<code>h</code>，然后比较<code>r</code>，接着比较<code>1</code>，自然<code>11</code>会在<code>2</code>前面了。这里可以添加<code>V</code>选项修改。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort -k1,1V -k2,2n test.bed </span><br><span class="line">chr1	9	28</span><br><span class="line">chr1	10	19</span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	40	50</span><br><span class="line">chr2	35	54</span><br><span class="line">chr3	32	47</span><br><span class="line">chr11	22	56</span><br></pre></td></tr></table></figure></p>
+<p>是不是觉得这样更可观一些？不过通常在处理数据时不做此处理，符合 规范的数据可以让后续处理程序效率更高。</p>
+<p>基本掌握<code>sort</code>这些也够用了，它主要为后续处理服务。如果想知道其他的用法，查查吧，同时欢迎发文来交流。</p>
+<h2 id="用uniq寻找唯一值"><a href="#用uniq寻找唯一值" class="headerlink" title="用uniq寻找唯一值"></a>用uniq寻找唯一值</h2><p>首先创建样例文本<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ cat test.letter </span><br><span class="line">A</span><br><span class="line">A</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">C</span><br><span class="line">C</span><br><span class="line">D</span><br><span class="line">F</span><br><span class="line">D</span><br></pre></td></tr></table></figure></p>
+<p>使用<code>uniq</code>看看<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ uniq test.letter </span><br><span class="line">A</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">D</span><br><span class="line">F</span><br><span class="line">D</span><br></pre></td></tr></table></figure></p>
+<p>尼玛，怎么不对。它好像只去掉了连续的同一字符。怎么办？想想我们刚学了什么命令？<code>sort</code>不是刚好可以把同样的字符弄到一起去吗，然后再使用<code>uniq</code>，嘿嘿：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort test.letter | uniq</span><br><span class="line">A</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">D</span><br><span class="line">F</span><br></pre></td></tr></table></figure></p>
+<p>哟呵，got you。</p>
+<p>加<code>-c</code>选项计数：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort test.letter | uniq -c</span><br><span class="line">      2 A</span><br><span class="line">      2 B</span><br><span class="line">      4 C</span><br><span class="line">      2 D</span><br><span class="line">      1 F</span><br></pre></td></tr></table></figure></p>
+<p>把结果再排序<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ sort test.letter | uniq -c | sort -rn</span><br><span class="line">      4 C</span><br><span class="line">      2 D</span><br><span class="line">      2 B</span><br><span class="line">      2 A</span><br><span class="line">      1 F</span><br></pre></td></tr></table></figure></p>
+<p><code>-d</code>选项只输出重复行<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ cat test.letter </span><br><span class="line">A</span><br><span class="line">A</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">C</span><br><span class="line">C</span><br><span class="line">D</span><br><span class="line">F</span><br><span class="line">D</span><br><span class="line">wsx@wsx-ubuntu:~$ uniq -d test.letter </span><br><span class="line">A</span><br><span class="line">C</span><br><span class="line">wsx@wsx-ubuntu:~$ sort test.letter | uniq -d</span><br><span class="line">A</span><br><span class="line">B</span><br><span class="line">C</span><br><span class="line">D</span><br></pre></td></tr></table></figure></p>
+<p>使用时需要注意处理不同导致的结果差异。</p>
+<h2 id="Join-命令"><a href="#Join-命令" class="headerlink" title="Join 命令"></a>Join 命令</h2><p>用来连接文件。<br>假设现在我们有两个文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ cat example.bed </span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	32	47</span><br><span class="line">chr3	11	28</span><br><span class="line">chr1	40	49</span><br><span class="line">chr3	16	27</span><br><span class="line">chr1	9	28</span><br><span class="line">chr2	35	53</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ cat example_length.txt </span><br><span class="line">chr1	53453</span><br><span class="line">chr2	34356</span><br><span class="line">chr3	24356</span><br></pre></td></tr></table></figure>
+<p>我想把第二个文件说明染色体长度添加到第一个文件对应染色体的第三列。<br>我们首先要给文件排序（使用<code>join</code>前必须做），然后使用<code>join</code>命令。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ sort -k1,1 example.bed &gt; example_sorted.bed</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ sort -c -k1,1 example_length.txt </span><br><span class="line">wsx@wsx-ubuntu:/tmp$ cat example_sorted.bed </span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	32	47</span><br><span class="line">chr1	40	49</span><br><span class="line">chr1	9	28</span><br><span class="line">chr2	35	53</span><br><span class="line">chr3	11	28</span><br><span class="line">chr3	16	27</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ join -1 1 -2 1 example_sorted.bed  example_length.txt &gt; example_with_length.txt</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ cat example_with_length.txt </span><br><span class="line">chr1 26 39 53453</span><br><span class="line">chr1 32 47 53453</span><br><span class="line">chr1 40 49 53453</span><br><span class="line">chr1 9 28 53453</span><br><span class="line">chr2 35 53 34356</span><br><span class="line">chr3 11 28 24356</span><br><span class="line">chr3 16 27 24356</span><br></pre></td></tr></table></figure></p>
+<p>命令基本语法是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">join -1 &lt;file_1_field&gt; -2 &lt;file_2_field&gt; &lt;file_1&gt; &lt;file_2&gt;</span><br></pre></td></tr></table></figure></p>
+<p>既然名字叫<code>join</code>，就是两者必须有共同之处，通过共同的支点将两者连为一体。<br><code>-1</code>和<code>-2</code>选项后接参数分别指定了这个支点，也就是连接的域（列）。比如例子中，都是两个文件的第一列。</p>
+<p>两个文件中，第一列都共有<code>chr1(2)(3)</code>。 如果不一致会出现什么情况呢？</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ join -1 1 -2 1 example_sorted.bed  example_length_alt.txt chr1 26 39 53453</span><br><span class="line">chr1 32 47 53453</span><br><span class="line">chr1 40 49 53453</span><br><span class="line">chr1 9 28 53453</span><br><span class="line">chr2 35 53 34356</span><br></pre></td></tr></table></figure>
+<p>如果第二个文件没有<code>chr3</code>，<code>join</code>之后也没了！！</p>
+<p>我们可以通过<code>-a</code>选项指定哪一个文件可以不遵循配对<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ join -1 1 -2 1 -a 1 example_sorted.bed  example_length_alt.txt </span><br><span class="line">chr1 26 39 53453</span><br><span class="line">chr1 32 47 53453</span><br><span class="line">chr1 40 49 53453</span><br><span class="line">chr1 9 28 53453</span><br><span class="line">chr2 35 53 34356</span><br><span class="line">chr3 11 28</span><br><span class="line">chr3 16 27</span><br></pre></td></tr></table></figure></p>
+<h2 id="awk"><a href="#awk" class="headerlink" title="awk"></a>awk</h2><p><code>awk</code>是文本处理的一把好手，虽然它不能像<code>python</code>，<code>R</code>干一些高级复杂的主题工作，但是它具备完整的命令操作和编程体系。</p>
+<p><code>awk</code>是一门语言，我不可能在学习的时候能够逻辑清晰详细地介绍给大家。主要是还通过实例来了解用法，加深认识。手册可以参考<a href="http://man.linuxde.net/awk。" target="_blank" rel="noopener">http://man.linuxde.net/awk。</a></p>
+<p>首先要明白的是，<code>awk</code>按行处理数据。在shell知识里，如果把一个文档看做一张表。那么一行就是一个<strong>记录</strong>，一列就是一个<strong>域</strong>。可以看出，<code>awk</code>就是按记录处理文本的。</p>
+<p>其次是<code>awk</code>的程序结构是<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pattern &#123;action&#125;</span><br></pre></td></tr></table></figure></p>
+<p>pattern可以是表达式或者正则表达式。pattern有点像<code>if</code>语句，当它满足时就会执行相应的动作。</p>
+<p>另一个<code>awk</code>核心是它用<code>$0</code>表示所有列，<code>$1</code>，<code>$2</code>…等等表示对应的列。我们可以很方便地用它进行操作。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123;print $0&#125;' example.bed </span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	32	47</span><br><span class="line">chr3	11	28</span><br><span class="line">chr1	40	49</span><br><span class="line">chr3	16	27</span><br><span class="line">chr1	9	28</span><br><span class="line">chr2	35	53</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123;print $1&#125;' example.bed </span><br><span class="line">chr1</span><br><span class="line">chr1</span><br><span class="line">chr3</span><br><span class="line">chr1</span><br><span class="line">chr3</span><br><span class="line">chr1</span><br><span class="line">chr2</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123;print $2&#125;' example.bed </span><br><span class="line">26</span><br><span class="line">32</span><br><span class="line">11</span><br><span class="line">40</span><br><span class="line">16</span><br><span class="line">9</span><br></pre></td></tr></table></figure></p>
+<p><code>print</code>语句就像动作一样输出你操作的结果。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123; print $2 "\t" $3&#125;' example.bed </span><br><span class="line">26	39</span><br><span class="line">32	47</span><br><span class="line">11	28</span><br><span class="line">40	49</span><br><span class="line">16	27</span><br><span class="line">9	28</span><br><span class="line">35	53</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123; print $2  $3&#125;' example.bed </span><br><span class="line">2639</span><br><span class="line">3247</span><br><span class="line">1128</span><br><span class="line">4049</span><br><span class="line">1627</span><br><span class="line">928</span><br><span class="line">3553</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123; print $2 , $3&#125;' example.bed </span><br><span class="line">26 39</span><br><span class="line">32 47</span><br><span class="line">11 28</span><br><span class="line">40 49</span><br><span class="line">16 27</span><br><span class="line">9 28</span><br><span class="line">35 53</span><br></pre></td></tr></table></figure></p>
+<p>了解上述几个语句的不同。</p>
+<p>表示染色体名一般用带<code>chr</code>或者不带<code>chr</code>标志两种方式。当我们要用到这两种时，肯定要让它们能够对应起来，也就是转换。<code>awk</code>命令可以非常方便地添加<code>chr</code>标记。</p>
+<p>下面我先把例子文件的<code>chr</code>去掉，然后加上试试。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123; print $1&#125;' example.bed</span><br><span class="line">chr1</span><br><span class="line">chr1</span><br><span class="line">chr3</span><br><span class="line">chr1</span><br><span class="line">chr3</span><br><span class="line">chr1</span><br><span class="line">chr2</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123; print $1&#125;' example.bed | cut -c4 </span><br><span class="line">1</span><br><span class="line">1</span><br><span class="line">3</span><br><span class="line">1</span><br><span class="line">3</span><br><span class="line">1</span><br><span class="line">2</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ awk '&#123; print $1&#125;' example.bed | cut -c4 | awk '&#123;print "chr"$1&#125;'</span><br><span class="line">chr1</span><br><span class="line">chr1</span><br><span class="line">chr3</span><br><span class="line">chr1</span><br><span class="line">chr3</span><br><span class="line">chr1</span><br><span class="line">chr2</span><br></pre></td></tr></table></figure></p>
+<p><code>awk</code>作为一门编程语言，它支持各种操作符（运算，逻辑，判断）喔。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ awk '$3 - $2 &gt;18' example.bed </span><br><span class="line">chr1	9	28</span><br><span class="line">wsx@wsx-ubuntu:/tmp$ awk '$1 ~/chr1/ &amp;&amp; $3 - $2 &gt; 10' example.bed </span><br><span class="line">chr1	26	39</span><br><span class="line">chr1	32	47</span><br><span class="line">chr1	9	28</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 这里 ~ 符号用来匹配正则表达式</span><br></pre></td></tr></table></figure></p>
+<p>还有<code>awk</code>存在一些变量，像<code>NR</code>表示行号，<code>OFS</code>表示输出分隔符等。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:/tmp$ awk 'NR &gt;= 3 &amp;&amp; NR &lt;= 5' example.bed </span><br><span class="line">chr3	11	28</span><br><span class="line">chr1	40	49</span><br><span class="line">chr3	16	27</span><br></pre></td></tr></table></figure></p>
+<p>如果我们想把<code>gtf</code>文件转换成为<code>bed</code>格式，可以使用<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/Work/research/Promoter_Research$ head -n1000 Homo_sapiens.GRCh37.75.gtf | awk '!/^#/&#123; print $1 "\t" $4-1 "\t" $5&#125; ' | head -n 3</span><br><span class="line">1	11868	14412</span><br><span class="line">1	11868	14409</span><br><span class="line">1	11868	12227</span><br></pre></td></tr></table></figure></p>
+<p>因为篇幅有限，我不可能输出所有结果，所以只取部分数据做了运算。</p>
+<h2 id="用Sed进行流编辑"><a href="#用Sed进行流编辑" class="headerlink" title="用Sed进行流编辑"></a>用Sed进行流编辑</h2><p><code>sed</code>命令从文本或者标准输入中每次读入一行数据。</p>
+<p>我们先从简单的实例出发，看下该命令怎么将一列中的<code>chrm12</code>,<code>chrom2</code>等转换成<code>chr12</code>，<code>chr2</code>的格式。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ cat chrms.txt</span><br><span class="line">chrom1    3214482    3216968</span><br><span class="line">chrom1    3214234    3216968</span><br><span class="line">chrom1    3213425    3210653</span><br><span class="line"></span><br><span class="line">wangsx@SC-201708020022:~/tmp$ sed 's/chrom/chr/' chrms.txt</span><br><span class="line">chr1    3214482    3216968</span><br><span class="line">chr1    3214234    3216968</span><br><span class="line">chr1    3213425    3210653</span><br></pre></td></tr></table></figure>
+<p>虽然示例文件处理仅仅只有三行，但我们可以将这种处理方式运用到上G甚至更大的数据文件中，而不用打开整个文件进行处理。并且，可以借助重导向实现对数据处理结果的输出。</p>
+<p><code>sed</code>替换命令采用的格式是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s/pattern/replacement/</span><br></pre></td></tr></table></figure>
+<p><code>sed</code>会自动搜索符合<code>pattern</code>的字符串，然后修改为<code>replacement</code>（我们想要修改后的样子）。一般默认<code>sed</code>只替换第一个匹配的<code>pattern</code>，我们可以通过添加全局标识<code>g</code>将其应用到数据的所有行中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s/pattern/replacement/g</span><br></pre></td></tr></table></figure>
+<p>如果我们想要忽略匹配的大小写，使用<code>i</code>标识</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s/pattern/replacement/i</span><br></pre></td></tr></table></figure>
+<p>默认<code>sed</code>命令支持基本的POSIX正则表达式（BRE），可以通过<code>-E</code>选项进行拓展（ERE）。很多的Linux命令都这种方式，像常用的<code>grep</code>命令。</p>
+<p>再看一个实例，如果我们想把<code>chr1:28647389-28659480</code>这样格式的文字转换为三列，可以使用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" | \</span><br><span class="line"><span class="meta">&gt;</span>  sed -E 's/^(chr[^:]+):([0-9]+)-([0-9]+)/\1\t\2\t\3/'</span><br><span class="line">chr1    28647389        28659480</span><br></pre></td></tr></table></figure>
+<p>我们聚焦在第二个命令<code>sed</code>上。初看杂乱无章，但是从最大的结构看依旧是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s/pattern/replacement/</span><br></pre></td></tr></table></figure>
+<p>先看<code>pattern</code>部分，这是由几个简单正则表达式组成的复合体，几个<code>()</code>括起来的字符串可以单独看。第一个匹配<code>chr</code>加上一个非冒号的字符，第二个和第三个都是匹配多个数字。最开始的<code>^</code>表示以<code>chr</code>起始（前面没有字符），各个括号中间的是对应的字符。整体的<code>pattern</code>的目的就是为了找到文本中符合这种模式的字符串，如果只是想把这个模式找出来的话，几个括号可以不用加。显然这几个括号的作用就是将它们划分成多个域，帮助<code>sed</code>进行处理。可以看到<code>replacement</code>部分存在<code>\1</code>,<code>\2</code>,<code>\3</code>，它恰好对应<code>()</code>的顺序。这样我们在中间插入<code>\t</code>制表符，就可以完成我们想要的功能：将原字符串转换为三列。</p>
+<p>我本身对字符串并不是非常熟悉，懂一些元字符，可能讲解的不是很到位。不熟悉正则表达式的朋友，可以学习和参考下<a href="http://www.jianshu.com/p/7c50954651fa" target="_blank" rel="noopener">学习正则表达式</a>，是我从Github上Copy到的非常好的学习资料，有兴趣也可以Fork学习。</p>
+<p>上山的路总是有很多条，我们下面看下其他实现该功能的办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" |  sed 's/[:-]/\t/g'</span><br><span class="line">chr1    28647389        28659480</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" |  sed 's/:/\t/' | sed 's/-/\t/'</span><br><span class="line">chr1    28647389        28659480</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" |  tr ':-' '\t'</span><br><span class="line">chr1    28647389        28659480</span><br></pre></td></tr></table></figure>
+<p>这三种方式看起来都非常简单有效。它处理字符串的思路不是从匹配pattern然后替换入手，不对，应该说是不是从匹配所有pattern然后替换入手。处理的关键是只处理字符串中看似无用的连字符<code>:</code>与<code>-</code>，将其替换成制表符从而轻松完成分割。</p>
+<p><code>sed &#39;s/:/\t/&#39; | sed &#39;s/-/\t/&#39;</code>可以通过<code>-e</code>选项写为<code>sed -e &#39;s/:/\t/&#39; -e &#39;s/-/\t/&#39;</code>，效果等价。</p>
+<p>默认<code>sed</code>命令支持基本的POSIX正则表达式（BRE），可以通过<code>-E</code>选项进行拓展（ERE）。很多的Linux命令都这种方式，像常用的<code>grep</code>命令。</p>
+<p>再看一个实例，如果我们想把<code>chr1:28647389-28659480</code>这样格式的文字转换为三列，可以使用：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" | \</span><br><span class="line"><span class="meta">&gt;</span>  sed -E 's/^(chr[^:]+):([0-9]+)-([0-9]+)/\1\t\2\t\3/'</span><br><span class="line">chr1    28647389        28659480</span><br></pre></td></tr></table></figure>
+<p>我们聚焦在第二个命令<code>sed</code>上。初看杂乱无章，但是从最大的结构看依旧是</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s/pattern/replacement/</span><br></pre></td></tr></table></figure>
+<p>先看<code>pattern</code>部分，这是由几个简单正则表达式组成的复合体，几个<code>()</code>括起来的字符串可以单独看。第一个匹配<code>chr</code>加上一个非冒号的字符，第二个和第三个都是匹配多个数字。最开始的<code>^</code>表示以<code>chr</code>起始（前面没有字符），各个括号中间的是对应的字符。整体的<code>pattern</code>的目的就是为了找到文本中符合这种模式的字符串，如果只是想把这个模式找出来的话，几个括号可以不用加。显然这几个括号的作用就是将它们划分成多个域，帮助<code>sed</code>进行处理。可以看到<code>replacement</code>部分存在<code>\1</code>,<code>\2</code>,<code>\3</code>，它恰好对应<code>()</code>的顺序。这样我们在中间插入<code>\t</code>制表符，就可以完成我们想要的功能：将原字符串转换为三列。</p>
+<p>我本身对字符串并不是非常熟悉，懂一些元字符，可能讲解的不是很到位。不熟悉正则表达式的朋友，可以学习和参考下<a href="http://www.jianshu.com/p/7c50954651fa" target="_blank" rel="noopener">学习正则表达式</a>，是我从Github上Copy到的非常好的学习资料，有兴趣也可以Fork学习。</p>
+<p>上山的路总是有很多条，我们下面看下其他实现该功能的办法：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" |  sed 's/[:-]/\t/g'</span><br><span class="line">chr1    28647389        28659480</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" |  sed 's/:/\t/' | sed 's/-/\t/'</span><br><span class="line">chr1    28647389        28659480</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ echo "chr1:28647389-28659480" |  tr ':-' '\t'</span><br><span class="line">chr1    28647389        28659480</span><br></pre></td></tr></table></figure>
+<p>这三种方式看起来都非常简单有效。它处理字符串的思路不是从匹配pattern然后替换入手，不对，应该说是不是从匹配所有pattern然后替换入手。处理的关键是只处理字符串中看似无用的连字符<code>:</code>与<code>-</code>，将其替换成制表符从而轻松完成分割。</p>
+<p><code>sed &#39;s/:/\t/&#39; | sed &#39;s/-/\t/&#39;</code>可以通过<code>-e</code>选项写为<code>sed -e &#39;s/:/\t/&#39; -e &#39;s/-/\t/&#39;</code>，效果等价。</p>
+<p>默认，<code>sed</code>会输出每一行的结果，用<code>replacement</code>替换<code>pattern</code>，但实际中我们可能会因此得到不想要的结果。比如下面的这个例子。</p>
+<p>如果我们想要抓出<code>gtf</code>文件第九列的转录名，可能会使用以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/database$ zgrep -v "^#" gencode.v27lift37.annotation.gtf.gz | head -n 3 | \</span><br><span class="line"><span class="meta">&gt;</span> sed -E 's/.*transcript_id "([^"]+)".*/\1/'</span><br><span class="line">chr1    HAVANA  gene    11869   14409   .       +       .       gene_id "ENSG00000223972.5_2"; gene_type "transcribed_unprocessed_pseudogene"; gene_name "DDX11L1"; level 2; havana_gene "OTTHUMG00000000961.2_2"; remap_status "full_contig"; remap_num_mappings 1; remap_target_status "overlap";</span><br><span class="line">ENST00000456328.2_1</span><br><span class="line">ENST00000456328.2_1</span><br></pre></td></tr></table></figure>
+<p>我们可以发现一些没有转录名行的结果是输出整行，这可不是我们想要的。一种解决办法是在使用<code>sed</code>之前先抓出有<code>transcript_id</code>的行。其实<code>sed</code>命令本身也可以通过选项和参数设定解决这个问题，这里我们可以用<code>-n</code>选项关闭<code>sed</code>输出所有行，在最末的<code>/</code>后加<code>p</code>只输出匹配项。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/database$ zgrep -v "^#" gencode.v27lift37.annotation.gtf.gz | head -n 3 | sed -E -n 's/.*transc</span><br><span class="line">ript_id "([^"]+)".*/\1/p'</span><br><span class="line">ENST00000456328.2_1</span><br><span class="line">ENST00000456328.2_1</span><br></pre></td></tr></table></figure>
+<p>注意方括号内<code>^</code>是非（取反）的意思。</p>
+<p>解释如下：</p>
+<ol>
+<li>首先，匹配字符串”transcript_id”之前0或多个任意字符（<code>.</code>表示除换行键的任意字符）。</li>
+<li>然后，匹配和捕获一个或多个不是引号的字符，用的是<code>[^&quot;]</code></li>
+</ol>
+<p><code>+</code>号的使用是一种非贪婪的方法。很多新手会用<code>*</code>，这是贪婪操作，往往会得不偿失，需要注意喔。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/database$ sed -E 's/transcript_id "([^"]+)".*/\1/' greedy_example.txt</span><br><span class="line">ENSMUST00000160944</span><br><span class="line">wangsx@SC-201708020022:~/database$ sed -E 's/transcript_id "(.*)".*/\1/' greedy_example.txt</span><br><span class="line">ENSMUST00000160944"; gene_name "Gm16088</span><br></pre></td></tr></table></figure>
+<p>使用<code>*</code>时它会尽量多地去匹配符合要求的模式。</p>
+<p>我们也可以用<code>sed</code>命令来获取特定范围的行，比如说我要取出头10行，可以使用</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n '1,10p' filename</span><br></pre></td></tr></table></figure>
+<p>20到50行</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed -n '20,50p' filename</span><br></pre></td></tr></table></figure>
+<p>当然<code>sed</code>的功能特性远远不止这些，有待于大家更多地挖掘。不过需要注意的是，尽量让工具干它最擅长的事情。如果是复杂地大规模计算，还是最好写个Python脚本。</p>
+<blockquote>
+<p><strong>KISS原则</strong>: </p>
+<p>Keep Incredible Sed Simple</p>
+</blockquote>
+<h2 id="高级Shell用法"><a href="#高级Shell用法" class="headerlink" title="高级Shell用法"></a>高级Shell用法</h2><h3 id="子shell"><a href="#子shell" class="headerlink" title="子shell"></a>子shell</h3><p>首先需要记住<strong>连续</strong>命令和<strong>管道</strong>命令的区别：前者是简单地一个一个按顺序运行程序（一般用<code>&amp;&amp;</code>或者<code>;</code>）；后者前一个程序的输出结果会直接传到下一个命令程序的输入中（这不就是流程化操作么，用<code>|</code>分隔）。</p>
+<p>子shell可以让我们在一个独立的shell进程中执行连续命令。</p>
+<p>首先看个例子</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/database$ echo "this command"; echo "that command" | sed 's/command/step/'</span><br><span class="line">this command</span><br><span class="line">that step</span><br><span class="line">wangsx@SC-201708020022:~/database$ (echo "this command"; echo "that command") | sed 's/command/step/'</span><br><span class="line">this step</span><br><span class="line">that step</span><br></pre></td></tr></table></figure>
+<p>发现仅仅加了个括号，结果就不同了。第二个命令就用了子shell，它把两个<code>echo</code>命令放进单独的空间执行后将结果传给下游。</p>
+<p>子shell在对<code>gtf</code>文件进行操作时有个非常有意思有用的用处。我们如果想对<code>gtf</code>文件排序，但是又想要保留文件头部注释信息，我们就能够用两次<code>grep</code>操作分别抓出注释和非注释信息，然后又把它结合在一起。下面看看效果，用<code>less</code>进行检查：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/database$ (zgrep "^#" gencode.v27lift37.annotation.gtf.gz; \</span><br><span class="line"><span class="meta">&gt;</span>  zgrep -v "^#" gencode.v27lift37.annotation.gtf.gz | \</span><br><span class="line"><span class="meta">&gt;</span>  sort -k1,1 -k4,4n) | less</span><br></pre></td></tr></table></figure>
+<p>可以看到，子shell确实能够给我们提供非常有用的操作去组合命令实现想要的功能。</p>
+<h3 id="命令管道及进程替换"><a href="#命令管道及进程替换" class="headerlink" title="命令管道及进程替换"></a>命令管道及进程替换</h3><p>很多生信命令行工具需要提供多个输入和输出参数，这用在管道命令里可能会导致非常低效的情形（管道只接受一个标准输入和输出）。幸好，我们可以使用命令管道来解决此类问题。</p>
+<p><strong>命名管道</strong>，也成为FIFO（先入先出，额，这不是队列么:smile:）。它是一个特殊的排序文件，命名管道有点像文件，它可以永久保留在你的文件系统上（估计本质就是文件吧~）。</p>
+<p>我们用<code>mkfifo</code>来生成它</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ ls -l fqin</span><br><span class="line">prw-rw-rw- 1 wangsx wangsx 0 9月   3 20:45 fqin</span><br></pre></td></tr></table></figure>
+<p>可以它看它权限的第一个字符是p，指代是pipe。说明是个特殊文件。</p>
+<p>我们像文件一样对它进行一些操作</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ cat fqin</span><br><span class="line">hello, named pipes</span><br><span class="line">[1]+  已完成               echo "hello, named pipes" &gt; fqin</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ rm fqin</span><br></pre></td></tr></table></figure>
+<p>比如当使用一个生信命令行工具</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">processing_tool --in1 in1.fq --in2 in2.fq --out1 out1.fq --out2 out2.fq</span><br></pre></td></tr></table></figure>
+<p><code>in1.fq in2.fq</code>就可以上游输出数据到<code>processing_tool</code>的命名管道；同理<code>out1.fq out2.fq</code>可以是命名管道用来写进输出数据。</p>
+<p>但这样我们每次都得不停地创建和删除这些文件，解决办法是使用匿名管道，也叫进程替换。</p>
+<p>不能光说，看看例子就知道和理解了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ cat &lt;(echo "hello, process substitution")</span><br><span class="line">hello, process substitution</span><br></pre></td></tr></table></figure>
+<p><code>echo</code>命令运行后使用了进程替换，产生匿名文件，然后匿名文件被重导向<code>cat</code>命令。</p>
+<p>把它用到工具上，就变成了(假定上游zcat下游执行grep命令)</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">processing_tool --in1 &lt; (zcat file1) --in2 &lt; (zcat file2) --out1 (gzip &gt; outfile1) --out2 (gzip &gt; outfile2)</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/">Linux数据处理命令工具</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2017-09-03, 00:00:00</p>
+        <p><span>最后更新:</span>2018-01-27, 01:07:14</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/" title="Linux数据处理命令工具">https://shixiangwang.github.io/2017/09/03/2017-09-03-Linux-data-analysis-tools/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2017/09/03/2017-09-03-Linux-data-analysis-tools/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/09/04/2017-09-04-control-shell/">
+                    控制脚本
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/08/21/2017-08-22-shell-show-data/">
+                    Linux脚本编程——呈现数据
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#纯文本信息汇总"><span class="toc-number">1.</span> <span class="toc-text">纯文本信息汇总</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#怎么去除注释的元数据行呢？怎么计数非注释行行数呢？"><span class="toc-number">1.1.</span> <span class="toc-text">怎么去除注释的元数据行呢？怎么计数非注释行行数呢？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Cut"><span class="toc-number">2.</span> <span class="toc-text">Cut</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#grep"><span class="toc-number">3.</span> <span class="toc-text">grep</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#file查看文件编码"><span class="toc-number">4.</span> <span class="toc-text">file查看文件编码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用sort对文本排序"><span class="toc-number">5.</span> <span class="toc-text">用sort对文本排序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用uniq寻找唯一值"><span class="toc-number">6.</span> <span class="toc-text">用uniq寻找唯一值</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Join-命令"><span class="toc-number">7.</span> <span class="toc-text">Join 命令</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#awk"><span class="toc-number">8.</span> <span class="toc-text">awk</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#用Sed进行流编辑"><span class="toc-number">9.</span> <span class="toc-text">用Sed进行流编辑</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#高级Shell用法"><span class="toc-number">10.</span> <span class="toc-text">高级Shell用法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#子shell"><span class="toc-number">10.1.</span> <span class="toc-text">子shell</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#命令管道及进程替换"><span class="toc-number">10.2.</span> <span class="toc-text">命令管道及进程替换</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Linux数据处理命令工具　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'https://shixiangwang.github.io/2017/09/03/2017-09-03-Linux-data-analysis-tools/';
+            this.page.identifier = '2017/09/03/2017-09-03-Linux-data-analysis-tools/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//Cloudberry.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/09/04/2017-09-04-control-shell/" title="上一篇: 控制脚本">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/08/21/2017-08-22-shell-show-data/" title="下一篇: Linux脚本编程——呈现数据">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/25/2017-12-25-sed-and-gawk/">初识sed与awk</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/2017-12-08-Git-basic-operation/">学习git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/2017-11-26-shell-create-function/">创建和使用shell函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/20/2017-09-20-OOPinR/">R-面向对象编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/15/2017-09-15-Class-in-R/">R中的属性与类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/2017-09-04-control-shell/">控制脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/">Linux数据处理命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/2017-08-22-shell-show-data/">Linux脚本编程——呈现数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-structural-command-of-shell/">Linux结构化命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-basic-shell/">构建基本shell脚本</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 Cloudberry
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 2;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

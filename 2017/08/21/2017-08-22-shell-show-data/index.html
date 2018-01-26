@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="" />
+
+
+
+<meta name="description" content="本章内容：  再探重定向 标准输入和输出 报告错误 丢弃数据 创建日志文件">
+<meta name="keywords" content="bash shell,shell笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux脚本编程——呈现数据">
+<meta property="og:url" content="https://shixiangwang.github.io/2017/08/21/2017-08-22-shell-show-data/index.html">
+<meta property="og:site_name" content="Cloudberry">
+<meta property="og:description" content="本章内容：  再探重定向 标准输入和输出 报告错误 丢弃数据 创建日志文件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-26T17:07:14.868Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux脚本编程——呈现数据">
+<meta name="twitter:description" content="本章内容：  再探重定向 标准输入和输出 报告错误 丢弃数据 创建日志文件">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Cloudberry" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>Linux脚本编程——呈现数据 | Cloudberry</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A site for writing</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/">分类</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:w_shixiang@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/ShixiangWang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 知乎" href="https://www.zhihu.com/people/wang-shi-xiang-65/activities" title="知乎"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/b6608e27dc74" title="简书"></a>
+                            
+                                <a class="fa Twitter" href="https://twitter.com/WangShxiang" title="Twitter"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OOP/">OOP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-command/">shell command</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.coding.me/yelee/">Yelee 主题使用说明</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">人该是自己生活的主宰，而不是别人手中的行货</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A site for writing</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/">分类</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:w_shixiang@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/ShixiangWang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 知乎" target="_blank" href="https://www.zhihu.com/people/wang-shi-xiang-65/activities" title="知乎"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/b6608e27dc74" title="简书"></a>
+                            
+                                <a class="fa Twitter" target="_blank" href="https://twitter.com/WangShxiang" title="Twitter"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2017-08-22-shell-show-data" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/21/2017-08-22-shell-show-data/" class="article-date">
+      <time datetime="2017-08-20T16:00:00.000Z" itemprop="datePublished">2017-08-21</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Linux脚本编程——呈现数据
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <blockquote>
+<p>本章内容：</p>
+<ul>
+<li>再探重定向</li>
+<li>标准输入和输出</li>
+<li>报告错误</li>
+<li>丢弃数据</li>
+<li>创建日志文件</li>
+</ul>
+</blockquote>
+<a id="more"></a>
+<h2 id="理解输入和输出"><a href="#理解输入和输出" class="headerlink" title="理解输入和输出"></a>理解输入和输出</h2><p>显示输出的方法有：</p>
+<ul>
+<li>在显示器屏幕上输出</li>
+<li>将输出重定向到文件中</li>
+<li>有时将一部分数据显示在显示器上；一部分保存到文件中。</li>
+</ul>
+<p>之前涉及的脚本都是以第一种方式输出。现在我们来具体了解下输入和输出。</p>
+<h3 id="标准文件描述符"><a href="#标准文件描述符" class="headerlink" title="标准文件描述符"></a>标准文件描述符</h3><p><strong>Linux系统将每个对象当作文件处理</strong>。着包括输入和输出进程。而标识文件对象是通过<strong>文件描述符</strong>完成的。文件描述符是一个非负整数，可以唯一标识会话中打开的文件。每个进程一次最多有九个文件描述符，bash shell保留勒前三个（0,1,2），见下表。</p>
+<table>
+<thead>
+<tr>
+<th>文件描述符</th>
+<th>缩写</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>STDIN</td>
+<td>标准输入</td>
+</tr>
+<tr>
+<td>1</td>
+<td>STDOUT</td>
+<td>标准输出</td>
+</tr>
+<tr>
+<td>2</td>
+<td>STDERR</td>
+<td>标准错误</td>
+</tr>
+</tbody>
+</table>
+<p>shell用他们将shell默认的输入和输出导向到相应的位置。</p>
+<p><strong>STDIN</strong></p>
+<p>在使用输入重定向符号（&lt;）时，Linux会用重定向指定的文件夹来替换标准输入文件描述符。它会读取文件并提取数据，就像它是从键盘上键入的。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ cat</span><br><span class="line">this is a test</span><br><span class="line">this is a test</span><br><span class="line">this is a second test</span><br><span class="line">this is a second test</span><br></pre></td></tr></table></figure>
+<p>输入<code>cat</code>命令时，它从STDIN接受输入。输入一行，<code>cat</code>命令会显示一行。</p>
+<p>当然也可以通过<code>&lt;</code>符号强制<code>cat</code>命令接受来自另一个非STDIN文件的输入。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ cat &lt; testfile</span><br><span class="line">This is the first line.</span><br><span class="line">This is the second line.</span><br><span class="line">This is the third line.</span><br></pre></td></tr></table></figure>
+<p><strong>STDOUT</strong></p>
+<p>标准输出就是终端显示器。我们可以使用<code>&lt;</code>输出重定向符号来改变它。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ ls -l &gt; test2</span><br><span class="line">wangsx@SC-201708020022:~$ cat test2</span><br><span class="line">总用量 28</span><br><span class="line">drwxrwxrwx 0 wangsx wangsx 4096 8月   2 11:48 biosoft</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx 2156 8月   4 00:12 biostar.yml</span><br><span class="line">drwxrwxrwx 0 wangsx wangsx 4096 8月   3 22:24 miniconda2</span><br><span class="line">drwxrwxrwx 0 wangsx wangsx 4096 8月   2 11:50 ncbi</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx 5230 8月  14 00:14 spf13-vim.sh</span><br><span class="line">drwxrwxrwx 0 wangsx wangsx 4096 8月  13 23:51 src</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx    0 8月  21 22:43 test2</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx   73 8月  21 22:39 testfile</span><br><span class="line">drwxrwxrwx 0 wangsx wangsx 4096 8月  19 17:15 tmp</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx 2156 8月  14 12:20 wsx_biostar.yml</span><br></pre></td></tr></table></figure>
+<p>如果文件存在，<code>&gt;</code>符号会将导向的文件全部重写。如果想要以追加的形式，则使用<code>&gt;&gt;</code>。</p>
+<p><strong>STDERR</strong></p>
+<p>STDERR文件描述符代表shell的标准错误输出。运行脚本或命令的错误信息都会发送到这个位置。</p>
+<p>默认，STDERR会和STDOUT指向同样的地方（屏幕终端）。使用脚本时，我们常常会希望将错误信息保存到日志文件中。</p>
+<h3 id="重定向错误"><a href="#重定向错误" class="headerlink" title="重定向错误"></a>重定向错误</h3><p>几种实现方法：</p>
+<ol>
+<li><p>只重定向错误</p>
+<p>将文件描述符值（2）放在重定向符号前。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ ls -al badfile 2&gt; test4</span><br><span class="line">wangsx@SC-201708020022:~$ cat test4</span><br><span class="line">ls: 无法访问'badfile': 没有那个文件或目录</span><br></pre></td></tr></table></figure>
+<p>命令生成的任何错误信息都会保存在输出文件中。<strong>这个方法只重定向错误信息。</strong></p>
+</li>
+<li><p>重定向错误和数据</p>
+<p>这必须用两个重定向符号。需要在符号前面放上待重定向数据所对应的文件描述符，然后指向用于保存数据的输出文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ ls -al test test2 test3 bad test 2&gt; test6 1&gt; test7</span><br><span class="line">wangsx@SC-201708020022:~$ cat test6</span><br><span class="line">ls: 无法访问'test': 没有那个文件或目录</span><br><span class="line">ls: 无法访问'test3': 没有那个文件或目录</span><br><span class="line">ls: 无法访问'bad': 没有那个文件或目录</span><br><span class="line">ls: 无法访问'test': 没有那个文件或目录</span><br><span class="line">wangsx@SC-201708020022:~$ cat test7</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx 571 8月  21 22:43 test2</span><br></pre></td></tr></table></figure>
+<p>可以看到正常输出重定向到了test7，错误重定向到了test6。另外，也可以将STDERR和STDOUT的输出重定向到同一个输出文件，bash shell提供了符号<code>&amp;&gt;</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ ls -al test test2 test3 bad &amp;&gt; test7</span><br><span class="line">wangsx@SC-201708020022:~$ cat test7</span><br><span class="line">ls: 无法访问'test': 没有那个文件或目录</span><br><span class="line">ls: 无法访问'test3': 没有那个文件或目录</span><br><span class="line">ls: 无法访问'bad': 没有那个文件或目录</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx 571 8月  21 22:43 test2</span><br></pre></td></tr></table></figure>
+<p>使用这个符号的话，bash shell会自动赋予错误消息更高的优先级。这样能够集中浏览错误信息。</p>
+<p>​</p>
+</li>
+</ol>
+<h2 id="在脚本中重定向输出"><a href="#在脚本中重定向输出" class="headerlink" title="在脚本中重定向输出"></a>在脚本中重定向输出</h2><p>两种方法在脚本中重定向输出：</p>
+<ul>
+<li>临时重定向输出</li>
+<li>永久重定向脚本中的所有命令</li>
+</ul>
+<h3 id="临时重定向"><a href="#临时重定向" class="headerlink" title="临时重定向"></a>临时重定向</h3><p>如果<strong>有意</strong>在脚本中生成错误信息，可以将单独的一行输出重定向到STDERR。</p>
+<p>使用时需要在文件描述符数字前加<code>&amp;</code>:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">echo "This is an error message" &gt;&amp;2</span><br></pre></td></tr></table></figure>
+<p>下面看个例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ cat test8</span><br><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> testing STDERR message</span><br><span class="line"></span><br><span class="line">echo "This is an error" &gt;&amp;2</span><br><span class="line">echo "This is normal output"</span><br></pre></td></tr></table></figure>
+<p>像平常一样运行的话，看出不会有什么差别。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ sh test8</span><br><span class="line">This is an error</span><br><span class="line">This is normal output</span><br></pre></td></tr></table></figure>
+<p>但是如果重定向STDERR的话，所有导向STDERR的文本都会被重定向</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ sh test8 2&gt; test9</span><br><span class="line">This is normal output</span><br><span class="line">wangsx@SC-201708020022:~$ cat test9</span><br><span class="line">This is an error</span><br></pre></td></tr></table></figure>
+<p><strong>这个方法非常适合在脚本中生成错误信息</strong>。</p>
+<h3 id="永久重定向"><a href="#永久重定向" class="headerlink" title="永久重定向"></a>永久重定向</h3><p>如果脚本中涉及大量重定向，上述的方法就会非常繁琐。我们可以用<code>exec</code>命令告诉shell在脚本执行期间重定向某个特定文件描述符。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ cat test10</span><br><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> redirecting all output to a file</span><br><span class="line">exec 1&gt;testout</span><br><span class="line"></span><br><span class="line">echo "This is a test of redirecting all output"</span><br><span class="line">echo "from a script to another file"</span><br><span class="line">echo "without having to redirect every individual line"</span><br><span class="line">wangsx@SC-201708020022:~$ sh test10</span><br><span class="line">wangsx@SC-201708020022:~$ cat testout</span><br><span class="line">This is a test of redirecting all output</span><br><span class="line">from a script to another file</span><br><span class="line">without having to redirect every individual line</span><br></pre></td></tr></table></figure>
+<p>再结合STDERR看看</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ cat test11</span><br><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> redirecting output to different locations</span><br><span class="line"></span><br><span class="line">exec 2&gt;testerror</span><br><span class="line"></span><br><span class="line">echo "This is the start of the script"</span><br><span class="line">echo "now redirecting all output to another location"</span><br><span class="line"></span><br><span class="line">exec 1&gt;testout</span><br><span class="line">echo "This output should go to the testout file"</span><br><span class="line">echo "but this should go to the testerror file" &gt;&amp;2</span><br><span class="line">wangsx@SC-201708020022:~$ sh test11</span><br><span class="line">This is the start of the script</span><br><span class="line">now redirecting all output to another location</span><br><span class="line">wangsx@SC-201708020022:~$ cat testout</span><br><span class="line">This output should go to the testout file</span><br><span class="line">wangsx@SC-201708020022:~$ cat testerror</span><br><span class="line">but this should go to the testerror file</span><br></pre></td></tr></table></figure>
+<p><strong>这个脚本用<code>exec</code>命令将STDERR的输出重定向到文件testerror。接着echo语句向STDOUT显示几行文本。随后使用<code>exec</code>命令将STDOUT重定向到testout文件。</strong>最后，虽然STDOUT被重定向了，但依然可以将echo语句发给STDERR。</p>
+<p>这里存在一个问题，一旦重定向了STDOUT或STDERR，就很难将他们重定向回原来的位置。</p>
+<p>这个问题可以用以下方式解决。</p>
+<p>前面提到shell只用了3个文件描述符，而总共有9个，我们可以利用其他6个来操作。</p>
+<p>这里只需要另外使用一个，就可以重定向文件描述符：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ cat test14</span><br><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> storing STDOUT, the coming back to it</span><br><span class="line"></span><br><span class="line">exec 3&gt;&amp;1</span><br><span class="line">exec 1&gt;test14out</span><br><span class="line"></span><br><span class="line">echo "This should store in the output file"</span><br><span class="line">echo "along with this line"</span><br><span class="line"></span><br><span class="line">exec 1&gt;&amp;3</span><br><span class="line">echo "Now things should be back to normal"</span><br><span class="line">wangsx@SC-201708020022:~$ sh test14</span><br><span class="line">Now things should be back to normal</span><br><span class="line">wangsx@SC-201708020022:~$ cat test14out</span><br><span class="line">This should store in the output file</span><br><span class="line">along with this line</span><br></pre></td></tr></table></figure>
+<p>这里有意思的是把重定向当程序变量在玩，类似</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">a=b # 把b的内容存到a</span><br><span class="line">b=c # 修改b的内容</span><br><span class="line"><span class="meta">#</span> 使用完后</span><br><span class="line">b=a # 将b原来的内容还原</span><br></pre></td></tr></table></figure>
+<p>输入文件描述符也可以进行类似的操作。</p>
+<h2 id="阻止命令输出"><a href="#阻止命令输出" class="headerlink" title="阻止命令输出"></a>阻止命令输出</h2><p>有时候不想显示脚本的输出就要这么干。</p>
+<p>一种通用的方法是将STDERR重定向到<code>null</code>的特殊文件（里面什么都没有）。shell输出到null文件的任何数据都不会保存，全部被丢掉了。</p>
+<p>null文件在Linux中的标准位置是<code>/dev/null</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ ls -al &gt; /dev/null</span><br><span class="line">wangsx@SC-201708020022:~$ cat /dev/null</span><br><span class="line">wangsx@SC-201708020022:~$</span><br></pre></td></tr></table></figure>
+<p>这是避免出现错误消息，也无需保存它们的一个常用方法。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ ls -al badfile test2 2&gt; /dev/null</span><br><span class="line">-rw-rw-rw- 1 wangsx wangsx 571 8月  21 22:43 test2</span><br></pre></td></tr></table></figure>
+<p>由于null文件不含有任何内容，程序员通常用它来快速清除现有文件中的数据，而不用先删除文件再重新创建。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~$ cat testfile</span><br><span class="line">This is the first line.</span><br><span class="line">This is the second line.</span><br><span class="line">This is the third line.</span><br><span class="line">wangsx@SC-201708020022:~$ cat /dev/null &gt; testfile</span><br><span class="line">wangsx@SC-201708020022:~$ cat testfile</span><br><span class="line">wangsx@SC-201708020022:~$</span><br></pre></td></tr></table></figure>
+<h2 id="创建临时文件"><a href="#创建临时文件" class="headerlink" title="创建临时文件"></a>创建临时文件</h2><p>Linux使用/tmp目录来存放不需要永久保留的文件。大多数Linux发行版配置了在启动时删除/tmp目录的所有文件。</p>
+<h3 id="创建本地临时文件"><a href="#创建本地临时文件" class="headerlink" title="创建本地临时文件"></a>创建本地临时文件</h3><p>默认<code>mktemp</code>会在本地目录创建一个文件。你只需要指定文件名模板，可以是任意文本名，后面加六个<code>X</code>即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ mktemp testing.XXXXXX</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ mktemp testing.XXXXXX</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ ll</span><br><span class="line">总用量 12</span><br><span class="line">drwxrwxrwx 0 wangsx wangsx 4096 8月  22 21:34 ./</span><br><span class="line">drwxr-xr-x 0 wangsx wangsx 4096 8月  22 21:31 ../</span><br><span class="line">-rw------- 1 wangsx wangsx    0 8月  22 21:33 testing.R6dAku</span><br><span class="line">-rw------- 1 wangsx wangsx    0 8月  22 21:32 testing.V5psXP</span><br></pre></td></tr></table></figure>
+<p><code>mktemp</code>命令会用6个字符码替换这6个<code>X</code>，从而保证文件名在目录中是唯一的。</p>
+<p>在脚本中使用<code>mktemp</code>命令时，可能要将文件名保存到变量中，这样就可以在脚本后面引用了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ cat test19</span><br><span class="line"><span class="meta">#</span>!/bin/bash t nomore" \</span><br><span class="line"><span class="meta">#</span> creating and using a temp file</span><br><span class="line">tempfile=$(mktemp test19.XXXXXX)</span><br><span class="line"></span><br><span class="line">exec 3&gt;$tempfile</span><br><span class="line">echo "This script writes to temp file $tempfile</span><br><span class="line">echo "This is the first line." &gt;&amp;3</span><br><span class="line">echo "This is the last line." &gt;&amp;3</span><br><span class="line">exec 3&gt;&amp;-</span><br><span class="line"></span><br><span class="line">echo "Done creating temp file. The contents are:"</span><br><span class="line">cat $tempfile </span><br><span class="line">rm -f $tempfile 2&gt; /dev/null</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ sh test19</span><br><span class="line">This script writes to temp file test19.fVVEwn</span><br><span class="line">Done creating temp file. The contents are:</span><br><span class="line">This is the first line.</span><br><span class="line">This is the last line.</span><br></pre></td></tr></table></figure>
+<p>显示的内容大致如上，我的ubuntu子系统有点怪怪的，不知道为毛。</p>
+<p><code>-t</code>选项回强制<code>mktemp</code>命令在系统的临时目录来创建该文件，它会返回临时文件的全路径，而不是只有文件名。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ mktemp -t test20.XXXX</span><br><span class="line">/tmp/test20.bY3Q</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ mktemp -t test20.XXXXXX</span><br><span class="line">/tmp/test20.WrkAia</span><br></pre></td></tr></table></figure>
+<p><code>-d</code>选项告诉<code>mktemp</code>创建一个临时目录而不是临时文件。</p>
+<h2 id="记录消息"><a href="#记录消息" class="headerlink" title="记录消息"></a>记录消息</h2><p>有时候想将消息同时发送到显示器和日志文件，用<code>tee</code>命令可以搞定。</p>
+<p><code>tee</code>命令的功能就像一个<code>T</code>，它将从STDIN过来的数据同时发往两处。一处是STDOUT，一处是<code>tee</code>命令行所指定的文件名。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ date | tee testfile</span><br><span class="line">2017年 08月 22日 星期二 21:49:07 DST</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ cat testfile</span><br><span class="line">2017年 08月 22日 星期二 21:49:07 DST</span><br></pre></td></tr></table></figure>
+<p>如果要追加文件，请使用<code>-a</code>选项。</p>
+<h2 id="实例"><a href="#实例" class="headerlink" title="实例"></a>实例</h2><p>文件重定向常见于脚本需要读入文件和输出文件时。</p>
+<p>下面是一个具体的实例：shell脚本使用命令行参数指定待读取的.csv文件。.csv格式用于从电子表格中导出数据，所以我们可以把数据库数据放入电子表格，把电子表格保存成.csv格式，读取文件，然后创建INSERT语句将数据插入MySQL数据库。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> read file and create INSERT statements for MySQL</span><br><span class="line"></span><br><span class="line">outfile='members.sql'</span><br><span class="line">IFS=","</span><br><span class="line">while read lname fname address city state zip # read 使用IFS字符解析读入的文本</span><br><span class="line">do</span><br><span class="line">    cat &gt;&gt; $outfile &lt;&lt; EOF</span><br><span class="line">    # &gt;&gt; 将cat的输出追加到$outfile指定的文件中</span><br><span class="line">    # cat的输入不再取自于标准输入，而是被重定向到脚本中存储的数据，EOF符号标记了追加到文件中的数据的起止（两个）</span><br><span class="line">    INSERT INTO members (lname,fname,address,city,state,zip) VALUES </span><br><span class="line">    ('$lname', '$fname', '$address', '$city', '$state', '$zip');</span><br><span class="line">EOF</span><br><span class="line">    # 上面是标准的SQL语句</span><br><span class="line">done &lt; $1 # 将命令行第一个参数指明的数据文件导入while</span><br></pre></td></tr></table></figure>
+<p>造一个符合的csv文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ cat members.csv</span><br><span class="line">Blum,Richard,123 Main St.,Chicago,IL,60601</span><br><span class="line">Blum,Barbara,123 Main St.,Chicago,IL,60601</span><br><span class="line">Bresnahan,Timothy,456, Oak Ave.,Columbus,OH,43201</span><br></pre></td></tr></table></figure>
+<p>运行脚本</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wangsx@SC-201708020022:~/tmp$ ./test23 members.csv</span><br><span class="line">wangsx@SC-201708020022:~/tmp$ cat members.sql</span><br><span class="line">    INSERT INTO members (lname,fname,address,city,state,zip) VALUES</span><br><span class="line">    ('Blum', 'Richard', '123 Main St.', 'Chicago', 'IL', '60601');</span><br><span class="line">    INSERT INTO members (lname,fname,address,city,state,zip) VALUES</span><br><span class="line">    ('Blum', 'Barbara', '123 Main St.', 'Chicago', 'IL', '60601');</span><br><span class="line">    INSERT INTO members (lname,fname,address,city,state,zip) VALUES</span><br><span class="line">    ('Bresnahan', 'Timothy', '456', ' Oak Ave.', 'Columbus', 'OH,43201');</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/08/21/2017-08-22-shell-show-data/">Linux脚本编程——呈现数据</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2017-08-21, 00:00:00</p>
+        <p><span>最后更新:</span>2018-01-27, 01:07:14</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/21/2017-08-22-shell-show-data/" title="Linux脚本编程——呈现数据">https://shixiangwang.github.io/2017/08/21/2017-08-22-shell-show-data/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2017/08/21/2017-08-22-shell-show-data/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/">
+                    Linux数据处理命令工具
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/08/11/2017-08-11-structural-command-of-shell/">
+                    Linux结构化命令
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#理解输入和输出"><span class="toc-number">1.</span> <span class="toc-text">理解输入和输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#标准文件描述符"><span class="toc-number">1.1.</span> <span class="toc-text">标准文件描述符</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#重定向错误"><span class="toc-number">1.2.</span> <span class="toc-text">重定向错误</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#在脚本中重定向输出"><span class="toc-number">2.</span> <span class="toc-text">在脚本中重定向输出</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#临时重定向"><span class="toc-number">2.1.</span> <span class="toc-text">临时重定向</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#永久重定向"><span class="toc-number">2.2.</span> <span class="toc-text">永久重定向</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#阻止命令输出"><span class="toc-number">3.</span> <span class="toc-text">阻止命令输出</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#创建临时文件"><span class="toc-number">4.</span> <span class="toc-text">创建临时文件</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#创建本地临时文件"><span class="toc-number">4.1.</span> <span class="toc-text">创建本地临时文件</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#记录消息"><span class="toc-number">5.</span> <span class="toc-text">记录消息</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#实例"><span class="toc-number">6.</span> <span class="toc-text">实例</span></a></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Linux脚本编程——呈现数据　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'https://shixiangwang.github.io/2017/08/21/2017-08-22-shell-show-data/';
+            this.page.identifier = '2017/08/21/2017-08-22-shell-show-data/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//Cloudberry.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/" title="上一篇: Linux数据处理命令工具">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/08/11/2017-08-11-structural-command-of-shell/" title="下一篇: Linux结构化命令">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/25/2017-12-25-sed-and-gawk/">初识sed与awk</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/2017-12-08-Git-basic-operation/">学习git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/2017-11-26-shell-create-function/">创建和使用shell函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/20/2017-09-20-OOPinR/">R-面向对象编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/15/2017-09-15-Class-in-R/">R中的属性与类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/2017-09-04-control-shell/">控制脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/">Linux数据处理命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/2017-08-22-shell-show-data/">Linux脚本编程——呈现数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-structural-command-of-shell/">Linux结构化命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-basic-shell/">构建基本shell脚本</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 Cloudberry
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 2;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>

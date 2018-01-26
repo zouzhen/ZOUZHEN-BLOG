@@ -14,17 +14,19 @@
 <meta name="author" content="" />
 
 
-    
-    
 
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="Cloudberry">
-<meta property="og:url" content="https://shixiangwang.github.io/index.html">
+<meta name="description" content="条件控制 内容  使用if-then语句 嵌套if语句 test命令 复合条件测试 使用双方括号和双括号 case命令   许多程序要求对shell脚本中的命令施加一些逻辑流程控制。而某些命令会根据条件判断执行相应的命令，这样的命令通常叫做结构化命令。从概念上理解，结构化命令是shell脚本的逻辑结构，不像顺序执行shell脚本，而是有组织地执行命令以应对复杂任务需求。 if-then语句最基本">
+<meta name="keywords" content="bash shell,shell笔记">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux结构化命令">
+<meta property="og:url" content="https://shixiangwang.github.io/2017/08/11/2017-08-11-structural-command-of-shell/index.html">
 <meta property="og:site_name" content="Cloudberry">
+<meta property="og:description" content="条件控制 内容  使用if-then语句 嵌套if语句 test命令 复合条件测试 使用双方括号和双括号 case命令   许多程序要求对shell脚本中的命令施加一些逻辑流程控制。而某些命令会根据条件判断执行相应的命令，这样的命令通常叫做结构化命令。从概念上理解，结构化命令是shell脚本的逻辑结构，不像顺序执行shell脚本，而是有组织地执行命令以应对复杂任务需求。 if-then语句最基本">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-25T20:02:03.140Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Cloudberry">
+<meta name="twitter:title" content="Linux结构化命令">
+<meta name="twitter:description" content="条件控制 内容  使用if-then语句 嵌套if语句 test命令 复合条件测试 使用双方括号和双括号 case命令   许多程序要求对shell脚本中的命令施加一些逻辑流程控制。而某些命令会根据条件判断执行相应的命令，这样的命令通常叫做结构化命令。从概念上理解，结构化命令是shell脚本的逻辑结构，不像顺序执行shell脚本，而是有组织地执行命令以应对复杂任务需求。 if-then语句最基本">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -52,13 +54,11 @@
 <link rel="stylesheet" href="/css/style.css">
 
 
-    <style> .article { opacity: 0;} </style>
-
 
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>Cloudberry</title>
+<title>Linux结构化命令 | Cloudberry</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -67,8 +67,8 @@
     var yiliaConfig = {
         fancybox: true,
         animate: true,
-        isHome: true,
-        isPost: false,
+        isHome: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -283,775 +283,13 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap">
-  
-    <article id="post-2017-12-25-sed-and-gawk" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/12/25/2017-12-25-sed-and-gawk/" class="article-date">
-      <time datetime="2017-12-24T16:00:00.000Z" itemprop="datePublished">2017-12-25</time>
-</a>
-
- 
-    <a href="/2017/12/25/2017-12-25-sed-and-gawk/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/12/25/2017-12-25-sed-and-gawk/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/25/2017-12-25-sed-and-gawk/">初识sed与awk</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p><strong>学习内容</strong>：</p>
-<blockquote>
-<ul>
-<li>学习sed编辑器</li>
-<li>gawk编辑器入门</li>
-<li>sed编辑器基础</li>
-</ul>
-</blockquote>
-<p>shell脚本最常见的一个用途就是处理文本文件，但仅靠shell脚本命令来处理文本文件的内容有点勉为其难。如果我们想在shell脚本中处理任何类型的数据，需要熟悉Linux中的sed和gawk工具。这两个工具可以极大简化我们需要进行的数据处理任务。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/12/25/2017-12-25-sed-and-gawk/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-12-08-Git-basic-operation" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/12/08/2017-12-08-Git-basic-operation/" class="article-date">
-      <time datetime="2017-12-07T16:00:00.000Z" itemprop="datePublished">2017-12-08</time>
-</a>
-
- 
-    <a href="/2017/12/08/2017-12-08-Git-basic-operation/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/12/08/2017-12-08-Git-basic-operation/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/12/08/2017-12-08-Git-basic-operation/">学习git</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>纯属搬砖操作，资料来源《Github入门与实战》，这本书的重要信息也就这些了，需要的时候找一找。</p>
-<p>书上提到的一个学习网站<a href="https://learngitbranching.js.org/" target="_blank" rel="noopener">https://learngitbranching.js.org/</a>非常棒，线上学习。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/git/">git</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/github/">github</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/12/08/2017-12-08-Git-basic-operation/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-11-29-shell-create-text-menu-and-window" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/" class="article-date">
-      <time datetime="2017-11-28T16:00:00.000Z" itemprop="datePublished">2017-11-29</time>
-</a>
-
- 
-    <a href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/11/29/2017-11-29-shell-create-text-menu-and-window/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p><em>来源： Linux命令行与shell脚本编程大全</em></p>
-<p>内容：</p>
-<blockquote>
-<ul>
-<li>创建文本菜单</li>
-<li>创建文本窗口部件</li>
-<li>添加X Window图形</li>
-</ul>
-</blockquote>
-<h2 id="创建文本菜单"><a href="#创建文本菜单" class="headerlink" title="创建文本菜单"></a>创建文本菜单</h2><p>创建交互式shell脚本最常用的方法是使用菜单，它提供了各种选项帮助脚本用户了解脚本能做到的和不能做的。</p>
-<p>shell脚本菜单的核心是<code>case</code>命令，该命令会根据用户在菜单上的选择来执行特定命令。</p>
-<p>下面我们逐步了解和创建基于菜单的shell脚本的步骤。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-11-26-shell-create-function" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/11/26/2017-11-26-shell-create-function/" class="article-date">
-      <time datetime="2017-11-25T16:00:00.000Z" itemprop="datePublished">2017-11-26</time>
-</a>
-
- 
-    <a href="/2017/11/26/2017-11-26-shell-create-function/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/11/26/2017-11-26-shell-create-function/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/11/26/2017-11-26-shell-create-function/">创建和使用shell函数</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p><em>来源： Linux命令行与shell脚本编程大全</em></p>
-<p><strong>内容</strong></p>
-<blockquote>
-<ul>
-<li>基本的脚本函数</li>
-<li>返回值</li>
-<li>在函数中使用变量</li>
-<li>数组变量和函数</li>
-<li>函数递归</li>
-<li>创建库</li>
-<li>在命令行上使用函数</li>
-</ul>
-</blockquote>
-<p>我们可以将shell脚本代码放进函数中封装起来，这样就能在脚本中的任何地方多次使用它了。</p>
-<p>下面我们来逐步了解如何创建自己的shell脚本函数并在应用中使用它们。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/11/26/2017-11-26-shell-create-function/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-09-20-OOPinR" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/20/2017-09-20-OOPinR/" class="article-date">
-      <time datetime="2017-09-19T16:00:00.000Z" itemprop="datePublished">2017-09-20</time>
-</a>
-
- 
-    <a href="/2017/09/20/2017-09-20-OOPinR/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/09/20/2017-09-20-OOPinR/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/20/2017-09-20-OOPinR/">R-面向对象编程</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="一些概念"><a href="#一些概念" class="headerlink" title="一些概念"></a>一些概念</h2><p>这里首先要提及一些概念，然后我们再看具体的实例加以理解。</p>
-<p>每一个单独的<strong>对象</strong>都可以被称为对应<strong>类</strong>的一个<strong>实例</strong>（instance）。操作指定类的函数称为<strong>方法</strong>（method）。</p>
-<p>把程序接口从具体的实现细节中分离开来的过程称为<strong>封装</strong>。</p>
-<p>在OOP（面向对象编程）中，我们可以通过一个类创建出另外一个类，只需要指定新类的不同信息即可，这种方法称为<strong>继承</strong>。由此衍生出，被继承的类称为<strong>父类或超类</strong>（superclass），新创建的类称为<strong>子类</strong>（subclass）。</p>
-<p>在OOP中，允许同一个方法名操纵不同对象并得到不同的结果，称为<strong>多态</strong>（polymorphism）。</p>
-<p>通过一系列的其他类来创建新类的过程称为<strong>组合</strong>（composition）。在一些语言中，一个类可以从多个类中继承方法，称为<strong>多重继承</strong>（multiple inheritance）。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/R/">R</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OOP/">OOP</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/09/20/2017-09-20-OOPinR/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-09-15-Class-in-R" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/15/2017-09-15-Class-in-R/" class="article-date">
-      <time datetime="2017-09-14T16:00:00.000Z" itemprop="datePublished">2017-09-15</time>
-</a>
-
- 
-    <a href="/2017/09/15/2017-09-15-Class-in-R/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/09/15/2017-09-15-Class-in-R/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/15/2017-09-15-Class-in-R/">R中的属性与类</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>属性描述了对象所代表的内容以及R解释该对象的方式。<strong>很多时候两个对象之间的唯一差别就在于它们的属性不同</strong>。下表展示了一些重要的属性。很多常见的属性都是针对常见的数值型数据对象而言的：像数组、矩阵和数据框。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/R/">R</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/class/">class</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/09/15/2017-09-15-Class-in-R/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-09-04-control-shell" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/04/2017-09-04-control-shell/" class="article-date">
-      <time datetime="2017-09-03T16:00:00.000Z" itemprop="datePublished">2017-09-04</time>
-</a>
-
- 
-    <a href="/2017/09/04/2017-09-04-control-shell/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/09/04/2017-09-04-control-shell/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/04/2017-09-04-control-shell/">控制脚本</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <blockquote>
-<p><strong>内容</strong></p>
-<ul>
-<li>处理信号</li>
-<li>以后台模式运行脚本</li>
-<li>禁止挂起</li>
-<li>作业控制</li>
-<li>修改脚本优先级</li>
-<li>脚本执行自动化</li>
-</ul>
-</blockquote>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/09/04/2017-09-04-control-shell/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-09-03-Linux-data-analysis-tools" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/" class="article-date">
-      <time datetime="2017-09-02T16:00:00.000Z" itemprop="datePublished">2017-09-03</time>
-</a>
-
- 
-    <a href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/09/03/2017-09-03-Linux-data-analysis-tools/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/">Linux数据处理命令工具</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <p>参考学习《Bioinformatics. Data. Skills》，这里简要地整理下Linux用来处理数据文本的工具。具体命令详情请在<a href="http://man.linuxde.net/" target="_blank" rel="noopener">Linux命令大全</a>中搜索或者查阅其他相关资料。</p>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell-command/">shell command</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-08-22-shell-show-data" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2017/08/21/2017-08-22-shell-show-data/" class="article-date">
-      <time datetime="2017-08-20T16:00:00.000Z" itemprop="datePublished">2017-08-21</time>
-</a>
-
- 
-    <a href="/2017/08/21/2017-08-22-shell-show-data/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/08/21/2017-08-22-shell-show-data/"></span>
-        
-    </a>
-
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/21/2017-08-22-shell-show-data/">Linux脚本编程——呈现数据</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-          
-              <blockquote>
-<p>本章内容：</p>
-<ul>
-<li>再探重定向</li>
-<li>标准输入和输出</li>
-<li>报告错误</li>
-<li>丢弃数据</li>
-<li>创建日志文件</li>
-</ul>
-</blockquote>
-          
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
-    </div>
-
-      
-        <p class="article-more-link">
-          <a href="/2017/08/21/2017-08-22-shell-show-data/#more">阅读全文 >></a>
-        </p>
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-2017-08-11-structural-command-of-shell" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-2017-08-11-structural-command-of-shell" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2017/08/11/2017-08-11-structural-command-of-shell/" class="article-date">
       <time datetime="2017-08-10T16:00:00.000Z" itemprop="datePublished">2017-08-11</time>
 </a>
 
- 
-    <a href="/2017/08/11/2017-08-11-structural-command-of-shell/#comments" title="查看评论">
-        <i class="fa fa-comments-o" aria-hidden="true"></i>
-        <span class="count-comment"></span>
-        
-        
-            <span class="disqus-comment-count" data-disqus-identifier="2017/08/11/2017-08-11-structural-command-of-shell/"></span>
-        
-    </a>
 
     </div>
   
@@ -1063,12 +301,27 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/08/11/2017-08-11-structural-command-of-shell/">Linux结构化命令</a>
+    <h1 class="article-title" itemprop="name">
+      Linux结构化命令
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -1476,27 +729,91 @@
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-    <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux/">Linux</a>
-    </div>
-
-
-      
-    <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
-    </div>
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/08/11/2017-08-11-structural-command-of-shell/">Linux结构化命令</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2017-08-11, 00:00:00</p>
+        <p><span>最后更新:</span>2017-10-26, 04:02:03</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/08/11/2017-08-11-structural-command-of-shell/" title="Linux结构化命令">https://shixiangwang.github.io/2017/08/11/2017-08-11-structural-command-of-shell/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2017/08/11/2017-08-11-structural-command-of-shell/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+            <div id="article-nav-newer" class="article-nav-title">
+                <a href="/2017/08/21/2017-08-22-shell-show-data/">
+                    Linux脚本编程——呈现数据
+                </a>
+            </div>
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/08/11/2017-08-11-basic-shell/">
+                    构建基本shell脚本
+                </a>
+            </div>
+        
+    </nav>
+
   
 </article>
 
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#条件控制"><span class="toc-number">1.</span> <span class="toc-text">条件控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#if-then语句"><span class="toc-number">1.1.</span> <span class="toc-text">if-then语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#if-then-else语句"><span class="toc-number">1.2.</span> <span class="toc-text">if-then-else语句</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#嵌套if"><span class="toc-number">1.3.</span> <span class="toc-text">嵌套if</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#test命令"><span class="toc-number">1.4.</span> <span class="toc-text">test命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#复合条件测试"><span class="toc-number">1.5.</span> <span class="toc-text">复合条件测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#if-then的高级特性"><span class="toc-number">1.6.</span> <span class="toc-text">if-then的高级特性</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#case命令"><span class="toc-number">1.7.</span> <span class="toc-text">case命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-number">1.8.</span> <span class="toc-text">小结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#循环控制"><span class="toc-number">2.</span> <span class="toc-text">循环控制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#for命令"><span class="toc-number">2.1.</span> <span class="toc-text">for命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C语言风格的for命令"><span class="toc-number">2.2.</span> <span class="toc-text">C语言风格的for命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#while命令"><span class="toc-number">2.3.</span> <span class="toc-text">while命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#until命令"><span class="toc-number">2.4.</span> <span class="toc-text">until命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#嵌套循环"><span class="toc-number">2.5.</span> <span class="toc-text">嵌套循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#控制循环"><span class="toc-number">2.6.</span> <span class="toc-text">控制循环</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#处理循环的输出"><span class="toc-number">2.7.</span> <span class="toc-text">处理循环的输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#实例"><span class="toc-number">2.8.</span> <span class="toc-text">实例</span></a></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"Linux结构化命令　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
 
 
 
@@ -1504,13 +821,57 @@
 
 
 
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'https://shixiangwang.github.io/2017/08/11/2017-08-11-structural-command-of-shell/';
+            this.page.identifier = '2017/08/11/2017-08-11-structural-command-of-shell/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//Cloudberry.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
 
-  
-  
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
-    </nav>
-  
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/08/21/2017-08-22-shell-show-data/" title="上一篇: Linux脚本编程——呈现数据">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/08/11/2017-08-11-basic-shell/" title="下一篇: 构建基本shell脚本">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/25/2017-12-25-sed-and-gawk/">初识sed与awk</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/2017-12-08-Git-basic-operation/">学习git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/2017-11-26-shell-create-function/">创建和使用shell函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/20/2017-09-20-OOPinR/">R-面向对象编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/15/2017-09-15-Class-in-R/">R中的属性与类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/2017-09-04-control-shell/">控制脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/">Linux数据处理命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/2017-08-22-shell-show-data/">Linux脚本编程——呈现数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-structural-command-of-shell/">Linux结构化命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-basic-shell/">构建基本shell脚本</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
 </div>
       <footer id="footer">
     <div class="outer">
@@ -1564,26 +925,6 @@
         })
     </script>
 
-
-    
-
-    
-        <script id="dsq-count-scr" src="//Cloudberry.disqus.com/count.js" async></script>
-        <script>
-            if ($(".left-col").is(":visible")) {
-                var $disqusCount = $(".disqus-comment-count");
-                $disqusCount.bind("DOMNodeInserted", function(e) {
-                    var num = $(this).text().replace(/[^0-9]/ig,"");
-                    if (num > 0) {
-                        $(this).siblings(".count-comment").text(num);
-                    }
-                    $(this).remove();
-                })
-            } else {
-                $(".disqus-comment-count").remove();
-            }
-        </script>
-     
 
 
 

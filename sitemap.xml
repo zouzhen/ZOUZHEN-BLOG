@@ -3,12 +3,22 @@
 
     <sitemap>
         <loc>https://shixiangwang.github.io/post-sitemap.xml</loc>
-        <lastmod>2018-01-26T02:56:17.671Z</lastmod>
+        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
     </sitemap>
 
     <sitemap>
         <loc>https://shixiangwang.github.io/page-sitemap.xml</loc>
-        <lastmod>2018-01-26T15:12:40.529Z</lastmod>
+        <lastmod>2018-01-26T17:12:26.139Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>https://shixiangwang.github.io/category-sitemap.xml</loc>
+        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
+    </sitemap>
+
+    <sitemap>
+        <loc>https://shixiangwang.github.io/tag-sitemap.xml</loc>
+        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
     </sitemap>
 
 </sitemapindex>

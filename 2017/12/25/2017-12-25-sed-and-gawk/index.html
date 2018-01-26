@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+
+    <!--[if lt IE 9]>
+        <style>body {display: none; background: none !important} </style>
+        <meta http-equiv="Refresh" Content="0; url=//outdatedbrowser.com/" />
+    <![endif]-->
+
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<meta name="format-detection" content="telephone=no" />
+<meta name="author" content="" />
+
+
+
+<meta name="description" content="学习内容：   学习sed编辑器 gawk编辑器入门 sed编辑器基础   shell脚本最常见的一个用途就是处理文本文件，但仅靠shell脚本命令来处理文本文件的内容有点勉为其难。如果我们想在shell脚本中处理任何类型的数据，需要熟悉Linux中的sed和gawk工具。这两个工具可以极大简化我们需要进行的数据处理任务。">
+<meta name="keywords" content="linux,shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初识sed与awk">
+<meta property="og:url" content="https://shixiangwang.github.io/2017/12/25/2017-12-25-sed-and-gawk/index.html">
+<meta property="og:site_name" content="Cloudberry">
+<meta property="og:description" content="学习内容：   学习sed编辑器 gawk编辑器入门 sed编辑器基础   shell脚本最常见的一个用途就是处理文本文件，但仅靠shell脚本命令来处理文本文件的内容有点勉为其难。如果我们想在shell脚本中处理任何类型的数据，需要熟悉Linux中的sed和gawk工具。这两个工具可以极大简化我们需要进行的数据处理任务。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-01-26T17:07:14.868Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初识sed与awk">
+<meta name="twitter:description" content="学习内容：   学习sed编辑器 gawk编辑器入门 sed编辑器基础   shell脚本最常见的一个用途就是处理文本文件，但仅靠shell脚本命令来处理文本文件的内容有点勉为其难。如果我们想在shell脚本中处理任何类型的数据，需要熟悉Linux中的sed和gawk工具。这两个工具可以极大简化我们需要进行的数据处理任务。">
+
+<link rel="apple-touch-icon" href= "/apple-touch-icon.png">
+
+
+    <link rel="alternate" href="/atom.xml" title="Cloudberry" type="application/atom+xml">
+
+
+
+    <link rel="shortcut icon" href="/favicon.png">
+
+
+
+    <link href="//cdn.bootcss.com/animate.css/3.5.1/animate.min.css" rel="stylesheet">
+
+
+
+    <link href="//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.css" rel="stylesheet">
+
+
+
+    <script src="//cdn.bootcss.com/pace/1.0.2/pace.min.js"></script>
+    <link href="//cdn.bootcss.com/pace/1.0.2/themes/blue/pace-theme-minimal.css" rel="stylesheet">
+
+
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+<link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
+
+
+<title>初识sed与awk | Cloudberry</title>
+
+<script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+<script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
+
+<script>
+    var yiliaConfig = {
+        fancybox: true,
+        animate: true,
+        isHome: false,
+        isPost: true,
+        isArchive: false,
+        isTag: false,
+        isCategory: false,
+        fancybox_js: "//cdn.bootcss.com/fancybox/2.1.5/jquery.fancybox.min.js",
+        scrollreveal: "//cdn.bootcss.com/scrollReveal.js/3.1.4/scrollreveal.min.js",
+        search: true
+    }
+</script>
+
+
+    <script>
+        yiliaConfig.jquery_ui = [true, "//cdn.bootcss.com/jqueryui/1.10.4/jquery-ui.min.js", "//cdn.bootcss.com/jqueryui/1.10.4/css/jquery-ui.min.css"];
+    </script>
+
+
+
+    <script> yiliaConfig.rootUrl = "\/";</script>
+
+
+
+
+
+
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            <img src="/img/avatar.png" class="animated zoomIn">
+        </a>
+        <hgroup>
+          <h1 class="header-author"><a href="/"></a></h1>
+        </hgroup>
+
+        
+        <p class="header-subtitle">A site for writing</p>
+        
+
+        
+            <form id="search-form">
+            <input type="text" id="local-search-input" name="q" placeholder="search..." class="search form-control" autocomplete="off" autocorrect="off" searchonload="false" />
+            <i class="fa fa-times" onclick="resetSearch()"></i>
+            </form>
+            <div id="local-search-result"></div>
+            <p class='no-result'>No results found <i class='fa fa-spinner fa-pulse'></i></p>
+        
+
+
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">主页</a></li>
+                        
+                            <li><a href="/archives/">所有文章</a></li>
+                        
+                            <li><a href="/categories/">分类</a></li>
+                        
+                            <li><a href="/tags/">标签云</a></li>
+                        
+                            <li><a href="/about/">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" href="mailto:w_shixiang@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" href="https://github.com/ShixiangWang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 知乎" href="https://www.zhihu.com/people/wang-shi-xiang-65/activities" title="知乎"></a>
+                            
+                                <a class="fa 简书" href="https://www.jianshu.com/u/b6608e27dc74" title="简书"></a>
+                            
+                                <a class="fa Twitter" href="https://twitter.com/WangShxiang" title="Twitter"></a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <ul class="tag-list"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Linux/">Linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OOP/">OOP</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/R/">R</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/class/">class</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/git/">git</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/github/">github</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/linux/">linux</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell/">shell</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell-command/">shell command</a></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a class="main-nav-link switch-friends-link" href="http://moxfive.coding.me/yelee/">Yelee 主题使用说明</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">人该是自己生活的主宰，而不是别人手中的行货</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="回到主页"></a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                <img src="/img/avatar.png" class="animated zoomIn">
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="回到主页"></a></h1>
+            </hgroup>
+            
+            <p class="header-subtitle">A site for writing</p>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">主页</a></li>
+                
+                    <li><a href="/archives/">所有文章</a></li>
+                
+                    <li><a href="/categories/">分类</a></li>
+                
+                    <li><a href="/tags/">标签云</a></li>
+                
+                    <li><a href="/about/">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fa Email" target="_blank" href="mailto:w_shixiang@163.com" title="Email"></a>
+                            
+                                <a class="fa GitHub" target="_blank" href="https://github.com/ShixiangWang" title="GitHub"></a>
+                            
+                                <a class="fa RSS" target="_blank" href="/atom.xml" title="RSS"></a>
+                            
+                                <a class="fa 知乎" target="_blank" href="https://www.zhihu.com/people/wang-shi-xiang-65/activities" title="知乎"></a>
+                            
+                                <a class="fa 简书" target="_blank" href="https://www.jianshu.com/u/b6608e27dc74" title="简书"></a>
+                            
+                                <a class="fa Twitter" target="_blank" href="https://twitter.com/WangShxiang" title="Twitter"></a>
+                            
+                        </ul>
+            </nav>
+        </header>                
+    </div>
+    <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
+</nav>
+      <div class="body-wrap"><article id="post-2017-12-25-sed-and-gawk" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/12/25/2017-12-25-sed-and-gawk/" class="article-date">
+      <time datetime="2017-12-24T16:00:00.000Z" itemprop="datePublished">2017-12-25</time>
+</a>
+
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      初识sed与awk
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux/">Linux</a>
+    </div>
+
+
+        
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/linux/">linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+    </div>
+
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p><strong>学习内容</strong>：</p>
+<blockquote>
+<ul>
+<li>学习sed编辑器</li>
+<li>gawk编辑器入门</li>
+<li>sed编辑器基础</li>
+</ul>
+</blockquote>
+<p>shell脚本最常见的一个用途就是处理文本文件，但仅靠shell脚本命令来处理文本文件的内容有点勉为其难。如果我们想在shell脚本中处理任何类型的数据，需要熟悉Linux中的sed和gawk工具。这两个工具可以极大简化我们需要进行的数据处理任务。</p>
+<a id="more"></a>
+<h2 id="文本处理"><a href="#文本处理" class="headerlink" title="文本处理"></a>文本处理</h2><p>当我们需要自动处理文本文件，又不想动用交互式文本编辑器时，sed和gawk是我们最好的选择。</p>
+<h3 id="sed编辑器"><a href="#sed编辑器" class="headerlink" title="sed编辑器"></a>sed编辑器</h3><p>也被称为<strong>流编辑器</strong>（stream editor），会在编辑器处理数据之前<strong>基于预先提供的一组规则</strong>来编辑数据流。</p>
+<p>sed编辑器可以根据命令来处理数据流中的数据，这些命令既可以从终端输入，也可以存储进脚本文件中。</p>
+<p>sed会执行以下的操作：</p>
+<ul>
+<li>一次从输入中读取一行数据</li>
+<li>根据所提供的命令匹配数据</li>
+<li>按照命令修改流中的数据</li>
+<li>将新的数据输出到STDOUT</li>
+</ul>
+<p>这一过程会重复直至处理完流中的所有数据行。</p>
+<p>sed命令的格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sed options script file</span><br></pre></td></tr></table></figure>
+<p>选项<code>options</code>可以允许我们修改<code>sed</code>命令的行为</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-e script</td>
+<td>在处理输入时，将script中指定的命令添加到已有的命令中</td>
+</tr>
+<tr>
+<td>-f file</td>
+<td>在处理输入时，将file中指定的命令添加到已有的命令中</td>
+</tr>
+<tr>
+<td>-n</td>
+<td>不产生命令输出，使用<code>print</code>命令来完成输出</td>
+</tr>
+</tbody>
+</table>
+<p><code>script</code>参数指定用于流数据上的单个命令，如果需要多个命令，要么使用<code>-e</code>选项在命令行中指定，要么使用<code>-f</code>选项在单独的文件中指定。</p>
+<h4 id="在命令行中定义编辑器命令"><a href="#在命令行中定义编辑器命令" class="headerlink" title="在命令行中定义编辑器命令"></a>在命令行中定义编辑器命令</h4><p>默认sed会将指定命令应用到STDIN输入流上，我们可以配合管道命令使用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ echo "This is a test" | sed 's/test/big test/'</span><br><span class="line">This is a big test</span><br></pre></td></tr></table></figure>
+<p><code>s</code>命令使用斜线间指定的第二个文本来替换第一个文本字符串模式（注意是替换整个模式，支持正则匹配），比如这个例子用<code>big test</code>替换了<code>test</code>。</p>
+<p>假如有以下文本：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br></pre></td></tr></table></figure>
+<p>键入命令，查看输出</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed 's/dog/cat/' data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br></pre></td></tr></table></figure>
+<p>可以看到符合模式的字符串都被修改了。</p>
+<p>要记住，sed并不会修改文本文件的数据，<strong>它只会将修改后的数据发送到STDOUT</strong>。</p>
+<h4 id="在命令行上使用多个编辑器命令"><a href="#在命令行上使用多个编辑器命令" class="headerlink" title="在命令行上使用多个编辑器命令"></a>在命令行上使用多个编辑器命令</h4><p>使用<code>-e</code>选项可以执行多个命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed -e 's/brown/green/; s/dog/cat/' data1.txt</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br><span class="line">The quick green fox jumps over the lazy cat.</span><br></pre></td></tr></table></figure>
+<p>两个命令都作用到文件中的每一行数据上。命令之间必须用分号隔开，并且<strong>在命令末尾与分号之间不同有空格</strong>。</p>
+<p>如果不想使用分号，可以用bash shell中的次提示符来分隔命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed -e '</span><br><span class="line"><span class="meta">&gt;</span> s/brown/green/</span><br><span class="line"><span class="meta">&gt;</span> s/fox/elephant/</span><br><span class="line"><span class="meta">&gt;</span> s/dog/cat/' data1.txt</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br></pre></td></tr></table></figure>
+<h4 id="从文件中读取编辑器命令"><a href="#从文件中读取编辑器命令" class="headerlink" title="从文件中读取编辑器命令"></a>从文件中读取编辑器命令</h4><p>如果有大量要处理的sed命令，将其单独放入一个文本中会更方便，可以用sed命令的<code>-f</code>选项来指定文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat script1.sed</span><br><span class="line">s/brown/green/</span><br><span class="line">s/fox/elephant/</span><br><span class="line">s/dog/cat/</span><br><span class="line"></span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed -f script1.sed data1.txt</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br><span class="line">The quick green elephant jumps over the lazy cat.</span><br></pre></td></tr></table></figure>
+<p>这种情况不用在每个命令后面放一个分号，sed知道每行都有一条单独的命令。</p>
+<h3 id="gawk程序"><a href="#gawk程序" class="headerlink" title="gawk程序"></a>gawk程序</h3><p>gawk是一个处理文本的更高级工具，能够提供一个类编程环境来修改和重新组织文件中的数据。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">说明	在所有的发行版都没有默认安装gawk程序，请先安装</span><br></pre></td></tr></table></figure>
+<p>gawk程序是Unix中原始awk的GNU版本，它让流编辑器迈上了一个新的台阶，提供了一种编程语言而不只是编辑器命令。</p>
+<p>我们可以利用它做下面的事情：</p>
+<ul>
+<li>定义变量来保存数据</li>
+<li>使用算术和字符串操作符来处理数据</li>
+<li>使用结构化编程概念来为数据处理增加处理逻辑</li>
+<li>通过提取数据文件中的数据元素，将其重新排列或格式化，生成格式化报告</li>
+</ul>
+<p>gawk程序的报告生成能力通常用来从大文本文件中提取数据元素，并将它们格式化成可读的报告，使得重要的数据更易于可读。</p>
+<h4 id="基本命令格式"><a href="#基本命令格式" class="headerlink" title="基本命令格式"></a>基本命令格式</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gawk options program file</span><br></pre></td></tr></table></figure>
+<p>下面显示了gawk程序的可用选项</p>
+<table>
+<thead>
+<tr>
+<th>选项</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-F fs</td>
+<td>指定行中划分数据字段的字段分隔符</td>
+</tr>
+<tr>
+<td>-f file</td>
+<td>从指定文件中读取程序</td>
+</tr>
+<tr>
+<td>-v var=value</td>
+<td>定义gawk程序中的一个变量及其默认值</td>
+</tr>
+<tr>
+<td>-mf N</td>
+<td>指定要处理的数据文件中的最大字段数</td>
+</tr>
+<tr>
+<td>-mr N</td>
+<td>指定数据文件中的最大数据行数</td>
+</tr>
+<tr>
+<td>-W keyword</td>
+<td>指定gawk的兼容模式或警告等级</td>
+</tr>
+</tbody>
+</table>
+<p>gawk的<strong>强大之处在于程序脚本</strong>（善于利用工具最强之处），可以写脚本来读取文本行的数据，然后处理并显示数据，创建任何类型的输出报告。</p>
+<h4 id="从命令行读取脚本"><a href="#从命令行读取脚本" class="headerlink" title="从命令行读取脚本"></a>从命令行读取脚本</h4><p>我们必须将脚本命令放入两个花括号中，而由于gawk命令行假定脚本是单个文本字符串，所以我们必须把脚本放到单引号中。</p>
+<p>下面是一个简单的例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ gawk '&#123;print "Hello World!"&#125;'</span><br><span class="line"></span><br><span class="line">Hello World!</span><br><span class="line">This is a test</span><br><span class="line">Hello World!</span><br><span class="line">This is</span><br><span class="line">Hello World!</span><br><span class="line"></span><br><span class="line">Hello World!</span><br></pre></td></tr></table></figure>
+<p><code>print</code>命令将文本打印到STDOUT。如果尝试允许命令，我们可能会有些失望，因为什么都不会发生，原因是没有指定文件名，所以gawk会从STDIN接收数据，如果我们按下回车，gawk会对这行文本允许一遍程序脚本。</p>
+<p>要终止这个程序必须表明数据流已经结束了，bash shell提供组合键来生成EOF(End-of-File)字符。Ctrl+D组合键会在bash中产生一个EOF字符。</p>
+<h4 id="使用数据字段变量"><a href="#使用数据字段变量" class="headerlink" title="使用数据字段变量"></a>使用数据字段变量</h4><p>gawk的主要特性之一是其处理文本文件中数据的能力，它自动给一行的每个数据元素分配一个变量。</p>
+<ul>
+<li>$0代表整个文本行</li>
+<li>$1代表文本行的第一个数据字段</li>
+<li>$2代表文本行的第二个数据字段</li>
+<li>$n代表文本行的第n个数据字段</li>
+</ul>
+<p>gawk在读取一行文本时，会用预定义的字段分隔符划分每个数据字段。默认字段分隔符为任意的空白字符（例如空格或制表符）。</p>
+<p>下面例子gawk读取文本显示第一个数据字段的值。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data2.txt</span><br><span class="line">One line of test text.</span><br><span class="line">Two lines of test text.</span><br><span class="line">Three lines of test text.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ gawk '&#123;print $1&#125;' data2.txt</span><br><span class="line">One</span><br><span class="line">Two</span><br><span class="line">Three</span><br></pre></td></tr></table></figure>
+<p>我们可以使用<code>-F</code>选项指定其他字段分隔符：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ gawk -F: '&#123;print $1&#125;' /etc/passwd</span><br><span class="line">root</span><br><span class="line">daemon</span><br><span class="line">bin</span><br><span class="line">sys</span><br><span class="line">sync</span><br><span class="line">games</span><br><span class="line">man</span><br><span class="line">lp</span><br><span class="line">mail</span><br><span class="line">news</span><br><span class="line">uucp</span><br><span class="line">proxy</span><br><span class="line">www-data</span><br><span class="line">backup</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>这个简短程序显示了系统中密码文件的第一个数据字段。</p>
+<h4 id="在程序脚本中使用多个命令"><a href="#在程序脚本中使用多个命令" class="headerlink" title="在程序脚本中使用多个命令"></a>在程序脚本中使用多个命令</h4><p>在命令之间放个分号即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ echo "My name is Shixiang" | gawk '&#123;$4="Christine"; print $0&#125;'</span><br><span class="line">My name is Christine</span><br></pre></td></tr></table></figure>
+<p>也可以使用次提示符一次一行输入程序脚本命令（类似sed）。</p>
+<h4 id="从文件中读取程序"><a href="#从文件中读取程序" class="headerlink" title="从文件中读取程序"></a>从文件中读取程序</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat script2.gawk</span><br><span class="line">&#123;print $1 " 's home directory is " $6&#125;</span><br><span class="line">wsx@wsx-laptop:~/tmp$ gawk -F: -f script2.gawk  /etc/passwd</span><br><span class="line">root 's home directory is /root</span><br><span class="line">daemon 's home directory is /usr/sbin</span><br><span class="line">bin 's home directory is /bin</span><br><span class="line">sys 's home directory is /dev</span><br><span class="line">sync 's home directory is /bin</span><br><span class="line">games 's home directory is /usr/games</span><br><span class="line">man 's home directory is /var/cache/man</span><br><span class="line">lp 's home directory is /var/spool/lpd</span><br><span class="line">mail 's home directory is /var/mail</span><br><span class="line">news 's home directory is /var/spool/news</span><br><span class="line">uucp 's home directory is /var/spool/uucp</span><br><span class="line">proxy 's home directory is /bin</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>可以在程序文件中指定多条命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat script3.gawk</span><br><span class="line">&#123;</span><br><span class="line">text = "'s home directory is "</span><br><span class="line">print $1 text $6</span><br><span class="line">&#125;</span><br><span class="line">wsx@wsx-laptop:~/tmp$ gawk -F: -f script3.gawk /etc/passwd</span><br><span class="line">root's home directory is /root</span><br><span class="line">daemon's home directory is /usr/sbin</span><br><span class="line">bin's home directory is /bin</span><br><span class="line">sys's home directory is /dev</span><br><span class="line">sync's home directory is /bin</span><br><span class="line">games's home directory is /usr/games</span><br><span class="line">man's home directory is /var/cache/man</span><br><span class="line">lp's home directory is /var/spool/lpd</span><br><span class="line">mail's home directory is /var/mail</span><br><span class="line">news's home directory is /var/spool/news</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h4 id="在处理数据前运行脚本"><a href="#在处理数据前运行脚本" class="headerlink" title="在处理数据前运行脚本"></a>在处理数据前运行脚本</h4><p>使用BEGIN关键字可以强制gawk再读取数据前执行BEGIN关键字指定的程序脚本。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data3.txt</span><br><span class="line">Line 1</span><br><span class="line">Line 2</span><br><span class="line">Line 3</span><br><span class="line">wsx@wsx-laptop:~/tmp$ gawk 'BEGIN &#123;print "The data3 File Contents:"&#125;</span><br><span class="line"><span class="meta">&gt;</span> &#123;print $0&#125;' data3.txt</span><br><span class="line">The data3 File Contents:</span><br><span class="line">Line 1</span><br><span class="line">Line 2</span><br><span class="line">Line 3</span><br></pre></td></tr></table></figure>
+<p>在gawk执行了BEGIN脚本后，它会用第二段脚本来处理文件数据。</p>
+<h4 id="在处理数据后允许脚本"><a href="#在处理数据后允许脚本" class="headerlink" title="在处理数据后允许脚本"></a>在处理数据后允许脚本</h4><p>与BEGIN关键字类似，END关键字允许我们指定一个脚本，gawk在读完数据后执行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ gawk 'BEGIN &#123;print "The data3 File Contents:"&#125;</span><br><span class="line"><span class="meta">&gt;</span> &#123;print $0&#125;</span><br><span class="line"><span class="meta">&gt;</span> END &#123;print "End of File"&#125;' data3.txt</span><br><span class="line">The data3 File Contents:</span><br><span class="line">Line 1</span><br><span class="line">Line 2</span><br><span class="line">Line 3</span><br><span class="line">End of File</span><br></pre></td></tr></table></figure>
+<p>我们把所有的内容放在一起组成一个漂亮的小程序脚本，用它从简单的数据文件中创建一份完整报告。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat script4.gawk</span><br><span class="line">BEGIN &#123;</span><br><span class="line">print "The latest list of users and shells"</span><br><span class="line">print " UserID \t Shell"</span><br><span class="line">print "-------- \t ------"</span><br><span class="line">FS=":"</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">print $1 "      \t " $7</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">END &#123;</span><br><span class="line">print "This concludes the listing"</span><br><span class="line">&#125;</span><br><span class="line">wsx@wsx-laptop:~/tmp$ gawk -f script4.gawk /etc/passwd</span><br><span class="line">The latest list of users and shells</span><br><span class="line"> UserID          Shell</span><br><span class="line">--------         ------</span><br><span class="line">root             /bin/bash</span><br><span class="line">daemon           /usr/sbin/nologin</span><br><span class="line">bin              /usr/sbin/nologin</span><br><span class="line">sys              /usr/sbin/nologin</span><br><span class="line">sync             /bin/sync</span><br><span class="line">games            /usr/sbin/nologin</span><br><span class="line">man              /usr/sbin/nologin</span><br><span class="line">lp               /usr/sbin/nologin</span><br><span class="line">mail             /usr/sbin/nologin</span><br><span class="line">news             /usr/sbin/nologin</span><br><span class="line">uucp             /usr/sbin/nologin</span><br><span class="line">proxy            /usr/sbin/nologin</span><br><span class="line">www-data         /usr/sbin/nologin</span><br><span class="line">backup           /usr/sbin/nologin</span><br><span class="line">list             /usr/sbin/nologin</span><br><span class="line">irc              /usr/sbin/nologin</span><br><span class="line">gnats            /usr/sbin/nologin</span><br><span class="line">nobody           /usr/sbin/nologin</span><br><span class="line">systemd-timesync         /bin/false</span><br><span class="line">systemd-network          /bin/false</span><br><span class="line">systemd-resolve          /bin/false</span><br><span class="line">systemd-bus-proxy        /bin/false</span><br><span class="line">syslog           /bin/false</span><br><span class="line">_apt             /bin/false</span><br><span class="line">lxd              /bin/false</span><br><span class="line">messagebus               /bin/false</span><br><span class="line">uuidd            /bin/false</span><br><span class="line">dnsmasq          /bin/false</span><br><span class="line">sshd             /usr/sbin/nologin</span><br><span class="line">pollinate        /bin/false</span><br><span class="line">wsx              /bin/bash</span><br><span class="line">This concludes the listing</span><br></pre></td></tr></table></figure>
+<p>我们以后会继续学习gawk高级编程。</p>
+<h2 id="sed编辑器基础"><a href="#sed编辑器基础" class="headerlink" title="sed编辑器基础"></a>sed编辑器基础</h2><p>下面介绍一些可以集成到脚本中的基本命令和功能。</p>
+<h3 id="更多的替换选项"><a href="#更多的替换选项" class="headerlink" title="更多的替换选项"></a>更多的替换选项</h3><p>之前我们已经学习了用<code>s</code>命令在行中替换文本，这个命令还有一些其他选项。</p>
+<h4 id="替换标记"><a href="#替换标记" class="headerlink" title="替换标记"></a>替换标记</h4><p>替换命令<code>s</code>默认只替换每行中出现的第一处。要让该命令能替换一行中不同地方出现的文本必须使用<strong>替换标记</strong>。该标记在替换命令字符串之后设置。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">s/pattern/replacement/flags</span><br></pre></td></tr></table></figure>
+<p>替换标记有4种：</p>
+<ul>
+<li>数字，表明替换第几处模式匹配的地方</li>
+<li>g，表明替换所有匹配的文本</li>
+<li>p，表明原先行的内容要打印出来</li>
+<li>w file，将替换的结果写入文件中</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data4.txt</span><br><span class="line">This is a test of the test script.</span><br><span class="line">This is the second test of the test script.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed 's/test/trial/2' data4.txt</span><br><span class="line">This is a test of the trial script.</span><br><span class="line">This is the second test of the trial script.</span><br></pre></td></tr></table></figure>
+<p>该命令只替换每行中第二次出现的匹配模式。而<code>g</code>标记替换所有的匹配之处。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed 's/test/trial/g' data4.txt</span><br><span class="line">This is a trial of the trial script.</span><br><span class="line">This is the second trial of the trial script.</span><br></pre></td></tr></table></figure>
+<p><code>p</code>替换标记会打印与替换命令中指定的模式匹配的行，通常与sed的<code>-n</code>选项一起使用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data5.txt</span><br><span class="line">This is a test line.</span><br><span class="line">This is a different line.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed -n 's/test/trial/p' data5.txt</span><br><span class="line">This is a trial line.</span><br></pre></td></tr></table></figure>
+<p><code>-n</code>选项禁止sed编辑器输出，但<code>p</code>标记会输出修改过的行。两者配合使用就是<strong>只输出被替换命令修改过的行</strong>。</p>
+<p><code>w</code>标记会产生同样的输出，不过会将输出（只输出被替换命令修改过的行）保存到指定文件中。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed 's/test/trial/w test.txt' data5.txt</span><br><span class="line">This is a trial line.</span><br><span class="line">This is a different line.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ cat test.txt</span><br><span class="line">This is a trial line.</span><br></pre></td></tr></table></figure>
+<h4 id="替换字符"><a href="#替换字符" class="headerlink" title="替换字符"></a>替换字符</h4><p>有一些字符不方便在替换模式中使用，常见的例子为正斜线。</p>
+<p>替换文件中的路径名会比较麻烦，比如用C shell替换/etc/passwd文件中的bash shell，必须这样做（通过反斜线转义）：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ head /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">...</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed 's/\/bin\/bash/\/bin\/csh/' /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/csh</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<p>为解决这样的问题，sed编辑器允许选择其他字符来替换命令中的字符串分隔符：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed 's!/bin/bash!/bin/csh!' /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/csh</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+<h3 id="使用地址"><a href="#使用地址" class="headerlink" title="使用地址"></a>使用地址</h3><p>如果只想要命令作用于特定行或某些行，必须使用<strong>行寻址</strong>。</p>
+<p>有两种形式：</p>
+<ul>
+<li>以数字形式表示行区间</li>
+<li>用文本模式来过滤出行</li>
+</ul>
+<p>它们都使用相同地格式来指定地址：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[address]command</span><br></pre></td></tr></table></figure>
+<p>也可以将多个命令分组</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">address &#123;</span><br><span class="line">  command1</span><br><span class="line">  command2</span><br><span class="line">  command3</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="以数字的方式行寻址"><a href="#以数字的方式行寻址" class="headerlink" title="以数字的方式行寻址"></a>以数字的方式行寻址</h4><p>sed编辑器会将文本流中的第一行编号为1，然后继续按顺序给以下行编号。</p>
+<p>指定的地址<strong>可以是单个行号，或者用行号、逗号以及结尾行号指定的一定区间范围的行</strong>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '2s/dog/cat/' data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '2,3s/dog/cat/' data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '2,$s/dog/cat/' data1.txt  # 美元符指代最后一行</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy cat.</span><br></pre></td></tr></table></figure>
+<h4 id="使用文本模式过滤器"><a href="#使用文本模式过滤器" class="headerlink" title="使用文本模式过滤器"></a>使用文本模式过滤器</h4><p>sed允许指定文本模式来过滤出命令要作用的行，格式如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/pattern/command</span><br></pre></td></tr></table></figure>
+<p>比如我要修改默认的shell，可以使用sed命令：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ grep wsx /etc/passwd</span><br><span class="line">wsx:x:1000:1000:"",,,:/home/wsx:/bin/bash</span><br><span class="line">wsx@wsx-laptop:~/tmp$ grep '/wsx/s/bash/csh/' /etc/passwd</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '/wsx/s/bash/csh/' /etc/passwd</span><br><span class="line">root:x:0:0:root:/root:/bin/bash</span><br><span class="line">daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin</span><br><span class="line">bin:x:2:2:bin:/bin:/usr/sbin/nologin</span><br><span class="line">...</span><br><span class="line">wsx:x:1000:1000:"",,,:/home/wsx:/bin/csh</span><br></pre></td></tr></table></figure>
+<p>正则表达式允许创建高级文本模式匹配表达式来匹配各种数据，结合一系列通配符、特殊字符来生成几乎任何形式文本的简练模式。我们后续会学习到。</p>
+<h4 id="命令组合"><a href="#命令组合" class="headerlink" title="命令组合"></a>命令组合</h4><p>使用花括号可以将多条命令组合在一起。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '2&#123;</span><br><span class="line"><span class="meta">&gt;</span> s/fox/elephant/</span><br><span class="line"><span class="meta">&gt;</span> s/dog/cat/</span><br><span class="line"><span class="meta">&gt;</span> &#125;' data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown elephant jumps over the lazy cat.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br></pre></td></tr></table></figure>
+<p>也可以在一组命令前指定一个地址区间。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '3,$&#123;</span><br><span class="line">s/brown/green/</span><br><span class="line">s/lazy/active/</span><br><span class="line">&#125;' data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick green fox jumps over the active dog.</span><br><span class="line">The quick green fox jumps over the active dog.</span><br><span class="line">The quick green fox jumps over the active dog.</span><br><span class="line">The quick green fox jumps over the active dog.</span><br><span class="line">The quick green fox jumps over the active dog.</span><br><span class="line">The quick green fox jumps over the active dog.</span><br><span class="line">The quick green fox jumps over the active dog.</span><br></pre></td></tr></table></figure>
+<h3 id="删除行"><a href="#删除行" class="headerlink" title="删除行"></a>删除行</h3><p>如果需要删除文本流中的特定行，使用删除命令<code>d</code>，它会删除匹配指定寻址模式的所有行。<strong>使用时要特别小心</strong>，如果忘记加入寻址模式，会将所有文本行删除。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed 'd' data1.txt</span><br></pre></td></tr></table></figure>
+<p>和指定的地址一起使用才能发挥删除命令的最大功用。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '3d' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>通过特定行区间指定：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '2,3d' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>通过特殊文本结尾字符指定：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '2,$d' data6.txt</span><br><span class="line">This is line number 1.</span><br></pre></td></tr></table></figure>
+<p>还可以使用模式匹配特性：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '/number 1/d' data6.txt</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>sed会删除包含匹配模式的行。</p>
+<p>记住，sed不会修改原始文件。</p>
+<p>还可以使用两个文本模式来删除某个区间内的行，但做的时候需要特别小心，指定的第一个模式会“打开”行删除功能，第二个模式会“关闭”行删除功能。sed会删除两个指定行之间的所有行（包括指定行）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data7.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br><span class="line">This is line number 1 again.</span><br><span class="line">This is text you want to keep.</span><br><span class="line">This is the last line in the file.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '/1/,/3/d' data7.txt</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>第二个出现的数字“1”的行再次触发了删除命令，因为未能找到停止模式“3”，所以将数据流剩余的行全部删掉了。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '/1/,/5/d' data7.txt</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '/2/,/4/d' data7.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 1 again.</span><br><span class="line">This is text you want to keep.</span><br><span class="line">This is the last line in the file.</span><br></pre></td></tr></table></figure>
+<h3 id="插入和附加文本"><a href="#插入和附加文本" class="headerlink" title="插入和附加文本"></a>插入和附加文本</h3><p>sed允许向数据流插入和附加文本行：</p>
+<ul>
+<li>插入命令<code>i</code>会在指定行前增加一个新行</li>
+<li>附加命令<code>a</code>会在指定行后增加一个新行</li>
+</ul>
+<p>注意，它们不能在单个命令行上使用，必须要指定是要插入还是要附加到的那一行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ echo "Test Line 2" | sed 'i\Test Line 1'</span><br><span class="line">Test Line 1</span><br><span class="line">Test Line 2</span><br><span class="line">wsx@wsx-laptop:~/tmp$ echo "Test Line 2" | sed 'a\Test Line 1'</span><br><span class="line">Test Line 2</span><br><span class="line">Test Line 1</span><br></pre></td></tr></table></figure>
+<p>要向数据流行内部插入或附加数据，必须用寻址来告诉sed数据应该出现在什么位置。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '3i\ This is an inserted line.' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line"> This is an inserted line.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '3a\ This is an inserted line.' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line"> This is an inserted line.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>如果想要给数据流末尾添加多行数据，通过<code>$</code>指定位置即可。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br><span class="line"> This is a new line.</span><br></pre></td></tr></table></figure>
+<h3 id="修改行"><a href="#修改行" class="headerlink" title="修改行"></a>修改行</h3><p>修改（change）命令允许修改整个数据流中整行文本内容。它跟插入和附加命令的工作机制一样。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '3c\This is a changed line.' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is a changed line.</span><br><span class="line">This is line number 4.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '/number 3/c\This is a changed line.' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is a changed line.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<h3 id="转换命令"><a href="#转换命令" class="headerlink" title="转换命令"></a>转换命令</h3><p>转换命令（y）是<strong>唯一可以处理单字符的sed命令</strong>。格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[address]y/inchars/outchars</span><br></pre></td></tr></table></figure>
+<p>转换命令会对<code>inchars</code>和<code>outchars</code>值进行一对一的映射。如果两者字符长度不同，则sed产生一条错误信息。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed 'y/123/789/' data6.txt</span><br><span class="line">This is line number 7.</span><br><span class="line">This is line number 8.</span><br><span class="line">This is line number 9.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>转换命令是一个全局命令，<strong>它会在文本行中找到的所有指定字符自动进行转换，而不会考虑它们出现的位置</strong>。</p>
+<h3 id="回顾命令"><a href="#回顾命令" class="headerlink" title="回顾命令"></a>回顾命令</h3><p>另有3个命令可以用来打印数据流中的信息：</p>
+<ul>
+<li><code>p</code>命令用来打印文本行</li>
+<li>等号<code>=</code>命令用来打印行号</li>
+<li><code>l</code>用来列出行</li>
+</ul>
+<h4 id="打印行"><a href="#打印行" class="headerlink" title="打印行"></a>打印行</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ echo "this is a test" | sed 'p'</span><br><span class="line">this is a test</span><br><span class="line">this is a test</span><br></pre></td></tr></table></figure>
+<p><code>p</code>打印已有的数据文本。最常用的用法是打印符合匹配文本模式的行。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed -n '/number 3/p' data6.txt</span><br><span class="line">This is line number 3.</span><br></pre></td></tr></table></figure>
+<p>在命令行上使用<code>-n</code>选项，可以禁止输出其他行，只打印包含匹配文本模式的行。</p>
+<p>也可以用来快速打印数据流中的某些行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed -n '2,3p' data6.txt</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br></pre></td></tr></table></figure>
+<h4 id="打印行号"><a href="#打印行号" class="headerlink" title="打印行号"></a>打印行号</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data1.txt</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '=' data1.txt</span><br><span class="line">1</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">2</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">3</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">4</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">5</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">6</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">7</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">8</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br><span class="line">9</span><br><span class="line">The quick brown fox jumps over the lazy dog.</span><br></pre></td></tr></table></figure>
+<p>这用来查找特定文本模式的话非常方便：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed -n '/number 4/&#123;</span><br><span class="line"><span class="meta">&gt;</span> =</span><br><span class="line"><span class="meta">&gt;</span> p</span><br><span class="line"><span class="meta">&gt;</span> &#125;' data6.txt</span><br><span class="line">4</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<h4 id="列出行"><a href="#列出行" class="headerlink" title="列出行"></a>列出行</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data9.txt</span><br><span class="line">This    line    contains        tabs.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed -n 'l' data9.txt</span><br><span class="line">This\tline\tcontains\ttabs.$</span><br></pre></td></tr></table></figure>
+<h3 id="使用Sed处理文件"><a href="#使用Sed处理文件" class="headerlink" title="使用Sed处理文件"></a>使用Sed处理文件</h3><h4 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h4><p><code>w</code>命令用来向文件写入行。该命令格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[address]w filename</span><br></pre></td></tr></table></figure>
+<p>将文本的前两行写入其他文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '1,2w test.txt' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ cat test.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br></pre></td></tr></table></figure>
+<p>如果不想让行显示到STDOUT（因为sed默认数据文本流），可以使用sed命令的<code>-n</code>选项。</p>
+<h4 id="读取数据"><a href="#读取数据" class="headerlink" title="读取数据"></a>读取数据</h4><p>读取命令为<code>r</code>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat data12.txt</span><br><span class="line">This is an added line.</span><br><span class="line">This is the second added line.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '3r data12.txt' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is an added line.</span><br><span class="line">This is the second added line.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>这效果有点像插入文本命令<code>i</code>和补充命令<code>a</code>。</p>
+<p> 同样适用于文本模式地址：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '/number 2/r data12.txt' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is an added line.</span><br><span class="line">This is the second added line.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br></pre></td></tr></table></figure>
+<p>文本末尾添加：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '$r data12.txt' data6.txt</span><br><span class="line">This is line number 1.</span><br><span class="line">This is line number 2.</span><br><span class="line">This is line number 3.</span><br><span class="line">This is line number 4.</span><br><span class="line">This is an added line.</span><br><span class="line">This is the second added line.</span><br></pre></td></tr></table></figure>
+<p><strong>读取命令的一个很酷的用法是和删除命令配合使用：利用另一个文件中的数据来替换文件中的占位文本</strong>。假如你有一份套用信件保存在文本中：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ cat notice.std</span><br><span class="line">Would the following people:</span><br><span class="line">LIST</span><br><span class="line">please report to the ship's captain.</span><br></pre></td></tr></table></figure>
+<p>套用信件将通用占位文本<code>LIST</code>放在人物名单的位置，我们先根据它插入文本字符，然后删除它。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-laptop:~/tmp$ sed '/LIST/&#123;</span><br><span class="line"><span class="meta">&gt;</span> r data10.txt</span><br><span class="line"><span class="meta">&gt;</span> d</span><br><span class="line"><span class="meta">&gt;</span> &#125;' notice.std</span><br><span class="line">Would the following people:</span><br><span class="line">This line contains an escape character.</span><br><span class="line">please report to the ship's captain.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ cat data10.txt</span><br><span class="line">This line contains an escape character.</span><br><span class="line">wsx@wsx-laptop:~/tmp$ cat data11.txt</span><br><span class="line">wangshx zhdan</span><br><span class="line">wsx@wsx-laptop:~/tmp$ sed '/LIST/&#123;</span><br><span class="line">r data11.txt</span><br><span class="line">d</span><br><span class="line">&#125;' notice.std</span><br><span class="line">Would the following people:</span><br><span class="line">wangshx zhdan</span><br><span class="line">please report to the ship's captain.</span><br></pre></td></tr></table></figure>
+<p>可以看到占位符被替换成了数据文件中的文字。</p>
+<p>完。</p>
+
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/12/25/2017-12-25-sed-and-gawk/">初识sed与awk</a></p>
+        <p><span>文章作者:</span><a href="/" title="回到主页"></a></p>
+        <p><span>发布时间:</span>2017-12-25, 00:00:00</p>
+        <p><span>最后更新:</span>2018-01-27, 01:07:14</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/12/25/2017-12-25-sed-and-gawk/" title="初识sed与awk">https://shixiangwang.github.io/2017/12/25/2017-12-25-sed-and-gawk/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2017/12/25/2017-12-25-sed-and-gawk/　　作者: " title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2017/12/08/2017-12-08-Git-basic-operation/">
+                    学习git
+                </a>
+            </div>
+        
+    </nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#文本处理"><span class="toc-number">1.</span> <span class="toc-text">文本处理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#sed编辑器"><span class="toc-number">1.1.</span> <span class="toc-text">sed编辑器</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#在命令行中定义编辑器命令"><span class="toc-number">1.1.1.</span> <span class="toc-text">在命令行中定义编辑器命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在命令行上使用多个编辑器命令"><span class="toc-number">1.1.2.</span> <span class="toc-text">在命令行上使用多个编辑器命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#从文件中读取编辑器命令"><span class="toc-number">1.1.3.</span> <span class="toc-text">从文件中读取编辑器命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#gawk程序"><span class="toc-number">1.2.</span> <span class="toc-text">gawk程序</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#基本命令格式"><span class="toc-number">1.2.1.</span> <span class="toc-text">基本命令格式</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#从命令行读取脚本"><span class="toc-number">1.2.2.</span> <span class="toc-text">从命令行读取脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用数据字段变量"><span class="toc-number">1.2.3.</span> <span class="toc-text">使用数据字段变量</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在程序脚本中使用多个命令"><span class="toc-number">1.2.4.</span> <span class="toc-text">在程序脚本中使用多个命令</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#从文件中读取程序"><span class="toc-number">1.2.5.</span> <span class="toc-text">从文件中读取程序</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在处理数据前运行脚本"><span class="toc-number">1.2.6.</span> <span class="toc-text">在处理数据前运行脚本</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#在处理数据后允许脚本"><span class="toc-number">1.2.7.</span> <span class="toc-text">在处理数据后允许脚本</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#sed编辑器基础"><span class="toc-number">2.</span> <span class="toc-text">sed编辑器基础</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#更多的替换选项"><span class="toc-number">2.1.</span> <span class="toc-text">更多的替换选项</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#替换标记"><span class="toc-number">2.1.1.</span> <span class="toc-text">替换标记</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#替换字符"><span class="toc-number">2.1.2.</span> <span class="toc-text">替换字符</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用地址"><span class="toc-number">2.2.</span> <span class="toc-text">使用地址</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#以数字的方式行寻址"><span class="toc-number">2.2.1.</span> <span class="toc-text">以数字的方式行寻址</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#使用文本模式过滤器"><span class="toc-number">2.2.2.</span> <span class="toc-text">使用文本模式过滤器</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#命令组合"><span class="toc-number">2.2.3.</span> <span class="toc-text">命令组合</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#删除行"><span class="toc-number">2.3.</span> <span class="toc-text">删除行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#插入和附加文本"><span class="toc-number">2.4.</span> <span class="toc-text">插入和附加文本</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#修改行"><span class="toc-number">2.5.</span> <span class="toc-text">修改行</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#转换命令"><span class="toc-number">2.6.</span> <span class="toc-text">转换命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#回顾命令"><span class="toc-number">2.7.</span> <span class="toc-text">回顾命令</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#打印行"><span class="toc-number">2.7.1.</span> <span class="toc-text">打印行</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#打印行号"><span class="toc-number">2.7.2.</span> <span class="toc-text">打印行号</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#列出行"><span class="toc-number">2.7.3.</span> <span class="toc-text">列出行</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#使用Sed处理文件"><span class="toc-number">2.8.</span> <span class="toc-text">使用Sed处理文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#写入文件"><span class="toc-number">2.8.1.</span> <span class="toc-text">写入文件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#读取数据"><span class="toc-number">2.8.2.</span> <span class="toc-text">读取数据</span></a></li></ol></li></ol></li></ol>
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
+
+
+
+    
+<div class="share">
+    
+        <div class="bdsharebuttonbox">
+            <a href="#" class="fa fa-twitter bds_twi" data-cmd="twi" title="分享到推特"></a>
+            <a href="#" class="fa fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+            <a href="#" class="fa fa-qq bds_sqq" data-cmd="sqq" title="分享给 QQ 好友"></a>
+            <a href="#" class="fa fa-files-o bds_copy" data-cmd="copy" title="复制网址"></a>
+            <a href="#" class="fa fa fa-envelope-o bds_mail" data-cmd="mail" title="通过邮件分享"></a>
+            <a href="#" class="fa fa-weixin bds_weixin" data-cmd="weixin" title="生成文章二维码"></a>
+            <a href="#" class="fa fa-share-alt bds_more" data-cmd="more"></i></a>
+        </div>
+        <script>
+            window._bd_share_config={
+                "common":{"bdSnsKey":{},"bdText":"初识sed与awk　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+        </script>
+    
+
+    
+</div>
+
+
+
+
+
+
+
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'https://shixiangwang.github.io/2017/12/25/2017-12-25-sed-and-gawk/';
+            this.page.identifier = '2017/12/25/2017-12-25-sed-and-gawk/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//Cloudberry.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2017/12/08/2017-12-08-Git-basic-operation/" title="下一篇: 学习git">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/12/25/2017-12-25-sed-and-gawk/">初识sed与awk</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/2017-12-08-Git-basic-operation/">学习git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/29/2017-11-29-shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/2017-11-26-shell-create-function/">创建和使用shell函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/20/2017-09-20-OOPinR/">R-面向对象编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/15/2017-09-15-Class-in-R/">R中的属性与类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/2017-09-04-control-shell/">控制脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/03/2017-09-03-Linux-data-analysis-tools/">Linux数据处理命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/2017-08-22-shell-show-data/">Linux脚本编程——呈现数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-structural-command-of-shell/">Linux结构化命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/2017-08-11-basic-shell/">构建基本shell脚本</a></li></ul>
+
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                <i class="fa fa-copyright"></i> 
+                2017-2018 Cloudberry
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank" title="快速、简洁且高效的博客框架">Hexo</a>  Theme <a href="https://github.com/MOxFIVE/hexo-theme-yelee" target="_blank" title="简而不减 Hexo 双栏博客主题  v3.5">Yelee</a> by MOxFIVE <i class="fa fa-heart animated infinite pulse"></i>
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" title="本站到访数"><i class="fa fa-user" aria-hidden="true"></i><span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>| </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit"  title="本页阅读量"><i class="fa fa-eye animated infinite pulse" aria-hidden="true"></i><span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+    </div>
+    
+<script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var iPad = window.navigator.userAgent.indexOf('iPad');
+            if (iPad > -1 || $(".left-col").css("display") === "none") {
+                var bgColorList = ["#9db3f4", "#414141", "#e5a859", "#f5dfc6", "#c084a0", "#847e72", "#cd8390", "#996731"];
+                var bgColor = Math.ceil(Math.random() * (bgColorList.length - 1));
+                $("body").css({"background-color": bgColorList[bgColor], "background-size": "cover"});
+            }
+            else {
+                var backgroundnum = 2;
+                var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+                $("body").css({"background": backgroundimg, "background-attachment": "fixed", "background-size": "cover"});
+            }
+        })
+    </script>
+
+
+
+
+
+    <script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+        processEscapes: true,
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+});
+
+MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+        all[i].SourceElement().parentNode.className += ' has-jax';                 
+    }       
+});
+</script>
+
+<script src="//cdn.bootcss.com/mathjax/2.6.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<div class="scroll" id="scroll">
+    <a href="#" title="返回顶部"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments" onclick="load$hide();" title="查看评论"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer" title="转到底部"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    // Open in New Window
+    
+        var oOpenInNew = {
+            
+            
+            
+            
+            
+            
+             archives: ".archive-article-title", 
+             miniArchives: "a.post-list-link", 
+            
+             friends: "#js-friends a", 
+             socail: ".social a" 
+        }
+        for (var x in oOpenInNew) {
+            $(oOpenInNew[x]).attr("target", "_blank");
+        }
+    
+</script>
+
+    <script>
+        var originTitle = document.title;
+        var titleTime;
+        document.addEventListener("visibilitychange", function() {
+            if (document.hidden) {
+                document.title = "(つェ⊂) 我藏好了哦~ " + originTitle;
+                clearTimeout(titleTime);
+            }
+            else {
+                document.title = "(*´∇｀*) 被你发现啦~ " + originTitle;
+                titleTime = setTimeout(function() {
+                    document.title = originTitle;
+                }, 2000);
+            }
+        })
+    </script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+  </div>
+</body>
+</html>
