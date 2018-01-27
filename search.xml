@@ -4,7 +4,7 @@
     
     <entry>
       <title><![CDATA[初识sed与awk]]></title>
-      <url>/2017/12/25/2017-12-25-sed-and-gawk/</url>
+      <url>/2017/12/25/sed-and-gawk/</url>
       <content type="html"><![CDATA[<p><strong>学习内容</strong>：</p>
 <blockquote>
 <ul>
@@ -286,7 +286,7 @@
     
     <entry>
       <title><![CDATA[学习git]]></title>
-      <url>/2017/12/08/2017-12-08-Git-basic-operation/</url>
+      <url>/2017/12/08/Git-basic-operation/</url>
       <content type="html"><![CDATA[<p>纯属搬砖操作，资料来源《Github入门与实战》，这本书的重要信息也就这些了，需要的时候找一找。</p>
 <p>书上提到的一个学习网站<a href="https://learngitbranching.js.org/" target="_blank" rel="noopener">https://learngitbranching.js.org/</a>非常棒，线上学习。</p>
 <a id="more"></a>
@@ -418,7 +418,7 @@
     
     <entry>
       <title><![CDATA[使用shell创建文本菜单和窗口部件]]></title>
-      <url>/2017/11/29/2017-11-29-shell-create-text-menu-and-window/</url>
+      <url>/2017/11/29/shell-create-text-menu-and-window/</url>
       <content type="html"><![CDATA[<p><em>来源： Linux命令行与shell脚本编程大全</em></p>
 <p>内容：</p>
 <blockquote>
@@ -843,7 +843,7 @@
     
     <entry>
       <title><![CDATA[创建和使用shell函数]]></title>
-      <url>/2017/11/26/2017-11-26-shell-create-function/</url>
+      <url>/2017/11/26/shell-create-function/</url>
       <content type="html"><![CDATA[<p><em>来源： Linux命令行与shell脚本编程大全</em></p>
 <p><strong>内容</strong></p>
 <blockquote>
@@ -1102,7 +1102,7 @@
     
     <entry>
       <title><![CDATA[R-面向对象编程]]></title>
-      <url>/2017/09/20/2017-09-20-OOPinR/</url>
+      <url>/2017/09/20/OOPinR/</url>
       <content type="html"><![CDATA[<h2 id="一些概念"><a href="#一些概念" class="headerlink" title="一些概念"></a>一些概念</h2><p>这里首先要提及一些概念，然后我们再看具体的实例加以理解。</p>
 <p>每一个单独的<strong>对象</strong>都可以被称为对应<strong>类</strong>的一个<strong>实例</strong>（instance）。操作指定类的函数称为<strong>方法</strong>（method）。</p>
 <p>把程序接口从具体的实现细节中分离开来的过程称为<strong>封装</strong>。</p>
@@ -1326,7 +1326,7 @@
     
     <entry>
       <title><![CDATA[R中的属性与类]]></title>
-      <url>/2017/09/15/2017-09-15-Class-in-R/</url>
+      <url>/2017/09/15/Class-in-R/</url>
       <content type="html"><![CDATA[<h2 id="属性"><a href="#属性" class="headerlink" title="属性"></a>属性</h2><p>属性描述了对象所代表的内容以及R解释该对象的方式。<strong>很多时候两个对象之间的唯一差别就在于它们的属性不同</strong>。下表展示了一些重要的属性。很多常见的属性都是针对常见的数值型数据对象而言的：像数组、矩阵和数据框。</p>
 <a id="more"></a>
 <table>
@@ -1428,7 +1428,7 @@
     
     <entry>
       <title><![CDATA[控制脚本]]></title>
-      <url>/2017/09/04/2017-09-04-control-shell/</url>
+      <url>/2017/09/04/control_shell/</url>
       <content type="html"><![CDATA[<blockquote>
 <p><strong>内容</strong></p>
 <ul>
@@ -1690,7 +1690,7 @@
     
     <entry>
       <title><![CDATA[Linux数据处理命令工具]]></title>
-      <url>/2017/09/03/2017-09-03-Linux-data-analysis-tools/</url>
+      <url>/2017/09/03/Linux-data-analysis-tools/</url>
       <content type="html"><![CDATA[<p>参考学习《Bioinformatics. Data. Skills》，这里简要地整理下Linux用来处理数据文本的工具。具体命令详情请在<a href="http://man.linuxde.net/" target="_blank" rel="noopener">Linux命令大全</a>中搜索或者查阅其他相关资料。</p>
 <a id="more"></a>
 <p><code>head</code>,<code>tail</code>查看文档头尾。<code>-n</code>选项可以指定行数。</p>
@@ -1866,7 +1866,7 @@
     
     <entry>
       <title><![CDATA[Linux脚本编程——呈现数据]]></title>
-      <url>/2017/08/21/2017-08-22-shell-show-data/</url>
+      <url>/2017/08/21/shell-show-data/</url>
       <content type="html"><![CDATA[<blockquote>
 <p>本章内容：</p>
 <ul>
@@ -2022,7 +2022,7 @@
     
     <entry>
       <title><![CDATA[Shell脚本之处理用户输入]]></title>
-      <url>/2017/08/19/2017-08-19-working-with-user-input/</url>
+      <url>/2017/08/19/working-with-user-input/</url>
       <content type="html"><![CDATA[<p><strong>Shell脚本笔记系列：</strong></p>
 <p><a href="http://www.flypeom.site/linux/2017/08/11/basic-shell/" target="_blank" rel="noopener">构建基本shell脚本</a></p>
 <p><a href="http://www.flypeom.site/linux/2017/08/11/structural-command-of-shell/" target="_blank" rel="noopener">Linux结构化命令</a></p>
@@ -2286,7 +2286,7 @@
     
     <entry>
       <title><![CDATA[Linux结构化命令]]></title>
-      <url>/2017/08/11/2017-08-11-structural-command-of-shell/</url>
+      <url>/2017/08/11/structural-command-of-shell/</url>
       <content type="html"><![CDATA[<a id="more"></a>
 <h2 id="条件控制"><a href="#条件控制" class="headerlink" title="条件控制"></a>条件控制</h2><blockquote>
 <p><strong>内容</strong></p>
@@ -2708,7 +2708,7 @@
     
     <entry>
       <title><![CDATA[构建基本shell脚本]]></title>
-      <url>/2017/08/11/2017-08-11-basic-shell/</url>
+      <url>/2017/08/11/basic-shell/</url>
       <content type="html"><![CDATA[<a id="more"></a>
 <blockquote>
 <p><strong>内容</strong></p>
