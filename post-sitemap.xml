@@ -7,56 +7,8 @@
     </url>
 
     <url>
-        <loc>https://shixiangwang.github.io/2017/08/21/2017-08-22-shell-show-data/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shixiangwang.github.io/2017/09/03/2017-09-03-Linux-data-analysis-tools/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shixiangwang.github.io/2017/09/04/2017-09-04-control-shell/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shixiangwang.github.io/2017/09/15/2017-09-15-Class-in-R/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shixiangwang.github.io/2017/09/20/2017-09-20-OOPinR/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shixiangwang.github.io/2017/11/26/2017-11-26-shell-create-function/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>https://shixiangwang.github.io/2017/11/29/2017-11-29-shell-create-text-menu-and-window/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
+        <loc>https://shixiangwang.github.io/2017/12/25/2017-12-25-sed-and-gawk/</loc>
+        <lastmod>2018-01-27T04:08:59.634Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -64,23 +16,71 @@
 
     <url>
         <loc>https://shixiangwang.github.io/2017/12/08/2017-12-08-Git-basic-operation/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
+        <lastmod>2018-01-27T04:08:54.162Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>https://shixiangwang.github.io/2017/12/25/2017-12-25-sed-and-gawk/</loc>
-        <lastmod>2018-01-26T17:07:14.868Z</lastmod>
+        <loc>https://shixiangwang.github.io/2017/11/29/2017-11-29-shell-create-text-menu-and-window/</loc>
+        <lastmod>2018-01-27T04:08:47.822Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
     </url>
 
     <url>
-        <loc>https://shixiangwang.github.io/2017/08/11/2017-08-11-basic-shell/</loc>
-        <lastmod>2018-01-26T16:58:03.064Z</lastmod>
+        <loc>https://shixiangwang.github.io/2017/11/26/2017-11-26-shell-create-function/</loc>
+        <lastmod>2018-01-27T04:08:42.946Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/2017/09/20/2017-09-20-OOPinR/</loc>
+        <lastmod>2018-01-27T04:08:38.410Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/2017/09/15/2017-09-15-Class-in-R/</loc>
+        <lastmod>2018-01-27T04:08:33.334Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/2017/09/04/2017-09-04-control-shell/</loc>
+        <lastmod>2018-01-27T04:08:26.410Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/2017/09/03/2017-09-03-Linux-data-analysis-tools/</loc>
+        <lastmod>2018-01-27T04:08:22.086Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/2017/08/21/2017-08-22-shell-show-data/</loc>
+        <lastmod>2018-01-27T04:08:16.958Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/2017/08/19/2017-08-19-working-with-user-input/</loc>
+        <lastmod>2018-01-27T04:08:11.150Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
@@ -88,7 +88,15 @@
 
     <url>
         <loc>https://shixiangwang.github.io/2017/08/11/2017-08-11-structural-command-of-shell/</loc>
-        <lastmod>2017-10-25T20:02:03.140Z</lastmod>
+        <lastmod>2018-01-27T04:08:05.774Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/2017/08/11/2017-08-11-basic-shell/</loc>
+        <lastmod>2018-01-27T04:07:39.126Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 
