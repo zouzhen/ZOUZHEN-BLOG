@@ -286,6 +286,98 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-working-with-user-input" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/08/19/working-with-user-input/" class="article-date">
+      <time datetime="2017-08-18T16:00:00.000Z" itemprop="datePublished">2017-08-19</time>
+</a>
+
+ 
+    <a href="/2017/08/19/working-with-user-input/#comments" title="查看评论">
+        <i class="fa fa-comments-o" aria-hidden="true"></i>
+        <span class="count-comment"></span>
+        
+        
+            <span class="disqus-comment-count" data-disqus-identifier="2017/08/19/working-with-user-input/"></span>
+        
+    </a>
+
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/08/19/working-with-user-input/">Shell脚本之处理用户输入</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p><strong>Shell脚本笔记系列：</strong></p>
+<p><a href="http://www.flypeom.site/linux/2017/08/11/basic-shell/" target="_blank" rel="noopener">构建基本shell脚本</a></p>
+<p><a href="http://www.flypeom.site/linux/2017/08/11/structural-command-of-shell/" target="_blank" rel="noopener">Linux结构化命令</a></p>
+<blockquote>
+<p>内容：</p>
+<ul>
+<li>传递参数</li>
+<li>跟踪参数</li>
+<li>移动变量</li>
+<li>处理选项</li>
+<li>将选项标准化</li>
+<li>获得用户输入</li>
+</ul>
+</blockquote>
+<p>经过前面的介绍，我们已经可以掌握一些流程化的脚本编程了。但有时候，我们需要编写的脚本能够跟使用者进行交互。它可以是静态的，输入相应的参数让它运行到底；也可以是动态的，脚本根据输入参数反馈不同的信息，使用者又能根据信息调整下一步的处理，实时与程序互动。</p>
+<p>bash shell提供了一些不同的方法来从<strong>用户处获得数据，包括命令行参数、命令行选项以及直接从键盘读取输入</strong>的能力。下面将一一介绍实现。</p>
+          
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux杂烩/">Linux杂烩</a><a class="article-category-link" href="/categories/Linux杂烩/shell编程/">shell编程</a>
+    </div>
+
+
+      
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/bash-shell/">bash shell</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell笔记/">shell笔记</a></li></ul>
+    </div>
+
+      
+        <p class="article-more-link">
+          <a href="/2017/08/19/working-with-user-input/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-structural-command-of-shell" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
@@ -1045,6 +1137,8 @@
 </footer>
     </div>
     
+    <script src="/js/GithubRepoWidget.js"></script>
+
 <script data-main="/js/main.js" src="//cdn.bootcss.com/require.js/2.2.0/require.min.js"></script>
 
     <script>
@@ -1117,7 +1211,7 @@ MathJax.Hub.Queue(function() {
     // Open in New Window
     
         var oOpenInNew = {
-            
+             github: ".github-widget a", 
             
              post: ".article-entry a[href], .copyright a[href]", 
             
