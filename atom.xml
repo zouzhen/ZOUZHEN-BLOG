@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://shixiangwang.github.io/"/>
-  <updated>2018-01-31T13:16:11.185Z</updated>
+  <updated>2018-01-31T13:23:44.285Z</updated>
   <id>https://shixiangwang.github.io/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>sed如何在执行命令前过滤特定文本行</title>
+    <link href="https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/"/>
+    <id>https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/</id>
+    <published>2018-01-31T13:19:40.000Z</published>
+    <updated>2018-01-31T13:23:44.285Z</updated>
+    
+    <content type="html"><![CDATA[<p>有人在微信群里问到这样一个问题：</p><blockquote><p>请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&gt;后面的染色体名字不会被替换?<br><img src="http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p></blockquote><a id="more"></a><p><a href="http://man.linuxde.net/tr" target="_blank" rel="noopener"><code>tr</code></a>命令确实可以完成文本字符替换一对一的映射，但很显然，这样的功能想要解决这个问题是不够的，它把不想要改变的文本也改变了。</p><p>解决问题的思路在于如何实现带&gt;标志的文本直接输出，而DNA字符行被执行转换命令。这个问题其实使用sed命令就可以快速解决，不少朋友对于<code>sed</code>的使用可能记忆为我在<a href="https://shixiangwang.github.io/2017/09/03/Linux-data-analysis-tools/#用Sed进行流编辑">笔记</a>中写的：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command/pattern/replacement/flag</span><br></pre></td></tr></table></figure><p><code>command</code>是一些命令，比如<code>s</code>,<code>d</code>等，<code>flag</code>是一些标记，<code>i</code>,<code>g</code>等等。</p><p>这样认识sed命令其实不是很全面，sed允许指定文本模式来过滤出命令要作用的行，格式如下：</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/pattern/command</span><br></pre></td></tr></table></figure><p>所以整理起来，sed格式其实（除了一些选项）为</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/pattern/command/pattern/replacement/flag</span><br></pre></td></tr></table></figure><p>第一个<code>pattern</code>用来过滤出要处理的文本行，第二个<code>pattern</code>是sed命令要作用的模式。</p><p>那么利用这个特定，一开始的问题可以利用正则表达式非常简单地解决了：</p><p>先用<code>/^[^&gt;]/</code>找到不以<code>&gt;</code>开始的行，然后执行<code>sed</code>字符转换命令。</p><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#</span> 随便写一个测试文本</span><br><span class="line"><span class="meta">$</span> cat test</span><br><span class="line"><span class="meta">&gt;</span> CAACCA</span><br><span class="line">acgtACGTACTGagct</span><br><span class="line">tacgactNNNNNNNNNNNNNNNN</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> cat test | sed '/^[^&gt;]/y/ACac/CAca/'</span><br><span class="line"><span class="meta">&gt;</span> CAACCA</span><br><span class="line">cagtCAGTCATGcgat</span><br><span class="line">tcagcatNNNNNNNNNNNNNNNN</span><br></pre></td></tr></table></figure><hr><p>有兴趣的可以看看<a href="https://shixiangwang.github.io/2017/12/25/sed-and-gawk/">初识sed与awk</a>这篇笔记。</p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;有人在微信群里问到这样一个问题：&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&amp;gt;后面的染色体名字不会被替换?&lt;br&gt;&lt;img src=&quot;http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240&quot; alt=&quot;&quot;&gt;&lt;/p&gt;
+&lt;/blockquote&gt;
+    
+    </summary>
+    
+      <category term="Linux杂烩" scheme="https://shixiangwang.github.io/categories/Linux%E6%9D%82%E7%83%A9/"/>
+    
+    
+      <category term="sed" scheme="https://shixiangwang.github.io/tags/sed/"/>
+    
+      <category term="生物信息学" scheme="https://shixiangwang.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+      <category term="文本处理" scheme="https://shixiangwang.github.io/tags/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/"/>
+    
+      <category term="fasta" scheme="https://shixiangwang.github.io/tags/fasta/"/>
+    
+  </entry>
   
   <entry>
     <title>Sync deploy 命令工具</title>

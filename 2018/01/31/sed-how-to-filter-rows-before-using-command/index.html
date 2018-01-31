@@ -15,17 +15,20 @@
 
 
 
-<meta name="description" content=".article-header {         padding: 0;         padding-top: 26px;         border-left: none;         text-align: center;     }     .article-header:hover {         border-left: none;     }     .art">
-<meta property="og:type" content="website">
-<meta property="og:title" content="404 Not Found：该页无法显示">
-<meta property="og:url" content="https://shixiangwang.github.io/404.html">
+<meta name="description" content="有人在微信群里问到这样一个问题：  请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&amp;gt;后面的染色体名字不会被替换?">
+<meta name="keywords" content="sed,生物信息学,文本处理,fasta">
+<meta property="og:type" content="article">
+<meta property="og:title" content="sed如何在执行命令前过滤特定文本行">
+<meta property="og:url" content="https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/index.html">
 <meta property="og:site_name" content="Cloudberry">
-<meta property="og:description" content=".article-header {         padding: 0;         padding-top: 26px;         border-left: none;         text-align: center;     }     .article-header:hover {         border-left: none;     }     .art">
+<meta property="og:description" content="有人在微信群里问到这样一个问题：  请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&amp;gt;后面的染色体名字不会被替换?">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-26T15:12:40.529Z">
+<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta property="og:updated_time" content="2018-01-31T13:23:44.285Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="404 Not Found：该页无法显示">
-<meta name="twitter:description" content=".article-header {         padding: 0;         padding-top: 26px;         border-left: none;         text-align: center;     }     .article-header:hover {         border-left: none;     }     .art">
+<meta name="twitter:title" content="sed如何在执行命令前过滤特定文本行">
+<meta name="twitter:description" content="有人在微信群里问到这样一个问题：  请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&amp;gt;后面的染色体名字不会被替换?">
+<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -57,7 +60,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>404 Not Found：该页无法显示 | Cloudberry</title>
+<title>sed如何在执行命令前过滤特定文本行 | Cloudberry</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -67,7 +70,7 @@
         fancybox: true,
         animate: true,
         isHome: false,
-        isPost: false,
+        isPost: true,
         isArchive: false,
         isTag: false,
         isCategory: false,
@@ -280,11 +283,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="page-" class="article article-type-page" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-sed-how-to-filter-rows-before-using-command" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/404.html" class="article-date">
-      <time datetime="2018-01-26T15:12:40.529Z" itemprop="datePublished">2018-01-26</time>
+      <a href="/2018/01/31/sed-how-to-filter-rows-before-using-command/" class="article-date">
+      <time datetime="2018-01-31T13:19:40.000Z" itemprop="datePublished">2018-01-31</time>
 </a>
 
 
@@ -299,7 +302,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      404 Not Found：该页无法显示
+      sed如何在执行命令前过滤特定文本行
     </h1>
   
 
@@ -307,8 +310,16 @@
       
       <div class="article-info article-info-post">
         
+    <div class="article-category tagcloud">
+    <a class="article-category-link" href="/categories/Linux杂烩/">Linux杂烩</a>
+    </div>
+
 
         
+    <div class="article-tag tagcloud">
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fasta/">fasta</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sed/">sed</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文本处理/">文本处理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生物信息学/">生物信息学</a></li></ul>
+    </div>
+
         <div class="clearfix"></div>
       </div>
       
@@ -316,82 +327,25 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-              <style>
-    .article-meta { display: none; }
-    #container .article .article-title { padding-right: 0; }
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover { border-left: none; }
-    .article-title { font-size: 1.6em }
-    .article-entry hr { margin: 0;}
-    .article-meta,
-    #container .article-info-post.article-info { display: none;}
-    #container .article .article-title { padding: 0; }
-</style>
-
-
-          
-        <style type="text/css">
-    .article-header {
-        padding: 0;
-        padding-top: 26px;
-        border-left: none;
-        text-align: center;
-    }
-    .article-header:hover {
-        border-left: none;
-    }
-    .article-title {
-        font-size: 2.1em;
-    }
-    strong a {
-        color: #747474;
-    }
-    .article-meta {
-        display: none;
-    }
-    .share {
-        display: none;
-    }
-    .ds-meta {
-        display: none;
-    }
-    .player {
-        margin-left: -10px;
-    }
-    .sign {
-        text-align: right;
-        font-style: italic;
-    }
-      #page-visit {
-        display: none;
-    }
-    .center {
-        text-align: center;
-        height: 2.5em;
-        font-weight: bold;
-    }
-    .article-entry hr {
-        margin: 0;
-    }
-    .pic {
-        text-align: center;
-        margin: 0;
-    }
-    .pic br {
-          display: none;
-      }
-    #container .article-info-post.article-info {
-      display: none;
-      }
-    #container .article .article-title {
-    padding: 0;
-    }
-</style>
+        <p>有人在微信群里问到这样一个问题：</p>
+<blockquote>
+<p>请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&gt;后面的染色体名字不会被替换?<br><img src="http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
+</blockquote>
+<a id="more"></a>
+<p><a href="http://man.linuxde.net/tr" target="_blank" rel="noopener"><code>tr</code></a>命令确实可以完成文本字符替换一对一的映射，但很显然，这样的功能想要解决这个问题是不够的，它把不想要改变的文本也改变了。</p>
+<p>解决问题的思路在于如何实现带&gt;标志的文本直接输出，而DNA字符行被执行转换命令。这个问题其实使用sed命令就可以快速解决，不少朋友对于<code>sed</code>的使用可能记忆为我在<a href="https://shixiangwang.github.io/2017/09/03/Linux-data-analysis-tools/#用Sed进行流编辑">笔记</a>中写的：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command/pattern/replacement/flag</span><br></pre></td></tr></table></figure>
+<p><code>command</code>是一些命令，比如<code>s</code>,<code>d</code>等，<code>flag</code>是一些标记，<code>i</code>,<code>g</code>等等。</p>
+<p>这样认识sed命令其实不是很全面，sed允许指定文本模式来过滤出命令要作用的行，格式如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/pattern/command</span><br></pre></td></tr></table></figure>
+<p>所以整理起来，sed格式其实（除了一些选项）为</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/pattern/command/pattern/replacement/flag</span><br></pre></td></tr></table></figure>
+<p>第一个<code>pattern</code>用来过滤出要处理的文本行，第二个<code>pattern</code>是sed命令要作用的模式。</p>
+<p>那么利用这个特定，一开始的问题可以利用正则表达式非常简单地解决了：</p>
+<p>先用<code>/^[^&gt;]/</code>找到不以<code>&gt;</code>开始的行，然后执行<code>sed</code>字符转换命令。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#</span> 随便写一个测试文本</span><br><span class="line"><span class="meta">$</span> cat test</span><br><span class="line"><span class="meta">&gt;</span> CAACCA</span><br><span class="line">acgtACGTACTGagct</span><br><span class="line">tacgactNNNNNNNNNNNNNNNN</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span> cat test | sed '/^[^&gt;]/y/ACac/CAca/'</span><br><span class="line"><span class="meta">&gt;</span> CAACCA</span><br><span class="line">cagtCAGTCATGcgat</span><br><span class="line">tcagcatNNNNNNNNNNNNNNNN</span><br></pre></td></tr></table></figure>
+<hr>
+<p>有兴趣的可以看看<a href="https://shixiangwang.github.io/2017/12/25/sed-and-gawk/">初识sed与awk</a>这篇笔记。</p>
 
       
     </div>
@@ -399,11 +353,63 @@
   </div>
   
     
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2018/01/31/sed-how-to-filter-rows-before-using-command/">sed如何在执行命令前过滤特定文本行</a></p>
+        <!-- modify author information
+        <p><span>文章作者:</span><a href="/" title="回到主页">王诗翔</a></p>
+        -->
+        <p><span>文章作者:</span>王诗翔</p>
+        <p><span>发布时间:</span>2018-01-31, 21:19:40</p>
+        <p><span>最后更新:</span>2018-01-31, 21:23:44</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2018/01/31/sed-how-to-filter-rows-before-using-command/" title="sed如何在执行命令前过滤特定文本行">https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/　　作者: 王诗翔" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/4.0/" title="CC BY-NC-SA 4.0 International" target = "_blank">"署名-非商用-相同方式共享 4.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
 
+
+
+    <nav id="article-nav">
+        
+        
+            <div id="article-nav-older" class="article-nav-title">
+                <a href="/2018/01/31/sync-deploy-tools/">
+                    Sync deploy 命令工具
+                </a>
+            </div>
+        
+    </nav>
 
 
   
 </article>
+
+    <div id="toc" class="toc-article">
+        <strong class="toc-title">文章目录</strong>
+        
+            
+        
+    </div>
+    <style>
+        .left-col .switch-btn,
+        .left-col .switch-area {
+            display: none;
+        }
+        .toc-level-3 i,
+        .toc-level-3 ol {
+            display: none !important;
+        }
+    </style>
+
+    <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+    <script>
+        yiliaConfig.toc = ["隐藏目录", "显示目录", !!"false"];
+    </script>
 
 
 
@@ -421,7 +427,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"404 Not Found：该页无法显示　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"sed如何在执行命令前过滤特定文本行　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -434,6 +440,48 @@
 
 
 
+    
+        <section id="comments">
+    <style> aside.comment-bar { margin: auto 30px; }</style>
+    <div id="disqus_thread"></div>
+    <script>
+        var disqus_config = function(){
+            this.page.url = 'https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/';
+            this.page.identifier = '2018/01/31/sed-how-to-filter-rows-before-using-command/';
+        };
+        var loadComment = function(){
+            var d = document, s = d.createElement('script');
+            s.src = '//Cloudberry.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        }
+    </script>
+    
+    <script> loadComment(); </script>
+
+</section>
+
+
+    
+
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+
+        
+            <a href="/2018/01/31/sync-deploy-tools/" title="下一篇: Sync deploy 命令工具">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        
+    </div>
+
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2018/01/31/sed-how-to-filter-rows-before-using-command/">sed如何在执行命令前过滤特定文本行</a></li><li class="post-list-item"><a class="post-list-link" href="/2018/01/31/sync-deploy-tools/">Sync deploy 命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/25/sed-and-gawk/">初识sed与awk</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/12/08/Git-basic-operation/">学习git</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/29/shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/11/26/shell-create-function/">创建和使用shell函数</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/20/OOPinR/">R-面向对象编程</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/15/Class-in-R/">R中的属性与类</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/04/control_shell/">控制脚本</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/09/03/Linux-data-analysis-tools/">Linux数据处理命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/21/shell-show-data/">Linux脚本编程——呈现数据</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/19/working-with-user-input/">Shell脚本之处理用户输入</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/structural-command-of-shell/">Linux结构化命令</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/08/11/basic-shell/">构建基本shell脚本</a></li></ul>
 
 
 
