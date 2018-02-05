@@ -3,6 +3,62 @@
   
     
     <entry>
+      <title><![CDATA[怎么在hexo博客系统中用Rmarkdown写文章]]></title>
+      <url>/2018/02/05/how-to-write-rmd-documents-in-hexo-system/</url>
+      <content type="html"><![CDATA[<p>作为一个搞数据分析的，动笔总少不了图和代码，<code>markdown</code>对代码本身就有不错的区分和高亮支持，但你永远不可能用<code>markdown</code>写出图来啊！这类东东人们称之为静态的。为了解决这类问题，现在有两个非常流行的动态文档工具，一是<code>Python</code>中的<a href="http://jupyter.org/" target="_blank" rel="noopener"><code>Jupyter Notebook</code></a>,另外就是<code>Rstudio</code>公司开发的 <a href="http://rmarkdown.rstudio.com/rmarkdown_websites.html#overview" target="_blank" rel="noopener"><code>Rmarkdown</code></a>了。</p>
+<a id="more"></a>
+<p>就流行度来说，<code>Jupyter Notebook</code>是胜<code>Rmarkdown</code>良多的，前者不仅支持<code>Python</code>本身，而且支持<code>R</code>，不仅如此，它还扩展到其他一些语言中去了（当然<code>Rmarkdown</code>现在也能调用<code>Python</code>和<code>Shell</code>等语言代码）。但我不知道什么原因，<code>Jupyter Notebook</code>导出的<code>markdown</code>文档实在丑的很，虽然<code>Github</code>很神奇的能够全部进行识别并显示出应有的效果。另外，Notebook用来调用写博客并不方便。<code>Rmarkdown</code>直接用来写博客则方便得多，语法跟<code>markdown</code>差不多，又能利用谢益辉大大的<code>knitr</code>包将其转换为<code>markdown</code>文档。</p>
+<p>总之，作为一个R爱好者，当然用R搞事情。</p>
+<p>谢益辉已经开发了一个叫<code>blogdown</code>的包，专门用<code>Rmarkdown</code>部署生成博客，支持<code>hugo</code>所有的主题。如果读者还没有自己的博客，又使用R，推荐阅读<a href="https://bookdown.org/yihui/blogdown/" target="_blank" rel="noopener">https://bookdown.org/yihui/blogdown/</a>创建自己的博客并用<code>Rmarkdown</code>发布文章。如果你喜欢使用<code>hexo</code>博客系统，并想要使用<code>Rmarkdown</code>写文章，下面就是你需要阅读的干货了，当然我这种方法不仅限于用在<code>hexo</code>博客系统。</p>
+<p>我实际做的事情就是写了两个<code>R</code>的函数，可以通过调用的方式创建<code>Rmarkdown</code>文档，并利用<code>knitr</code>包的<code>knit</code>函数将其转换为<code>markdown</code>文档。</p>
+<h2 id="第一步"><a href="#第一步" class="headerlink" title="第一步"></a>第一步</h2><p>创建一个<code>Rmarkdown</code>文档模板，这样我们可以非常方便地在每次写新文章时生成YAML头信息。</p>
+<p>其内容如下：</p>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">title:</span> <span class="string">"Put your title here"</span></span><br><span class="line"><span class="attr">author:</span> <span class="string">王诗翔</span></span><br><span class="line"><span class="attr">date:</span> <span class="string">"2018-02-05 21:07:48"</span></span><br><span class="line"><span class="attr">top:</span> <span class="literal">false</span></span><br><span class="line"><span class="attr">categories:</span> <span class="string">Linux杂烩</span></span><br><span class="line"><span class="attr">tags:</span></span><br><span class="line"><span class="bullet">    -</span> <span class="string">Linux</span></span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+<p>我们将它保存为<code>template.Rmd</code>文件（<code>Rmarkdown</code>文件一般以<code>.Rmd</code>或者<code>.rmd</code>结尾）。</p>
+<h2 id="第二步"><a href="#第二步" class="headerlink" title="第二步"></a>第二步</h2><p>将下面两个函数保存到一个R文件（以<code>.R</code>结尾）中：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">################</span></span><br><span class="line"><span class="comment">## 用rmd写博客 ##</span></span><br><span class="line"><span class="comment">################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 作者：王诗翔</span></span><br><span class="line"><span class="comment"># 更新日期：2018-02-05</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#&gt;&gt;&gt;&gt;&gt;&gt; new_rmd_post 函数 &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span></span><br><span class="line"><span class="comment"># 写好模板文档后，你可以用这个函数来创建Rmarkdown文档</span></span><br><span class="line"><span class="comment"># 参数说明：</span></span><br><span class="line"><span class="comment"># post_name:     博文名（最好英文，显示不会乱码），比如我写这篇博文用的是</span></span><br><span class="line"><span class="comment">#                how-to-write-rmd-documents-in-hexo-system</span></span><br><span class="line"><span class="comment">#                意思不一定要对，只要能跟其他博文名字有区分就行了</span></span><br><span class="line"><span class="comment"># template_name: 模板名，起template.Rmd最好，因为每次写文章都会用到，</span></span><br><span class="line"><span class="comment">#                这样你创建的时候不用每次都指定模板的名字</span></span><br><span class="line"><span class="comment"># template_path: 模板文档的路径，默认当前工作路径</span></span><br><span class="line"><span class="comment"># post_path:     你想把生成的文档放在哪个路径，默认当前工作路径</span></span><br><span class="line">new_rmd_post &lt;- <span class="keyword">function</span>(post_name=<span class="literal">NULL</span>,template_name=<span class="string">"template.Rmd"</span>,</span><br><span class="line">                         template_path=getwd(), post_path=getwd())&#123;</span><br><span class="line">    <span class="keyword">if</span>(is.null(post_name))&#123;</span><br><span class="line">        <span class="keyword">stop</span>(<span class="string">"A post name must be given!"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    input_file   &lt;- paste(template_path,template_name, sep=<span class="string">"/"</span>)</span><br><span class="line">    current_time &lt;- Sys.Date()</span><br><span class="line">    out_file     &lt;- paste0(current_time, <span class="string">"-"</span>,post_name,<span class="string">".Rmd"</span>)</span><br><span class="line">    fl_content   &lt;- readLines(input_file)</span><br><span class="line">    writeLines(fl_content, out_file)</span><br><span class="line">    print(<span class="string">"New Rmarkdown post creat successfully!"</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#&gt;&gt;&gt;&gt;&gt; new_md_post 函数 &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span></span><br><span class="line"><span class="comment"># 你可以用这个函数来将Rmd文档转换为markdown文档</span></span><br><span class="line"><span class="comment"># 需要安装knitr包，命令为 install.packages("knitr")</span></span><br><span class="line"><span class="comment"># 参数说明：</span></span><br><span class="line"><span class="comment"># post_name: 文章文档名，推荐使用 年-月-日-英文名 的方式</span></span><br><span class="line"><span class="comment"># template_name: 模板名，你需要转换的Rmd文档</span></span><br><span class="line"><span class="comment"># template_path: 模板文档的路径，默认当前工作路径</span></span><br><span class="line"><span class="comment"># post_path:     你想把生成的文档放在哪个路径，默认当前工作路径</span></span><br><span class="line"><span class="comment"># time_tag:      时间标签，如果你转换的文档没有年-月-日这种标记，</span></span><br><span class="line"><span class="comment">#                将time_tag设定为TRUE会自动在名字前加上</span></span><br><span class="line">new_md_post &lt;- <span class="keyword">function</span>(post_name=<span class="literal">NULL</span>,template_name=<span class="string">"template.Rmd"</span>,template_path=getwd(),</span><br><span class="line">                        post_path=getwd(),time_tag=<span class="literal">FALSE</span>)&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span>(is.null(post_name))&#123;</span><br><span class="line">        post_name &lt;- gsub(pattern = <span class="string">"^(.*)\\.[Rr]md$"</span>, <span class="string">"\\1"</span>, x = template_name)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    input_file   &lt;- paste(template_path,template_name, sep=<span class="string">"/"</span>)</span><br><span class="line">    <span class="comment"># retrieve system date</span></span><br><span class="line">    <span class="keyword">if</span>(time_tag)&#123;</span><br><span class="line">        current_time &lt;- Sys.Date()</span><br><span class="line">        out_file     &lt;- paste0(post_path, <span class="string">"/"</span>, current_time, <span class="string">"-"</span>,post_name,<span class="string">".md"</span>)</span><br><span class="line">    &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">        out_file     &lt;- paste0(post_path, <span class="string">"/"</span>, post_name,<span class="string">".md"</span>)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    knitr::knit(input = input_file, output = out_file)</span><br><span class="line">    print(<span class="string">"New markdown post creat successfully!"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>我把它保存为<code>new_post.R</code>，上述我进行了比较详细的注释，请在使用之前仔细阅读一下。</p>
+<h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>我以现在以<code>Rmarkdown</code>写的这篇文章为例，简单讲一下使用。</p>
+<p>我推荐在与你<code>markdown</code>博文目录同级创建一个<code>_rmd</code>目录，你可以将该目录设为一个项目目录，专门用来写<code>rmarkdown</code>文档。</p>
+<p>或者你每次用<code>setwd()</code>函数设定工作目录。</p>
+<p>将前两步创建的两个文件扔到该目录。运行R文件：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">source</span>(<span class="string">"./new_post.R"</span>)</span><br></pre></td></tr></table></figure>
+<p>这样就能在R控制台调用里面的两个函数了。</p>
+<p>创建一个<code>Rmarkdown</code>文档：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; new_rmd_post(<span class="string">"how-to-write-rmd-documents-in-hexo-system"</span>)</span><br><span class="line">[<span class="number">1</span>] <span class="string">"New Rmarkdown post creat successfully!"</span></span><br></pre></td></tr></table></figure>
+<p>创建的文档名会自动添加年-月-日和后缀。</p>
+<p>然后你就可以开始写博客了，写好后将<code>Rmarkdown</code>转换为<code>markdown</code>文档：</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&gt; new_md_post(template_name = <span class="string">"2018-02-05-how-to-write-rmd-documents-in-hexo-system.Rmd"</span>, post_path = <span class="string">"../_posts"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">processing file: /home/wsx/blog/<span class="keyword">source</span>/_rmd/<span class="number">2018</span>-<span class="number">02</span>-<span class="number">05</span>-how-to-write-rmd-documents-<span class="keyword">in</span>-hexo-system.Rmd</span><br><span class="line">  |.................................................................| <span class="number">100</span>%</span><br><span class="line">   inline R code fragments</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">output file: ../_posts/<span class="number">2018</span>-<span class="number">02</span>-<span class="number">05</span>-how-to-write-rmd-documents-<span class="keyword">in</span>-hexo-system.md</span><br><span class="line"></span><br><span class="line">[<span class="number">1</span>] <span class="string">"New markdown post creat successfully!"</span></span><br></pre></td></tr></table></figure>
+<p>细心的娃娃可以感觉到我单独创建<code>_rmd</code>目录并将其设为工作目录的好处：需要键入函数的参数非常少。特别是你固定你自己的写法之后，你将两个函数中的目录路径默认参数全部对应上，再使用<code>Rstudio</code>的<code>TAB</code>键补全，运行命令简直秒秒种，专心写文章就好啦。</p>
+<p>本文没有涉及到画图，从理论上讲是毫无问题的，因为我只是创建了一个快速的文档创建和转换接口。后续我少不了会用到绘图，到时候再讲。</p>
+]]></content>
+      
+        <categories>
+            
+            <category> 极客R </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> R </tag>
+            
+            <tag> 写作 </tag>
+            
+            <tag> Rmd </tag>
+            
+            <tag> md </tag>
+            
+            <tag> Rstudio </tag>
+            
+            <tag> Gist </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
       <title><![CDATA[sed如何在执行命令前过滤特定文本行]]></title>
       <url>/2018/01/31/sed-how-to-filter-rows-before-using-command/</url>
       <content type="html"><![CDATA[<p>有人在微信群里问到这样一个问题：</p>
@@ -2449,207 +2505,6 @@
     </entry>
     
     <entry>
-      <title><![CDATA[构建基本shell脚本]]></title>
-      <url>/2017/08/11/basic-shell/</url>
-      <content type="html"><![CDATA[<a id="more"></a>
-<blockquote>
-<p><strong>内容</strong></p>
-<ul>
-<li>使用多个命令</li>
-<li>创建脚本文件</li>
-<li>显示消息</li>
-<li>使用变量</li>
-<li>输入输出重定向</li>
-<li>管道</li>
-<li>数学运算</li>
-<li>退出脚本</li>
-</ul>
-</blockquote>
-<h3 id="使用多个命令"><a href="#使用多个命令" class="headerlink" title="使用多个命令"></a>使用多个命令</h3><p>如果多个命令一起使用，可以放在一行并用分号分隔。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ date; who</span><br><span class="line">2017年 07月 26日 星期三 09:53:43 CST</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
-<h3 id="创建脚本文件"><a href="#创建脚本文件" class="headerlink" title="创建脚本文件"></a>创建脚本文件</h3><p>在创建脚本文件时，必须在文件的第一行指定要使用的shell，格式为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br></pre></td></tr></table></figure>
-<p>脚本文件的第一行中<code>#</code>后的惊叹号会告诉shell使用哪个shell来运行脚本（如果是其他编码语言脚本，像python，第一行类似）。</p>
-<p>其他地方的<code>#</code>用作注释行。</p>
-<p>添加名为<code>test1</code>的脚本文件，内容为：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># This script displays the date and who's logged on</span></span><br><span class="line">date</span><br><span class="line">who</span><br></pre></td></tr></table></figure>
-<p>现在运行脚本，结果会是：</p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx<span class="meta">@wsx</span>-<span class="string">ubuntu:</span>~/script_learn$ test1</span><br><span class="line">未找到 <span class="string">'test1'</span> 命令，您要输入的是否是：</span><br><span class="line"> 命令 <span class="string">'testr'</span> 来自于包 <span class="string">'python3-testrepository'</span> (main)</span><br><span class="line"> 命令 <span class="string">'testr'</span> 来自于包 <span class="string">'python-testrepository'</span> (universe)</span><br><span class="line"> 命令 <span class="string">'test'</span> 来自于包 <span class="string">'coreutils'</span> (main)</span><br><span class="line">test1：未找到命令</span><br></pre></td></tr></table></figure>
-<p>我们现在需要做的是让bash shell能够找到我们的脚本文件。shell会通过<code>PATH</code>环境变量来查找命令，我们可以看看：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $PATH</span><br><span class="line">/home/wsx/Anaconda/bin:/home/wsx/Anoconda/ENTER/bin:/usr/lib/jvm/default-java/bin:/home/wsx/bin:/home/wsx/Anaconda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin</span><br></pre></td></tr></table></figure>
-<p>很显然，我们的文件没有在这些目录范围内。要让shell找到test1脚本，我们可以采取以下两种做法之一：</p>
-<ul>
-<li>将shell脚本文件所处的目录添加到<code>PATH</code>环境变量中；</li>
-<li>在提示符中用绝对路径或相对路径来引用shell脚本文件。</li>
-</ul>
-<p>第二种方法比较简单，我们在这里试试：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1</span><br><span class="line">bash: ./test1: 权限不够</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ll test1 # 发现权限不够，查看文件的权限</span><br><span class="line">-rw-rw-r-- 1 wsx wsx 73 7月  26 10:03 test1</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test1 # 修改权限，添加可执行属性</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1 # 成功运行脚本</span><br><span class="line">2017年 07月 26日 星期三 10:09:23 CST</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
-<h3 id="显示消息"><a href="#显示消息" class="headerlink" title="显示消息"></a>显示消息</h3><p>在<code>echo</code>命令后面加上一个字符串，就能显示出这个文本字符串。这种方式可以添加自己的文本消息来告诉脚本用户脚本正在做什么。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo This is a test</span><br><span class="line">This is a test</span><br></pre></td></tr></table></figure>
-<p>如果文本本身带有字符串，我们需要<strong>用单引号或双引号来划定文本字符串</strong>。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo "Let's see if this'll work"</span><br><span class="line">Let's see if this'll work</span><br></pre></td></tr></table></figure>
-<p>我们修改下之前的test1文件，增加消息显示：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br><span class="line">echo The time and date are:</span><br><span class="line">date</span><br><span class="line">echo "Let's see who's logged into the system"</span><br><span class="line">who</span><br></pre></td></tr></table></figure>
-<p>运行：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1</span><br><span class="line">The time and date are:</span><br><span class="line">2017年 07月 26日 星期三 10:17:59 CST</span><br><span class="line">Let's see who's logged into the system</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
-<p><strong>如果想把文本字符串和命令输出显示在同一行中</strong>，可以用<code>echo</code>语句的<code>-n</code>参数。需要在字符串的两侧加上引号，并且保证字符串尾部有一个空格（不然字符串和命令输出就粘连到一起了）。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br><span class="line">echo -n "The time and date are: "</span><br><span class="line">date</span><br><span class="line">echo  "Let's see who's logged into the system: "</span><br><span class="line">who</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行结果输出</span></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1</span><br><span class="line">The time and date are: 2017年 07月 26日 星期三 10:24:04 CST</span><br><span class="line">Let's see who's logged into the system:</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
-<h3 id="使用变量"><a href="#使用变量" class="headerlink" title="使用变量"></a>使用变量</h3><p>变量允许我们临时性地将信息存储在shell脚本中，以便和脚本中的其他命令一起使用。</p>
-<p><strong>环境变量</strong></p>
-<p>shell维护着一组环境变量，用来记录特定的系统信息。比如系统的名称、登录到系统上的用户名、用户的系统ID(也称为UID)、用户默认主目录以及shell查找程序的搜索路径。</p>
-<p>使用<code>set</code>命令显示一份完整的当前环境变量列表。<code>env</code>与<code>printenv</code>命令都可以显示全局变量。（这些命令输出结果比较多，不展示了。之前关于环境变量的笔记有比较详细的描述。）</p>
-<p>在环境变量名称之前加上美元符可以使用这些环境变量。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test2</span><br><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> display user information from the system</span></span><br><span class="line">echo "User info for userid: $USER"</span><br><span class="line">echo UID: $UID</span><br><span class="line">echo HOME: $HOME</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test2</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test2</span><br><span class="line">User info for userid: wsx</span><br><span class="line">UID: 1000</span><br><span class="line">HOME: /home/wsx</span><br></pre></td></tr></table></figure>
-<p>可以想象的到，如果我们想要使用实际的美元符而不是引用变量，肯定会出问题。这时候我们需要在美元符前面加上<code>\</code>进行转义，以显示美元符本身。</p>
-<p><strong>用户变量</strong></p>
-<p>使用等号将值赋给用户变量。<strong>注意，在变量、等号和值之间不能出现空格！</strong>这个是初学者常见的一个问题，本人也非常不太适应这个。因为在其他语言中不区分等号两边的空格，相信接触过其他脚本的朋友们肯定有习惯打空格使代码美观的，这在bash shell中是万万行不通滴。</p>
-<p>一个使用的例子：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test3</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> testing variables</span></span><br><span class="line">days=10</span><br><span class="line">guest="Katie"</span><br><span class="line">echo "$guest checked in $days days ago"</span><br><span class="line">days=5</span><br><span class="line">guest="Jessica"</span><br><span class="line">echo "$guest checked in $days days ago"</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test3</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test3</span><br><span class="line">Katie checked in 10 days ago</span><br><span class="line">Jessica checked in 5 days ago</span><br></pre></td></tr></table></figure>
-<p>变量每次被引用时，都会输出当前赋给它的值。重要的是要记住，引用一个变量值时需要使用美元符，而引用变量来对其进行赋值时则不需要使用美元符。</p>
-<h3 id="命令替换"><a href="#命令替换" class="headerlink" title="命令替换"></a>命令替换</h3><p>shell脚本最有用的特性之一就是可以从命令输出中提取信息，并将其赋给变量。</p>
-<p>有两种方法可以将命令输出赋给变量：</p>
-<ul>
-<li>反引号字符(`)</li>
-<li>$()格式</li>
-</ul>
-<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">要么用一对反引号把整个命令行命令围起来：</span><br><span class="line">testing=`date`</span><br><span class="line">要么使用$()格式</span><br><span class="line">testing=<span class="variable">$(date)</span></span><br></pre></td></tr></table></figure>
-<p>下面是一个例子，在脚本中通过命令替换获得当前日期并用它来生成唯一文件名：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test4</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> copy the /usr/bin directory listing to a <span class="built_in">log</span> file</span></span><br><span class="line">today=$(date +%y%m%d)</span><br><span class="line">ls /usr/bin -al &gt; log.$today</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test4</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test4</span><br></pre></td></tr></table></figure>
-<h3 id="重定向输入和输出"><a href="#重定向输入和输出" class="headerlink" title="重定向输入和输出"></a>重定向输入和输出</h3><p>通过几个操作符进行重定向，我们可以将命令的结果输出到另外的位置（文件）。当然，重定向可以用于输入。</p>
-<p><strong>输出重定向</strong></p>
-<p>最基本的操作符是<code>&gt;</code>。比如我们想要输出命令结果到一个指定文件：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ date &gt; test6</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ls -l test6</span><br><span class="line">-rw-rw-r-- 1 wsx wsx 43 7月  26 16:42 test6</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test6</span><br><span class="line">2017年 07月 26日 星期三 16:42:34 CST</span><br></pre></td></tr></table></figure>
-<p>如果想要将命令的输出追加到已有文件中，需要用双大于号（&gt;&gt;）来追加数据。</p>
-<p><strong>输入重定向</strong></p>
-<p>输入重定向和输出重定向正好相反。输入重定向将文件的内容重定向到命令，而非将命令的输出重定向到文件。</p>
-<p>使用的符号是小于号（&lt;）。</p>
-<blockquote>
-<p>一种简单的记忆方法是：在命令行上，命令总是在左侧，而重定向符号“指向”数据流动的方向。小于号说明数据正在从输入文件流向命令。</p>
-</blockquote>
-<p>比如用wc命令检查文本的行数、词数和字节数。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ wc &lt; test6</span><br><span class="line"> 1  6 43</span><br></pre></td></tr></table></figure>
-<p>另一种输入重定向的方法是<strong>内联输入重定向</strong>。它无需使用文件进行重定向，只需要在命令行中指定用于输入重定向的数据即可。它使用的符号是远小于号（&lt;&lt;），除了这个符号，我们还需要指定一个文本标记用来划分输入数据的开始和结尾。任何字符串都可以作为文本标记，但在数据的开始和结尾文本标记必须一致。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ wc &lt;&lt; EOF</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">test</span> string1</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">test</span> string2</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">test</span> string3</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> EOF</span></span><br><span class="line"> 3  6 39</span><br></pre></td></tr></table></figure>
-<p>它的形式为：</p>
-<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">command</span> &lt;&lt; marker</span><br><span class="line"><span class="class"><span class="keyword">data</span></span></span><br><span class="line"><span class="title">marker</span></span><br></pre></td></tr></table></figure>
-<h3 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h3><p>有时候需要将一个命令的输出作为另一个命令的输入。通过<code>|</code>符号分隔命令即可实现管道。</p>
-<p>比如我想查看某个文件（test1）的前两行并进行排序，操作如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test1</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br><span class="line">echo -n "The time and date are: "</span><br><span class="line">date</span><br><span class="line">echo  "Let's see who's logged into the system: "</span><br><span class="line">who</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test1 | head -2 | sort</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br></pre></td></tr></table></figure>
-<p>管道的强大之处在于可以根据自己的需求灵活地组合和使用各种linux命令工具。这里只是一个简单的例子，要熟练掌握少不了平时多多研究和练习。</p>
-<h3 id="执行数学运算"><a href="#执行数学运算" class="headerlink" title="执行数学运算"></a>执行数学运算</h3><p>对shell脚本来说，执行数学运算非常麻烦。有两种实现方式。</p>
-<p><strong>expr</strong>命令</p>
-<p><code>expr</code>命令允许在命令行上处理数学表达式，但是特别笨拙。（Bourne shell中）</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ exrpr 1 + 5</span><br><span class="line">未找到 'exrpr' 命令，您要输入的是否是：</span><br><span class="line"> 命令 'expr' 来自于包 'coreutils' (main)</span><br><span class="line">exrpr：未找到命令</span><br></pre></td></tr></table></figure>
-<p>看到没有，那算了。它基本涉及的操作跟我们使用的其他语言是一致的。但是有些问题需要处理，像<code>*</code>是通配符，在运算是是做乘号处理的，需要进行转义。</p>
-<p><strong>使用方括号</strong></p>
-<p>bash shell提供了一种更简单的方法来执行数学表达式。在bash中，在将一个数学运算结果赋给某个变量时，可以用美元符和方括号（$[operator]）将数学表达式围起来。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ var1=$[1+5]</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $var1</span><br><span class="line">6</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ var2=$[$var1+2]</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $var2</span><br><span class="line">8</span><br></pre></td></tr></table></figure>
-<p>这种方式不仅方便，而且因为在方括号内，不会让shell误解乘号或其他符号。</p>
-<p>但bash shell计算有一个主要限制：<strong>它只支持整数运算！</strong></p>
-<p><strong>浮点解决方案</strong></p>
-<p>最常见的方案是用内建的bash计算器。它实际上是一门编程语言，它允许在命令行中输入浮点表达式，然后解释并计算该表达式，最后返回结果。bash计算器能够识别：</p>
-<ul>
-<li>数字（整数和浮点数）</li>
-<li>变量（简单变量和数组）</li>
-<li>注释（/<em> </em>/开始的行）</li>
-<li>表达式</li>
-<li>编程语句</li>
-<li>函数</li>
-</ul>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ bc</span><br><span class="line">bc 1.06.95</span><br><span class="line">Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006 Free Software Foundation, Inc.</span><br><span class="line">This is free software with ABSOLUTELY NO WARRANTY.</span><br><span class="line">For details type `warranty'.</span><br><span class="line">12 * 5.4</span><br><span class="line">64.8</span><br><span class="line">3.156 * (3 + 5)</span><br><span class="line">25.248</span><br><span class="line">quit</span><br></pre></td></tr></table></figure>
-<p>在脚本中使用bc</p>
-<p>可以用命令替换运行bc命令，并将输出赋给一个变量。基本格式如下：</p>
-<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">variable</span>=$(echo <span class="comment">"options; expression"</span> |<span class="comment"> bc)</span></span><br></pre></td></tr></table></figure>
-<p>options设置变量，expression参数定义了通过bc执行的数学表达式。</p>
-<p>看一个简单实例：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test9</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">var1=$(echo "scale=4; 3.44/5" | bc)</span><br><span class="line">echo The answer is $var1</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test9</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test9</span><br><span class="line">The answer is .6880</span><br></pre></td></tr></table></figure>
-<p>这个例子将<code>scale</code>变量设置为四位小数，并在<code>expression</code>部分指定了特定的运算。</p>
-<p>这个方法适用于较短的运算，但有时我们会涉及更多的数字。如果需要进行大量运算，在一个命令行中列出多个表达式就会有点麻烦。</p>
-<p>这里有一个解决方法：使用内联输入重定向，将一个文件重定向到bc命令来处理。格式为：</p>
-<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">variable=$(bc &lt;&lt; <span class="built_in">EOF</span></span><br><span class="line">options</span><br><span class="line"><span class="built_in">statements</span></span><br><span class="line">expressions</span><br><span class="line"><span class="built_in">EOF</span>)</span><br></pre></td></tr></table></figure>
-<p><code>EOF</code>文本字符串标识了内联重定向数据的起始。注意，仍然需要命令替换符号将bc命令的输出赋给变量。</p>
-<p>下面是一个例子：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test10</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">var1=10.46</span><br><span class="line">var2=43.67</span><br><span class="line">var3=33.2</span><br><span class="line">var4=71</span><br><span class="line"></span><br><span class="line">var5=$(bc &lt;&lt;EOF</span><br><span class="line">scale=4</span><br><span class="line">a1 = ( $var1 * $var2)</span><br><span class="line">b1 = ( $var3 * $var4)</span><br><span class="line">a1 + b1</span><br><span class="line">EOF</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">echo The final answer for this mess is $var5</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test10</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test10</span><br><span class="line">The final answer for this mess is 2813.9882</span><br></pre></td></tr></table></figure>
-<p>在普通的shell脚本中，数字默认当做字符串处理。这也是为什么我们脚本处理计算麻烦和我们需要特定的工具和方法来进行处理。一定要注意区分。</p>
-<h3 id="退出脚本"><a href="#退出脚本" class="headerlink" title="退出脚本"></a>退出脚本</h3><p>前面运行的脚本都是命令执行完成，脚本自动结束。其实我们可以用更为优雅的方式告诉shell命令运行完成，因为每个命令都使用<strong>退出状态码（exit status）</strong>，它是一个0-255的整数值，我们可以捕获这个值并在脚本中使用。</p>
-<p>Linux提供了一个专门的变量<code>$?</code>来保存上个已执行命令的退出状态码。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ date</span><br><span class="line">2017年 07月 27日 星期四 10:44:18 CST</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $?</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
-<p>按照惯例，一个成功结束的命令的退出状态码是0。如果有错误，则显示一个正数值。</p>
-<p>Linux错误退出状态码没有什么标准，但有一些参考：</p>
-<table>
-<thead>
-<tr>
-<th>状态码</th>
-<th>描述</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>0</td>
-<td>命令成功结束</td>
-</tr>
-<tr>
-<td>1</td>
-<td>一般性未知错误</td>
-</tr>
-<tr>
-<td>2</td>
-<td>不适合的shell命令</td>
-</tr>
-<tr>
-<td>126</td>
-<td>命令不可执行</td>
-</tr>
-<tr>
-<td>127</td>
-<td>没找到命令</td>
-</tr>
-<tr>
-<td>128</td>
-<td>无效的退出参数</td>
-</tr>
-<tr>
-<td>128+x</td>
-<td>与Linux信号x相关的严重错误</td>
-</tr>
-<tr>
-<td>130</td>
-<td>通过Ctrl+C终止的命令</td>
-</tr>
-<tr>
-<td>255</td>
-<td>正常范围之外的退出状态码</td>
-</tr>
-</tbody>
-</table>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ asfg</span><br><span class="line">未找到 'asfg' 命令，您要输入的是否是：</span><br><span class="line"> 命令 'asdfg' 来自于包 'aoeui' (universe)</span><br><span class="line">asfg：未找到命令</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $?</span><br><span class="line">127</span><br></pre></td></tr></table></figure>
-<p><strong>exit命令</strong></p>
-<p>默认，shell脚本会以脚本最后的一个命令的退出状态码退出。</p>
-<p>但是我们可以改变这种默认行为，返回自己的退出状态码。exit命令允许在脚本结束时指定一个状态退出码。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test13</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> testing the <span class="built_in">exit</span> status</span></span><br><span class="line">var1=10</span><br><span class="line">var2=30</span><br><span class="line">var3=$[$var1 + $var2]</span><br><span class="line">echo The answer is $var3</span><br><span class="line">exit 5</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test13</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test13</span><br><span class="line">The answer is 40</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $?</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
-<p>注意最大255，如果大于它，得到的是求模的结果（余数）。</p>
-]]></content>
-      
-        <categories>
-            
-            <category> Linux杂烩 </category>
-            
-            <category> shell编程 </category>
-            
-        </categories>
-        
-        
-        <tags>
-            
-            <tag> bash shell </tag>
-            
-            <tag> shell笔记 </tag>
-            
-        </tags>
-        
-    </entry>
-    
-    <entry>
       <title><![CDATA[Linux结构化命令]]></title>
       <url>/2017/08/11/structural-command-of-shell/</url>
       <content type="html"><![CDATA[<a id="more"></a>
@@ -2669,20 +2524,20 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">if command</span><br><span class="line">then</span><br><span class="line">truecommands</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 <p><strong>注意</strong>，在其他编程语言中，<code>if</code>语句之后的对象是一个等式，等式的结果为<code>TRUE</code>或者<code>FALSE</code>，但是bash shell中的<code>if</code>语句是运行<code>if</code>后面的命令，如果该命令的退出状态码是0（命令成功执行），则运行<code>then</code>语句后面的命令。<code>fi</code>表示<code>if</code>语句到此结束。</p>
 <p>下面是一个简单的例子：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test1.sh</span><br><span class="line"><span class="meta">#</span>! /bin/bash</span><br><span class="line"><span class="meta">#</span> testing the if statement</span><br><span class="line">if pwd</span><br><span class="line">then</span><br><span class="line">    echo "It worked"</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test1.sh</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1.sh</span><br><span class="line">/home/wsx/script_learn</span><br><span class="line">It worked</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test1.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> testing the <span class="keyword">if</span> statement</span></span><br><span class="line">if pwd</span><br><span class="line">then</span><br><span class="line">    echo "It worked"</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test1.sh</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1.sh</span><br><span class="line">/home/wsx/script_learn</span><br><span class="line">It worked</span><br></pre></td></tr></table></figure>
 <p>这个例子中在判断成功执行<code>pwd</code>命令后，执行输出文本字符串。</p>
 <p>大家可以尝试把<code>pwd</code>命令改成随便乱打的字符试试结果。它会显示报错信息，<code>then</code>后面的语句也不会执行。</p>
 <p>if-then语句的另一种形式：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">if command; then</span><br><span class="line">commands</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 <p>在then部分，我们可以使用多个命令（从格式中command结尾有没有s也可以看出）。</p>
 <p>我们再来一个例子：在<code>if</code>语句中用<code>grep</code>命令在<code>/etc/passwd</code>文件中查找某个用户名当前是否在系统上使用。如果有用户使用了哪个登录名，脚本会显示一些文本信息并列出该用户HOME目录的bash文件。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test3.sh</span><br><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"><span class="meta">#</span> testing multiple commands in the then section</span><br><span class="line"><span class="meta">#</span></span><br><span class="line">testuser=wsx</span><br><span class="line"><span class="meta">#</span></span><br><span class="line">if grep $testuser /etc/passwd</span><br><span class="line">then</span><br><span class="line">  echo "This is my first command"</span><br><span class="line">  echo "This is my second command"</span><br><span class="line">  echo "I can even put in other commands besides echo:"</span><br><span class="line">  ls -a /home/$testuser/.b*</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test3.sh</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test3.sh</span><br><span class="line">wsx:x:1000:1000:wsx,,,:/home/wsx:/bin/bash</span><br><span class="line">This is my first command</span><br><span class="line">This is my second command</span><br><span class="line">I can even put in other commands besides echo:</span><br><span class="line">/home/wsx/.bash_history  /home/wsx/.bashrc</span><br><span class="line">/home/wsx/.bash_logout	 /home/wsx/.bashrc-anaconda3.bak</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test3.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> testing multiple commands <span class="keyword">in</span> the <span class="keyword">then</span> section</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">testuser=wsx</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">if grep $testuser /etc/passwd</span><br><span class="line">then</span><br><span class="line">  echo "This is my first command"</span><br><span class="line">  echo "This is my second command"</span><br><span class="line">  echo "I can even put in other commands besides echo:"</span><br><span class="line">  ls -a /home/$testuser/.b*</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test3.sh</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test3.sh</span><br><span class="line">wsx:x:1000:1000:wsx,,,:/home/wsx:/bin/bash</span><br><span class="line">This is my first command</span><br><span class="line">This is my second command</span><br><span class="line">I can even put in other commands besides echo:</span><br><span class="line">/home/wsx/.bash_history  /home/wsx/.bashrc</span><br><span class="line">/home/wsx/.bash_logout	 /home/wsx/.bashrc-anaconda3.bak</span><br></pre></td></tr></table></figure>
 <p>如果设置的用户名不存在，那么就没有输出。那么如果在这里显示的一些消息可以说明用户名在系统中未找到，这样可能就会显得更友好。所以接下来看看<code>if-then-else</code>语句。</p>
 <h3 id="if-then-else语句"><a href="#if-then-else语句" class="headerlink" title="if-then-else语句"></a>if-then-else语句</h3><p>我相信意思非常容易理解，这里较之前我们添加了一个<code>else</code>块来处理<code>if</code>中命令没有成功执行的步骤。格式为：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">if command</span><br><span class="line">then</span><br><span class="line">  commands</span><br><span class="line">else commands</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 <h3 id="嵌套if"><a href="#嵌套if" class="headerlink" title="嵌套if"></a>嵌套if</h3><p>有时我们需要检查脚本代码中的多种条件，可以是用嵌套的<code>if-then</code>语句。</p>
 <p>处理一个例子：检查<code>/etc/passwd</code>文件中是否存在某个用户名以及该用户名的目录是否存在。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test5.sh</span><br><span class="line"><span class="meta">#</span>!/bin/bash</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> Testing nested ifs</span><br><span class="line"><span class="meta">#</span></span><br><span class="line">testuser=NoSuchUser</span><br><span class="line"><span class="meta">#</span></span><br><span class="line">if grep $testuser /etc/passwd</span><br><span class="line">then</span><br><span class="line">  echo "The user $testuser exits on this system."</span><br><span class="line">else</span><br><span class="line">  echo "The user $testuser does not exit on this system."</span><br><span class="line">  if ls -d /home/$testuser/</span><br><span class="line">  then</span><br><span class="line">     echo "However, $testuser has a directory."</span><br><span class="line">  fi</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test5.sh</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test5.sh</span><br><span class="line">The user NoSuchUser does not exit on this system.</span><br><span class="line">ls: 无法访问'/home/NoSuchUser/': 没有那个文件或目录</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test5.sh</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> Testing nested ifs</span></span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">testuser=NoSuchUser</span><br><span class="line"><span class="meta">#</span><span class="bash"></span></span><br><span class="line">if grep $testuser /etc/passwd</span><br><span class="line">then</span><br><span class="line">  echo "The user $testuser exits on this system."</span><br><span class="line">else</span><br><span class="line">  echo "The user $testuser does not exit on this system."</span><br><span class="line">  if ls -d /home/$testuser/</span><br><span class="line">  then</span><br><span class="line">     echo "However, $testuser has a directory."</span><br><span class="line">  fi</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test5.sh</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test5.sh</span><br><span class="line">The user NoSuchUser does not exit on this system.</span><br><span class="line">ls: 无法访问'/home/NoSuchUser/': 没有那个文件或目录</span><br></pre></td></tr></table></figure>
 <p>可以使用<code>else</code>部分的另一种形式:<code>elif</code>。这样我们就不再用书写多个<code>if-then</code>语句了。在其他语言中，有的是用<code>elif</code>的形式，有的使用<code>else if</code>等形式。面对相同内含在不同语言中不同的表示方式，我们需要有意识地区别，以免接触的东西多了可能各种语言代码串写喔。</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">if command1</span><br><span class="line">then</span><br><span class="line">truecommands</span><br><span class="line">elif command2</span><br><span class="line">then</span><br><span class="line">truemore commands</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
 <p>这种表示方式逻辑更为清晰，但是也有点容易让写的人搞混。其实可以看到一个<code>if</code>对应一个<code>fi</code>。这是一个大的嵌套<code>if</code>结构。</p>
@@ -3050,6 +2905,207 @@
 <p>为了把数据从文件导向<code>while</code>命令，只要再<code>while</code>命令尾部加一个重定向符号。</p>
 <p>处理过程写成脚本如下：</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> process new user accounts</span></span><br><span class="line"></span><br><span class="line">input="users.csv"</span><br><span class="line">while IFS=',', read -r userid name</span><br><span class="line">do</span><br><span class="line">trueecho "adding $userid"</span><br><span class="line">trueuseradd -c "$name" -m $userid</span><br><span class="line">done &lt; "$input"</span><br></pre></td></tr></table></figure>
+]]></content>
+      
+        <categories>
+            
+            <category> Linux杂烩 </category>
+            
+            <category> shell编程 </category>
+            
+        </categories>
+        
+        
+        <tags>
+            
+            <tag> bash shell </tag>
+            
+            <tag> shell笔记 </tag>
+            
+        </tags>
+        
+    </entry>
+    
+    <entry>
+      <title><![CDATA[构建基本shell脚本]]></title>
+      <url>/2017/08/11/basic-shell/</url>
+      <content type="html"><![CDATA[<a id="more"></a>
+<blockquote>
+<p><strong>内容</strong></p>
+<ul>
+<li>使用多个命令</li>
+<li>创建脚本文件</li>
+<li>显示消息</li>
+<li>使用变量</li>
+<li>输入输出重定向</li>
+<li>管道</li>
+<li>数学运算</li>
+<li>退出脚本</li>
+</ul>
+</blockquote>
+<h3 id="使用多个命令"><a href="#使用多个命令" class="headerlink" title="使用多个命令"></a>使用多个命令</h3><p>如果多个命令一起使用，可以放在一行并用分号分隔。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~$ date; who</span><br><span class="line">2017年 07月 26日 星期三 09:53:43 CST</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
+<h3 id="创建脚本文件"><a href="#创建脚本文件" class="headerlink" title="创建脚本文件"></a>创建脚本文件</h3><p>在创建脚本文件时，必须在文件的第一行指定要使用的shell，格式为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br></pre></td></tr></table></figure>
+<p>脚本文件的第一行中<code>#</code>后的惊叹号会告诉shell使用哪个shell来运行脚本（如果是其他编码语言脚本，像python，第一行类似）。</p>
+<p>其他地方的<code>#</code>用作注释行。</p>
+<p>添加名为<code>test1</code>的脚本文件，内容为：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment"># This script displays the date and who's logged on</span></span><br><span class="line">date</span><br><span class="line">who</span><br></pre></td></tr></table></figure>
+<p>现在运行脚本，结果会是：</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx<span class="meta">@wsx</span>-<span class="string">ubuntu:</span>~/script_learn$ test1</span><br><span class="line">未找到 <span class="string">'test1'</span> 命令，您要输入的是否是：</span><br><span class="line"> 命令 <span class="string">'testr'</span> 来自于包 <span class="string">'python3-testrepository'</span> (main)</span><br><span class="line"> 命令 <span class="string">'testr'</span> 来自于包 <span class="string">'python-testrepository'</span> (universe)</span><br><span class="line"> 命令 <span class="string">'test'</span> 来自于包 <span class="string">'coreutils'</span> (main)</span><br><span class="line">test1：未找到命令</span><br></pre></td></tr></table></figure>
+<p>我们现在需要做的是让bash shell能够找到我们的脚本文件。shell会通过<code>PATH</code>环境变量来查找命令，我们可以看看：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $PATH</span><br><span class="line">/home/wsx/Anaconda/bin:/home/wsx/Anoconda/ENTER/bin:/usr/lib/jvm/default-java/bin:/home/wsx/bin:/home/wsx/Anaconda/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin</span><br></pre></td></tr></table></figure>
+<p>很显然，我们的文件没有在这些目录范围内。要让shell找到test1脚本，我们可以采取以下两种做法之一：</p>
+<ul>
+<li>将shell脚本文件所处的目录添加到<code>PATH</code>环境变量中；</li>
+<li>在提示符中用绝对路径或相对路径来引用shell脚本文件。</li>
+</ul>
+<p>第二种方法比较简单，我们在这里试试：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1</span><br><span class="line">bash: ./test1: 权限不够</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ll test1 # 发现权限不够，查看文件的权限</span><br><span class="line">-rw-rw-r-- 1 wsx wsx 73 7月  26 10:03 test1</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test1 # 修改权限，添加可执行属性</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1 # 成功运行脚本</span><br><span class="line">2017年 07月 26日 星期三 10:09:23 CST</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
+<h3 id="显示消息"><a href="#显示消息" class="headerlink" title="显示消息"></a>显示消息</h3><p>在<code>echo</code>命令后面加上一个字符串，就能显示出这个文本字符串。这种方式可以添加自己的文本消息来告诉脚本用户脚本正在做什么。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo This is a test</span><br><span class="line">This is a test</span><br></pre></td></tr></table></figure>
+<p>如果文本本身带有字符串，我们需要<strong>用单引号或双引号来划定文本字符串</strong>。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo "Let's see if this'll work"</span><br><span class="line">Let's see if this'll work</span><br></pre></td></tr></table></figure>
+<p>我们修改下之前的test1文件，增加消息显示：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br><span class="line">echo The time and date are:</span><br><span class="line">date</span><br><span class="line">echo "Let's see who's logged into the system"</span><br><span class="line">who</span><br></pre></td></tr></table></figure>
+<p>运行：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1</span><br><span class="line">The time and date are:</span><br><span class="line">2017年 07月 26日 星期三 10:17:59 CST</span><br><span class="line">Let's see who's logged into the system</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
+<p><strong>如果想把文本字符串和命令输出显示在同一行中</strong>，可以用<code>echo</code>语句的<code>-n</code>参数。需要在字符串的两侧加上引号，并且保证字符串尾部有一个空格（不然字符串和命令输出就粘连到一起了）。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br><span class="line">echo -n "The time and date are: "</span><br><span class="line">date</span><br><span class="line">echo  "Let's see who's logged into the system: "</span><br><span class="line">who</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 运行结果输出</span></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test1</span><br><span class="line">The time and date are: 2017年 07月 26日 星期三 10:24:04 CST</span><br><span class="line">Let's see who's logged into the system:</span><br><span class="line">wsx      tty7         2017-07-26 09:48 (:0)</span><br></pre></td></tr></table></figure>
+<h3 id="使用变量"><a href="#使用变量" class="headerlink" title="使用变量"></a>使用变量</h3><p>变量允许我们临时性地将信息存储在shell脚本中，以便和脚本中的其他命令一起使用。</p>
+<p><strong>环境变量</strong></p>
+<p>shell维护着一组环境变量，用来记录特定的系统信息。比如系统的名称、登录到系统上的用户名、用户的系统ID(也称为UID)、用户默认主目录以及shell查找程序的搜索路径。</p>
+<p>使用<code>set</code>命令显示一份完整的当前环境变量列表。<code>env</code>与<code>printenv</code>命令都可以显示全局变量。（这些命令输出结果比较多，不展示了。之前关于环境变量的笔记有比较详细的描述。）</p>
+<p>在环境变量名称之前加上美元符可以使用这些环境变量。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test2</span><br><span class="line"><span class="meta">#</span><span class="bash">! /bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> display user information from the system</span></span><br><span class="line">echo "User info for userid: $USER"</span><br><span class="line">echo UID: $UID</span><br><span class="line">echo HOME: $HOME</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test2</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test2</span><br><span class="line">User info for userid: wsx</span><br><span class="line">UID: 1000</span><br><span class="line">HOME: /home/wsx</span><br></pre></td></tr></table></figure>
+<p>可以想象的到，如果我们想要使用实际的美元符而不是引用变量，肯定会出问题。这时候我们需要在美元符前面加上<code>\</code>进行转义，以显示美元符本身。</p>
+<p><strong>用户变量</strong></p>
+<p>使用等号将值赋给用户变量。<strong>注意，在变量、等号和值之间不能出现空格！</strong>这个是初学者常见的一个问题，本人也非常不太适应这个。因为在其他语言中不区分等号两边的空格，相信接触过其他脚本的朋友们肯定有习惯打空格使代码美观的，这在bash shell中是万万行不通滴。</p>
+<p>一个使用的例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test3</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> testing variables</span></span><br><span class="line">days=10</span><br><span class="line">guest="Katie"</span><br><span class="line">echo "$guest checked in $days days ago"</span><br><span class="line">days=5</span><br><span class="line">guest="Jessica"</span><br><span class="line">echo "$guest checked in $days days ago"</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test3</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test3</span><br><span class="line">Katie checked in 10 days ago</span><br><span class="line">Jessica checked in 5 days ago</span><br></pre></td></tr></table></figure>
+<p>变量每次被引用时，都会输出当前赋给它的值。重要的是要记住，引用一个变量值时需要使用美元符，而引用变量来对其进行赋值时则不需要使用美元符。</p>
+<h3 id="命令替换"><a href="#命令替换" class="headerlink" title="命令替换"></a>命令替换</h3><p>shell脚本最有用的特性之一就是可以从命令输出中提取信息，并将其赋给变量。</p>
+<p>有两种方法可以将命令输出赋给变量：</p>
+<ul>
+<li>反引号字符(`)</li>
+<li>$()格式</li>
+</ul>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">要么用一对反引号把整个命令行命令围起来：</span><br><span class="line">testing=`date`</span><br><span class="line">要么使用$()格式</span><br><span class="line">testing=<span class="variable">$(date)</span></span><br></pre></td></tr></table></figure>
+<p>下面是一个例子，在脚本中通过命令替换获得当前日期并用它来生成唯一文件名：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test4</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> copy the /usr/bin directory listing to a <span class="built_in">log</span> file</span></span><br><span class="line">today=$(date +%y%m%d)</span><br><span class="line">ls /usr/bin -al &gt; log.$today</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test4</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test4</span><br></pre></td></tr></table></figure>
+<h3 id="重定向输入和输出"><a href="#重定向输入和输出" class="headerlink" title="重定向输入和输出"></a>重定向输入和输出</h3><p>通过几个操作符进行重定向，我们可以将命令的结果输出到另外的位置（文件）。当然，重定向可以用于输入。</p>
+<p><strong>输出重定向</strong></p>
+<p>最基本的操作符是<code>&gt;</code>。比如我们想要输出命令结果到一个指定文件：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ date &gt; test6</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ls -l test6</span><br><span class="line">-rw-rw-r-- 1 wsx wsx 43 7月  26 16:42 test6</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test6</span><br><span class="line">2017年 07月 26日 星期三 16:42:34 CST</span><br></pre></td></tr></table></figure>
+<p>如果想要将命令的输出追加到已有文件中，需要用双大于号（&gt;&gt;）来追加数据。</p>
+<p><strong>输入重定向</strong></p>
+<p>输入重定向和输出重定向正好相反。输入重定向将文件的内容重定向到命令，而非将命令的输出重定向到文件。</p>
+<p>使用的符号是小于号（&lt;）。</p>
+<blockquote>
+<p>一种简单的记忆方法是：在命令行上，命令总是在左侧，而重定向符号“指向”数据流动的方向。小于号说明数据正在从输入文件流向命令。</p>
+</blockquote>
+<p>比如用wc命令检查文本的行数、词数和字节数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ wc &lt; test6</span><br><span class="line"> 1  6 43</span><br></pre></td></tr></table></figure>
+<p>另一种输入重定向的方法是<strong>内联输入重定向</strong>。它无需使用文件进行重定向，只需要在命令行中指定用于输入重定向的数据即可。它使用的符号是远小于号（&lt;&lt;），除了这个符号，我们还需要指定一个文本标记用来划分输入数据的开始和结尾。任何字符串都可以作为文本标记，但在数据的开始和结尾文本标记必须一致。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ wc &lt;&lt; EOF</span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">test</span> string1</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">test</span> string2</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> <span class="built_in">test</span> string3</span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> EOF</span></span><br><span class="line"> 3  6 39</span><br></pre></td></tr></table></figure>
+<p>它的形式为：</p>
+<figure class="highlight haskell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="title">command</span> &lt;&lt; marker</span><br><span class="line"><span class="class"><span class="keyword">data</span></span></span><br><span class="line"><span class="title">marker</span></span><br></pre></td></tr></table></figure>
+<h3 id="管道"><a href="#管道" class="headerlink" title="管道"></a>管道</h3><p>有时候需要将一个命令的输出作为另一个命令的输入。通过<code>|</code>符号分隔命令即可实现管道。</p>
+<p>比如我想查看某个文件（test1）的前两行并进行排序，操作如下：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test1</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br><span class="line">echo -n "The time and date are: "</span><br><span class="line">date</span><br><span class="line">echo  "Let's see who's logged into the system: "</span><br><span class="line">who</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test1 | head -2 | sort</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> This script displays the date and who<span class="string">'s logged on</span></span></span><br></pre></td></tr></table></figure>
+<p>管道的强大之处在于可以根据自己的需求灵活地组合和使用各种linux命令工具。这里只是一个简单的例子，要熟练掌握少不了平时多多研究和练习。</p>
+<h3 id="执行数学运算"><a href="#执行数学运算" class="headerlink" title="执行数学运算"></a>执行数学运算</h3><p>对shell脚本来说，执行数学运算非常麻烦。有两种实现方式。</p>
+<p><strong>expr</strong>命令</p>
+<p><code>expr</code>命令允许在命令行上处理数学表达式，但是特别笨拙。（Bourne shell中）</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ exrpr 1 + 5</span><br><span class="line">未找到 'exrpr' 命令，您要输入的是否是：</span><br><span class="line"> 命令 'expr' 来自于包 'coreutils' (main)</span><br><span class="line">exrpr：未找到命令</span><br></pre></td></tr></table></figure>
+<p>看到没有，那算了。它基本涉及的操作跟我们使用的其他语言是一致的。但是有些问题需要处理，像<code>*</code>是通配符，在运算是是做乘号处理的，需要进行转义。</p>
+<p><strong>使用方括号</strong></p>
+<p>bash shell提供了一种更简单的方法来执行数学表达式。在bash中，在将一个数学运算结果赋给某个变量时，可以用美元符和方括号（$[operator]）将数学表达式围起来。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ var1=$[1+5]</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $var1</span><br><span class="line">6</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ var2=$[$var1+2]</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $var2</span><br><span class="line">8</span><br></pre></td></tr></table></figure>
+<p>这种方式不仅方便，而且因为在方括号内，不会让shell误解乘号或其他符号。</p>
+<p>但bash shell计算有一个主要限制：<strong>它只支持整数运算！</strong></p>
+<p><strong>浮点解决方案</strong></p>
+<p>最常见的方案是用内建的bash计算器。它实际上是一门编程语言，它允许在命令行中输入浮点表达式，然后解释并计算该表达式，最后返回结果。bash计算器能够识别：</p>
+<ul>
+<li>数字（整数和浮点数）</li>
+<li>变量（简单变量和数组）</li>
+<li>注释（/<em> </em>/开始的行）</li>
+<li>表达式</li>
+<li>编程语句</li>
+<li>函数</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ bc</span><br><span class="line">bc 1.06.95</span><br><span class="line">Copyright 1991-1994, 1997, 1998, 2000, 2004, 2006 Free Software Foundation, Inc.</span><br><span class="line">This is free software with ABSOLUTELY NO WARRANTY.</span><br><span class="line">For details type `warranty'.</span><br><span class="line">12 * 5.4</span><br><span class="line">64.8</span><br><span class="line">3.156 * (3 + 5)</span><br><span class="line">25.248</span><br><span class="line">quit</span><br></pre></td></tr></table></figure>
+<p>在脚本中使用bc</p>
+<p>可以用命令替换运行bc命令，并将输出赋给一个变量。基本格式如下：</p>
+<figure class="highlight gams"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">variable</span>=$(echo <span class="comment">"options; expression"</span> |<span class="comment"> bc)</span></span><br></pre></td></tr></table></figure>
+<p>options设置变量，expression参数定义了通过bc执行的数学表达式。</p>
+<p>看一个简单实例：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test9</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line">var1=$(echo "scale=4; 3.44/5" | bc)</span><br><span class="line">echo The answer is $var1</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test9</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test9</span><br><span class="line">The answer is .6880</span><br></pre></td></tr></table></figure>
+<p>这个例子将<code>scale</code>变量设置为四位小数，并在<code>expression</code>部分指定了特定的运算。</p>
+<p>这个方法适用于较短的运算，但有时我们会涉及更多的数字。如果需要进行大量运算，在一个命令行中列出多个表达式就会有点麻烦。</p>
+<p>这里有一个解决方法：使用内联输入重定向，将一个文件重定向到bc命令来处理。格式为：</p>
+<figure class="highlight gauss"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">variable=$(bc &lt;&lt; <span class="built_in">EOF</span></span><br><span class="line">options</span><br><span class="line"><span class="built_in">statements</span></span><br><span class="line">expressions</span><br><span class="line"><span class="built_in">EOF</span>)</span><br></pre></td></tr></table></figure>
+<p><code>EOF</code>文本字符串标识了内联重定向数据的起始。注意，仍然需要命令替换符号将bc命令的输出赋给变量。</p>
+<p>下面是一个例子：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test10</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"></span><br><span class="line">var1=10.46</span><br><span class="line">var2=43.67</span><br><span class="line">var3=33.2</span><br><span class="line">var4=71</span><br><span class="line"></span><br><span class="line">var5=$(bc &lt;&lt;EOF</span><br><span class="line">scale=4</span><br><span class="line">a1 = ( $var1 * $var2)</span><br><span class="line">b1 = ( $var3 * $var4)</span><br><span class="line">a1 + b1</span><br><span class="line">EOF</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line">echo The final answer for this mess is $var5</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test10</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test10</span><br><span class="line">The final answer for this mess is 2813.9882</span><br></pre></td></tr></table></figure>
+<p>在普通的shell脚本中，数字默认当做字符串处理。这也是为什么我们脚本处理计算麻烦和我们需要特定的工具和方法来进行处理。一定要注意区分。</p>
+<h3 id="退出脚本"><a href="#退出脚本" class="headerlink" title="退出脚本"></a>退出脚本</h3><p>前面运行的脚本都是命令执行完成，脚本自动结束。其实我们可以用更为优雅的方式告诉shell命令运行完成，因为每个命令都使用<strong>退出状态码（exit status）</strong>，它是一个0-255的整数值，我们可以捕获这个值并在脚本中使用。</p>
+<p>Linux提供了一个专门的变量<code>$?</code>来保存上个已执行命令的退出状态码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ date</span><br><span class="line">2017年 07月 27日 星期四 10:44:18 CST</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $?</span><br><span class="line">0</span><br></pre></td></tr></table></figure>
+<p>按照惯例，一个成功结束的命令的退出状态码是0。如果有错误，则显示一个正数值。</p>
+<p>Linux错误退出状态码没有什么标准，但有一些参考：</p>
+<table>
+<thead>
+<tr>
+<th>状态码</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>命令成功结束</td>
+</tr>
+<tr>
+<td>1</td>
+<td>一般性未知错误</td>
+</tr>
+<tr>
+<td>2</td>
+<td>不适合的shell命令</td>
+</tr>
+<tr>
+<td>126</td>
+<td>命令不可执行</td>
+</tr>
+<tr>
+<td>127</td>
+<td>没找到命令</td>
+</tr>
+<tr>
+<td>128</td>
+<td>无效的退出参数</td>
+</tr>
+<tr>
+<td>128+x</td>
+<td>与Linux信号x相关的严重错误</td>
+</tr>
+<tr>
+<td>130</td>
+<td>通过Ctrl+C终止的命令</td>
+</tr>
+<tr>
+<td>255</td>
+<td>正常范围之外的退出状态码</td>
+</tr>
+</tbody>
+</table>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ asfg</span><br><span class="line">未找到 'asfg' 命令，您要输入的是否是：</span><br><span class="line"> 命令 'asdfg' 来自于包 'aoeui' (universe)</span><br><span class="line">asfg：未找到命令</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $?</span><br><span class="line">127</span><br></pre></td></tr></table></figure>
+<p><strong>exit命令</strong></p>
+<p>默认，shell脚本会以脚本最后的一个命令的退出状态码退出。</p>
+<p>但是我们可以改变这种默认行为，返回自己的退出状态码。exit命令允许在脚本结束时指定一个状态退出码。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">wsx@wsx-ubuntu:~/script_learn$ cat test13</span><br><span class="line"><span class="meta">#</span><span class="bash">!/bin/bash</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> testing the <span class="built_in">exit</span> status</span></span><br><span class="line">var1=10</span><br><span class="line">var2=30</span><br><span class="line">var3=$[$var1 + $var2]</span><br><span class="line">echo The answer is $var3</span><br><span class="line">exit 5</span><br><span class="line"></span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ chmod u+x test13</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ ./test13</span><br><span class="line">The answer is 40</span><br><span class="line">wsx@wsx-ubuntu:~/script_learn$ echo $?</span><br><span class="line">5</span><br></pre></td></tr></table></figure>
+<p>注意最大255，如果大于它，得到的是求模的结果（余数）。</p>
 ]]></content>
       
         <categories>

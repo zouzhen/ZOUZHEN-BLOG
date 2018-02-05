@@ -30,13 +30,6 @@
     </url>
 
     <url>
-        <loc>https://shixiangwang.github.io/tags/R/</loc>
-        <lastmod>2018-01-27T04:08:38.410Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>https://shixiangwang.github.io/tags/OOP/</loc>
         <lastmod>2018-01-27T04:08:38.410Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -95,6 +88,48 @@
     <url>
         <loc>https://shixiangwang.github.io/tags/fasta/</loc>
         <lastmod>2018-01-31T13:23:44.285Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/tags/R/</loc>
+        <lastmod>2018-02-05T13:07:48.423Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/tags/%E5%86%99%E4%BD%9C/</loc>
+        <lastmod>2018-02-05T13:07:48.423Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/tags/Rmd/</loc>
+        <lastmod>2018-02-05T13:07:48.423Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/tags/md/</loc>
+        <lastmod>2018-02-05T13:07:48.423Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/tags/Rstudio/</loc>
+        <lastmod>2018-02-05T13:07:48.423Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>https://shixiangwang.github.io/tags/Gist/</loc>
+        <lastmod>2018-02-05T13:07:48.423Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
