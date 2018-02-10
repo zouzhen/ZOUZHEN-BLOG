@@ -15,20 +15,18 @@
 
 
 
-<meta name="description" content="有人在微信群里问到这样一个问题：  请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&amp;gt;后面的染色体名字不会被替换?">
-<meta name="keywords" content="sed,生物信息学,文本处理,fasta">
+<meta name="description" content="在我之前转载的文章apply,lapply,sapply用法探索中已经对R中apply家族函数进行了比较详细地说明，这篇文章基于我在data campus中对lapply、sapply、vapply几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。">
+<meta name="keywords" content="R,lapply,sapply,vapply,迭代计算">
 <meta property="og:type" content="article">
-<meta property="og:title" content="sed如何在执行命令前过滤特定文本行">
-<meta property="og:url" content="https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/index.html">
+<meta property="og:title" content="简单理解lapply,sapply,vapply">
+<meta property="og:url" content="https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/index.html">
 <meta property="og:site_name" content="Cloudberry">
-<meta property="og:description" content="有人在微信群里问到这样一个问题：  请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&amp;gt;后面的染色体名字不会被替换?">
+<meta property="og:description" content="在我之前转载的文章apply,lapply,sapply用法探索中已经对R中apply家族函数进行了比较详细地说明，这篇文章基于我在data campus中对lapply、sapply、vapply几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
-<meta property="og:updated_time" content="2018-01-31T13:23:44.285Z">
+<meta property="og:updated_time" content="2018-02-10T07:33:47.767Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="sed如何在执行命令前过滤特定文本行">
-<meta name="twitter:description" content="有人在微信群里问到这样一个问题：  请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&amp;gt;后面的染色体名字不会被替换?">
-<meta name="twitter:image" content="http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240">
+<meta name="twitter:title" content="简单理解lapply,sapply,vapply">
+<meta name="twitter:description" content="在我之前转载的文章apply,lapply,sapply用法探索中已经对R中apply家族函数进行了比较详细地说明，这篇文章基于我在data campus中对lapply、sapply、vapply几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -60,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>sed如何在执行命令前过滤特定文本行 | Cloudberry</title>
+<title>简单理解lapply,sapply,vapply | Cloudberry</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -291,11 +289,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-sed-how-to-filter-rows-before-using-command" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-easy-sapply-apply-vapply" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2018/01/31/sed-how-to-filter-rows-before-using-command/" class="article-date">
-      <time datetime="2018-01-31T13:19:40.000Z" itemprop="datePublished">2018-01-31</time>
+      <a href="/2018/02/10/easy-sapply-apply-vapply/" class="article-date">
+      <time datetime="2018-02-10T07:04:57.000Z" itemprop="datePublished">2018-02-10</time>
 </a>
 
 
@@ -310,7 +308,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      sed如何在执行命令前过滤特定文本行
+      简单理解lapply,sapply,vapply
     </h1>
   
 
@@ -319,13 +317,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="/categories/Linux杂烩/">Linux杂烩</a>
+    <a class="article-category-link" href="/categories/极客R/">极客R</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/fasta/">fasta</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sed/">sed</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文本处理/">文本处理</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/生物信息学/">生物信息学</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/lapply/">lapply</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/sapply/">sapply</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/vapply/">vapply</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/迭代计算/">迭代计算</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -335,25 +333,23 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>有人在微信群里问到这样一个问题：</p>
-<blockquote>
-<p>请问我想把参考基因组中所有的A和C替换成C和A，小写也按照这样的规则替换，该怎么实现呢，tr可以做到，但是我想保证&gt;后面的染色体名字不会被替换?<br><img src="http://upload-images.jianshu.io/upload_images/3884693-da7fbb654d3f7bc1.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""></p>
-</blockquote>
+        <p>在我之前转载的文章<a href="https://www.jianshu.com/p/9bca3555b06c" target="_blank" rel="noopener">apply,lapply,sapply用法探索</a>中已经对R中<code>apply</code>家族函数进行了比较详细地说明，这篇文章基于我在data campus中对<code>lapply</code>、<code>sapply</code>、<code>vapply</code>几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。</p>
 <a id="more"></a>
-<p><a href="http://man.linuxde.net/tr" target="_blank" rel="noopener"><code>tr</code></a>命令确实可以完成文本字符替换一对一的映射，但很显然，这样的功能想要解决这个问题是不够的，它把不想要改变的文本也改变了。</p>
-<p>解决问题的思路在于如何实现带&gt;标志的文本直接输出，而DNA字符行被执行转换命令。这个问题其实使用sed命令就可以快速解决，不少朋友对于<code>sed</code>的使用可能记忆为我在<a href="https://shixiangwang.github.io/2017/09/03/Linux-data-analysis-tools/#用Sed进行流编辑">笔记</a>中写的：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">command/pattern/replacement/flag</span><br></pre></td></tr></table></figure>
-<p><code>command</code>是一些命令，比如<code>s</code>,<code>d</code>等，<code>flag</code>是一些标记，<code>i</code>,<code>g</code>等等。</p>
-<p>这样认识sed命令其实不是很全面，sed允许指定文本模式来过滤出命令要作用的行，格式如下：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/pattern/command</span><br></pre></td></tr></table></figure>
-<p>所以整理起来，sed格式其实（除了一些选项）为</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/pattern/command/pattern/replacement/flag</span><br></pre></td></tr></table></figure>
-<p>第一个<code>pattern</code>用来过滤出要处理的文本行，第二个<code>pattern</code>是sed命令要作用的模式。</p>
-<p>那么利用这个特定，一开始的问题可以利用正则表达式非常简单地解决了：</p>
-<p>先用<code>/^[^&gt;]/</code>找到不以<code>&gt;</code>开始的行，然后执行<code>sed</code>字符转换命令。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="meta">#</span><span class="bash"> 随便写一个测试文本</span></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat <span class="built_in">test</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> CAACCA</span></span><br><span class="line">acgtACGTACTGagct</span><br><span class="line">tacgactNNNNNNNNNNNNNNNN</span><br><span class="line"></span><br><span class="line"><span class="meta">$</span><span class="bash"> cat <span class="built_in">test</span> | sed <span class="string">'/^[^&gt;]/y/ACac/CAca/'</span></span></span><br><span class="line"><span class="meta">&gt;</span><span class="bash"> CAACCA</span></span><br><span class="line">cagtCAGTCATGcgat</span><br><span class="line">tcagcatNNNNNNNNNNNNNNNN</span><br></pre></td></tr></table></figure>
-<hr>
-<p>有兴趣的可以看看<a href="https://shixiangwang.github.io/2017/12/25/sed-and-gawk/">初识sed与awk</a>这篇笔记。</p>
+<p>使用的是一组温度数据，每天测5次，连续测量一个星期。</p>
+<p>我们先将其输入R:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">temp &lt;- list(c(<span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">6</span>, -<span class="number">1</span>), c(<span class="number">6</span>, <span class="number">9</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">5</span>), c(<span class="number">4</span>, <span class="number">8</span>, <span class="number">3</span>, -<span class="number">1</span>, -<span class="number">3</span></span><br><span class="line">), c(<span class="number">1</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">2</span>, -<span class="number">2</span>), c(<span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">2</span>), c(-<span class="number">3</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">4</span>), c(<span class="number">3</span>,</span><br><span class="line">                                                             <span class="number">6</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>我们进行迭代计算的函数是<code>basics</code>，它计算每一天温度的最小、最大值、平均值以及中位数。</p>
+<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition of the basics() function</span></span><br><span class="line">basics &lt;- <span class="function"><span class="keyword">function</span>(<span class="title">x</span>) &#123;</span></span><br><span class="line">  c(<span class="built_in">min</span> = <span class="built_in">min</span>(x), mean = mean(x), <span class="built_in">median</span> = <span class="built_in">median</span>(x), <span class="built_in">max</span> = <span class="built_in">max</span>(x))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>lapply</code>最为常见，以列表为输入，以列表为输出。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; lapply(temp, basics)</span><br><span class="line">[[<span class="number">1</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">1.0</span>    <span class="number">4.8</span>    <span class="number">6.0</span>    <span class="number">9.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">2</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">     <span class="number">5</span>      <span class="number">9</span>      <span class="number">9</span>     <span class="number">13</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">3</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">3.0</span>    <span class="number">2.2</span>    <span class="number">3.0</span>    <span class="number">8.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">4</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">2.0</span>    <span class="number">2.4</span>    <span class="number">2.0</span>    <span class="number">7.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">5</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">   <span class="number">2.0</span>    <span class="number">5.4</span>    <span class="number">5.0</span>    <span class="number">9.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">6</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">3.0</span>    <span class="number">4.6</span>    <span class="number">5.0</span>    <span class="number">9.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">7</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">   <span class="number">1.0</span>    <span class="number">4.6</span>    <span class="number">4.0</span>    <span class="number">9.0</span></span><br></pre></td></tr></table></figure>
+<p>可以看出，如果迭代次数够大，结果会非常冗长，但我们所需要的结果其实可以以比较紧凑的数组（矩阵）展示出来。因此，我们可以使用<code>sapply</code>函数，<code>s</code>前缀即简化之意。</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; sapply(temp, basics)</span><br><span class="line">       [,<span class="number">1</span>] [,<span class="number">2</span>] [,<span class="number">3</span>] [,<span class="number">4</span>] [,<span class="number">5</span>] [,<span class="number">6</span>] [,<span class="number">7</span>]</span><br><span class="line">min    -<span class="number">1.0</span>    <span class="number">5</span> -<span class="number">3.0</span> -<span class="number">2.0</span>  <span class="number">2.0</span> -<span class="number">3.0</span>  <span class="number">1.0</span></span><br><span class="line">mean    <span class="number">4.8</span>    <span class="number">9</span>  <span class="number">2.2</span>  <span class="number">2.4</span>  <span class="number">5.4</span>  <span class="number">4.6</span>  <span class="number">4.6</span></span><br><span class="line">median  <span class="number">6.0</span>    <span class="number">9</span>  <span class="number">3.0</span>  <span class="number">2.0</span>  <span class="number">5.0</span>  <span class="number">5.0</span>  <span class="number">4.0</span></span><br><span class="line">max     <span class="number">9.0</span>   <span class="number">13</span>  <span class="number">8.0</span>  <span class="number">7.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span></span><br></pre></td></tr></table></figure>
+<p>是否已经足够紧凑？</p>
+<p>最后想要介绍的函数<code>vapply</code>其实是为<code>sapply</code>加了一层验证选项:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; vapply(temp, basics, numeric(<span class="number">4</span>))</span><br><span class="line">       [,<span class="number">1</span>] [,<span class="number">2</span>] [,<span class="number">3</span>] [,<span class="number">4</span>] [,<span class="number">5</span>] [,<span class="number">6</span>] [,<span class="number">7</span>]</span><br><span class="line">min    -<span class="number">1.0</span>    <span class="number">5</span> -<span class="number">3.0</span> -<span class="number">2.0</span>  <span class="number">2.0</span> -<span class="number">3.0</span>  <span class="number">1.0</span></span><br><span class="line">mean    <span class="number">4.8</span>    <span class="number">9</span>  <span class="number">2.2</span>  <span class="number">2.4</span>  <span class="number">5.4</span>  <span class="number">4.6</span>  <span class="number">4.6</span></span><br><span class="line">median  <span class="number">6.0</span>    <span class="number">9</span>  <span class="number">3.0</span>  <span class="number">2.0</span>  <span class="number">5.0</span>  <span class="number">5.0</span>  <span class="number">4.0</span></span><br><span class="line">max     <span class="number">9.0</span>   <span class="number">13</span>  <span class="number">8.0</span>  <span class="number">7.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span></span><br><span class="line">&gt; vapply(temp, basics, numeric(<span class="number">3</span>))</span><br><span class="line">Error <span class="keyword">in</span> vapply(temp, basics, numeric(<span class="number">3</span>)) : 值的长度必需为<span class="number">3</span>，</span><br><span class="line"> 但FUN(X[[<span class="number">1</span>]])结果的长度却是<span class="number">4</span></span><br></pre></td></tr></table></figure>
+<p> 读者可以发现，当第三个参数其实就是验证选项，命名为<code>FUN.VALUE</code>。</p>
+ <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> &gt; args(vapply)</span><br><span class="line"><span class="keyword">function</span> (X, FUN, FUN.VALUE, <span class="keyword">...</span>, USE.NAMES = <span class="literal">TRUE</span>)</span><br><span class="line"><span class="literal">NULL</span></span><br></pre></td></tr></table></figure>
+<p>我们知道每次迭代计算应该返回4个数值型结果，所以当我们设置为<code>numeric(3)</code>时它会报错。这个函数及其选项的设定在我们编写比较大型的迭代计算和整合函数代码时非常有用，可以帮助我们快速检验结果的有效性，尽量避免调试bug带来的苦恼。</p>
 
       
     </div>
@@ -362,16 +358,16 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2018/01/31/sed-how-to-filter-rows-before-using-command/">sed如何在执行命令前过滤特定文本行</a></p>
+        <p><span>本文标题:</span><a href="/2018/02/10/easy-sapply-apply-vapply/">简单理解lapply,sapply,vapply</a></p>
         <!-- modify author information
         <p><span>文章作者:</span><a href="/" title="回到主页">王诗翔</a></p>
         -->
         <p><span>文章作者:</span>王诗翔</p>
-        <p><span>发布时间:</span>2018-01-31, 21:19:40</p>
-        <p><span>最后更新:</span>2018-01-31, 21:23:44</p>
+        <p><span>发布时间:</span>2018-02-10, 15:04:57</p>
+        <p><span>最后更新:</span>2018-02-10, 15:33:47</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2018/01/31/sed-how-to-filter-rows-before-using-command/" title="sed如何在执行命令前过滤特定文本行">https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/　　作者: 王诗翔" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2018/02/10/easy-sapply-apply-vapply/" title="简单理解lapply,sapply,vapply">https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/　　作者: 王诗翔" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -383,16 +379,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="/2018/02/06/how-to-write-rmd-documents-in-hexo-system/">
-                    怎么在hexo博客系统中用Rmarkdown写文章
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="/2018/01/31/sync-deploy-tools/">
-                    Sync deploy 命令工具
+                <a href="/2018/02/07/how-to-do-group-survival-analysis/">
+                    怎么对连续变量分组并进行生存分析
                 </a>
             </div>
         
@@ -441,7 +431,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"sed如何在执行命令前过滤特定文本行　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"简单理解lapply,sapply,vapply　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -460,8 +450,8 @@
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function(){
-            this.page.url = 'https://shixiangwang.github.io/2018/01/31/sed-how-to-filter-rows-before-using-command/';
-            this.page.identifier = '2018/01/31/sed-how-to-filter-rows-before-using-command/';
+            this.page.url = 'https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/';
+            this.page.identifier = '2018/02/10/easy-sapply-apply-vapply/';
         };
         var loadComment = function(){
             var d = document, s = d.createElement('script');
@@ -483,15 +473,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/2018/02/06/how-to-write-rmd-documents-in-hexo-system/" title="上一篇: 怎么在hexo博客系统中用Rmarkdown写文章">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="/2018/01/31/sync-deploy-tools/" title="下一篇: Sync deploy 命令工具">
+            <a href="/2018/02/07/how-to-do-group-survival-analysis/" title="下一篇: 怎么对连续变量分组并进行生存分析">
                 <i class="fa fa-angle-right"></i>
             </a>
         
