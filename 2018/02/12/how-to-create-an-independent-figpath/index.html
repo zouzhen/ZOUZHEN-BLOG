@@ -23,13 +23,12 @@
 <meta property="og:site_name" content="Cloudberry">
 <meta property="og:description" content="在博文怎么在hexo博客系统中用Rmarkdown写文章中我介绍了如何使用我创建的函数自动生成Rmarkdown文档并将其转换为markdown博文。文章并没有具体讲生成图片的过程，我在前一篇文章怎么对连续变量分组并进行生存分析写作时发现用hexo系统存在一些小问题：hexo生成public静态网页文档集合（包括主页展示的所有内容）和博文所在的source文件夹是相对独立的，这会导致markdow">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="https://shixiangwang.github.io/images/image.jpg">
 <meta property="og:image" content="https://shixiangwang.github.io/2018/02/12/how-to-create-an-independent-figpath/test-fig-path-1.png">
-<meta property="og:updated_time" content="2018-02-12T07:30:47.935Z">
+<meta property="og:updated_time" content="2018-02-12T08:01:16.707Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="为markdown博文创建独立图片路径">
 <meta name="twitter:description" content="在博文怎么在hexo博客系统中用Rmarkdown写文章中我介绍了如何使用我创建的函数自动生成Rmarkdown文档并将其转换为markdown博文。文章并没有具体讲生成图片的过程，我在前一篇文章怎么对连续变量分组并进行生存分析写作时发现用hexo系统存在一些小问题：hexo生成public静态网页文档集合（包括主页展示的所有内容）和博文所在的source文件夹是相对独立的，这会导致markdow">
-<meta name="twitter:image" content="https://shixiangwang.github.io/images/image.jpg">
+<meta name="twitter:image" content="https://shixiangwang.github.io/2018/02/12/how-to-create-an-independent-figpath/test-fig-path-1.png">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -338,7 +337,7 @@
           
         <p>在博文<a href="https://shixiangwang.github.io/2018/02/06/how-to-write-rmd-documents-in-hexo-system/">怎么在hexo博客系统中用Rmarkdown写文章</a>中我介绍了如何使用我创建的函数自动生成<code>Rmarkdown</code>文档并将其转换为<code>markdown</code>博文。文章并没有具体讲生成图片的过程，我在前一篇文章<a href="https://shixiangwang.github.io/2018/02/07/how-to-do-group-survival-analysis/">怎么对连续变量分组并进行生存分析</a>写作时发现用hexo系统存在一些小问题：<code>hexo</code>生成<code>public</code>静态网页文档集合（包括主页展示的所有内容）和博文所在的<code>source</code>文件夹是相对独立的，这会导致<code>markdown</code>的图片引用路径时在本地用一些markdown预览器可以看到图片，但实际呢，在部署的博客上却看不到了！</p>
 <a id="more"></a>
-<p>根据hexo官方文档<a href="https://hexo.io/zh-cn/docs/asset-folders.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/asset-folders.html</a>的描述，我们可以<strong>将图片扔到<code>source/images</code>文件夹下，然后通过类似于 <img src="/images/image.jpg" alt=""> 的方法访问它们</strong>。值得注意的是，这种方法使用的既不是图片的绝对路径也不是图片的相对路径，所以它会出现了一个略微尴尬的情况，在本地不能预览，在部署好的博客上却能看到！上一篇博文写作时正准备回家，没时间整这个幺蛾子，就是这样发的文章。</p>
+<p>根据hexo官方文档<a href="https://hexo.io/zh-cn/docs/asset-folders.html" target="_blank" rel="noopener">https://hexo.io/zh-cn/docs/asset-folders.html</a>的描述，我们可以<strong>将图片扔到<code>source/images</code>文件夹下，然后通过类似于 ![](/images/image.jpg) 的方法访问它们</strong>。值得注意的是，这种方法使用的既不是图片的绝对路径也不是图片的相对路径，所以它会出现了一个略微尴尬的情况，在本地不能预览，在部署好的博客上却能看到！上一篇博文写作时正准备回家，没时间整这个幺蛾子，就是这样发的文章。</p>
 <p>当然官网提到可以使用一些非<code>markdown</code>标记符来引用图片，这种我自认为不可取，我看重的就是<code>markdown</code>的简约、文章易迁移特性，使用这种方式会让我的文章<strong>不够自由</strong>。</p>
 <p>仔细阅读文档后，发现可取的办法是：</p>
 <blockquote>
@@ -349,6 +348,7 @@
 <p>写作这篇文章其实既用于记录，也用于测试该功能。我们就用最经典的数据集随手画个图好了～</p>
 <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">plot(mtcars)</span><br></pre></td></tr></table></figure>
 <p><img src="test-fig-path-1.png" alt="测试图片"></p>
+<p>有意思的是，测试后发现<code>hexo</code>多此一举般，如果将图片扔进文章对应的目录下，只需要填入图片名字即可，相对和绝对路径引用还是不能见效。至少比之前方便了，罢了罢了……</p>
 
       
     </div>
@@ -363,7 +363,7 @@
         -->
         <p><span>文章作者:</span>王诗翔</p>
         <p><span>发布时间:</span>2018-02-12, 15:17:33</p>
-        <p><span>最后更新:</span>2018-02-12, 15:30:47</p>
+        <p><span>最后更新:</span>2018-02-12, 16:01:16</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="" title="为markdown博文创建独立图片路径">https://shixiangwang.github.io/2018/02/12/how-to-create-an-independent-figpath/</a>
             <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2018/02/12/how-to-create-an-independent-figpath/　　作者: 王诗翔" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
