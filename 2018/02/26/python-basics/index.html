@@ -15,18 +15,18 @@
 
 
 
-<meta name="description" content="在我之前转载的文章apply,lapply,sapply用法探索中已经对R中apply家族函数进行了比较详细地说明，这篇文章基于我在data campus中对lapply、sapply、vapply几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。">
-<meta name="keywords" content="R,lapply,sapply,vapply,迭代计算">
+<meta name="description" content="前言两天研习Python基础系列文章为“learn by example”编程课程的python部分，原英文Github仓库点击此处，中文Github仓库点击此处，所有内容已发至简书（见章节部分）。">
+<meta name="keywords" content="python">
 <meta property="og:type" content="article">
-<meta property="og:title" content="简单理解lapply,sapply,vapply">
-<meta property="og:url" content="https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/index.html">
+<meta property="og:title" content="两天研习Python基础">
+<meta property="og:url" content="https://shixiangwang.github.io/2018/02/26/python-basics/index.html">
 <meta property="og:site_name" content="Cloudberry">
-<meta property="og:description" content="在我之前转载的文章apply,lapply,sapply用法探索中已经对R中apply家族函数进行了比较详细地说明，这篇文章基于我在data campus中对lapply、sapply、vapply几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。">
+<meta property="og:description" content="前言两天研习Python基础系列文章为“learn by example”编程课程的python部分，原英文Github仓库点击此处，中文Github仓库点击此处，所有内容已发至简书（见章节部分）。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-02-10T07:33:47.767Z">
+<meta property="og:updated_time" content="2018-02-26T13:07:13.115Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="简单理解lapply,sapply,vapply">
-<meta name="twitter:description" content="在我之前转载的文章apply,lapply,sapply用法探索中已经对R中apply家族函数进行了比较详细地说明，这篇文章基于我在data campus中对lapply、sapply、vapply几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。">
+<meta name="twitter:title" content="两天研习Python基础">
+<meta name="twitter:description" content="前言两天研习Python基础系列文章为“learn by example”编程课程的python部分，原英文Github仓库点击此处，中文Github仓库点击此处，所有内容已发至简书（见章节部分）。">
 
 <link rel="apple-touch-icon" href= "/apple-touch-icon.png">
 
@@ -58,7 +58,7 @@
 <link href="//cdn.bootcss.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
 
 
-<title>简单理解lapply,sapply,vapply | Cloudberry</title>
+<title>两天研习Python基础 | Cloudberry</title>
 
 <script src="//cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
 <script src="//cdn.bootcss.com/clipboard.js/1.5.10/clipboard.min.js"></script>
@@ -289,11 +289,11 @@
     </div>
     <link class="menu-list" tags="标签" friends="友情链接" about="关于我"/>
 </nav>
-      <div class="body-wrap"><article id="post-easy-sapply-apply-vapply" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-python-basics" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="" class="article-date">
-      <time datetime="2018-02-10T07:04:57.000Z" itemprop="datePublished">2018-02-10</time>
+      <time datetime="2018-02-26T13:01:41.000Z" itemprop="datePublished">2018-02-26</time>
 </a>
 
 
@@ -308,7 +308,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      简单理解lapply,sapply,vapply
+      两天研习Python基础
     </h1>
   
 
@@ -317,13 +317,13 @@
       <div class="article-info article-info-post">
         
     <div class="article-category tagcloud">
-    <a class="article-category-link" href="../../../../categories/极客R/">极客R</a>
+    <a class="article-category-link" href="../../../../categories/Python之歌/">Python之歌</a>
     </div>
 
 
         
     <div class="article-tag tagcloud">
-        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="../../../../tags/R/">R</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="../../../../tags/lapply/">lapply</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="../../../../tags/sapply/">sapply</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="../../../../tags/vapply/">vapply</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="../../../../tags/迭代计算/">迭代计算</a></li></ul>
+        <ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="../../../../tags/python/">python</a></li></ul>
     </div>
 
         <div class="clearfix"></div>
@@ -333,23 +333,97 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>在我之前转载的文章<a href="https://www.jianshu.com/p/9bca3555b06c" target="_blank" rel="noopener">apply,lapply,sapply用法探索</a>中已经对R中<code>apply</code>家族函数进行了比较详细地说明，这篇文章基于我在data campus中对<code>lapply</code>、<code>sapply</code>、<code>vapply</code>几个函数的学习，以更为简单的实例来了解这几个以列表对输入的迭代函数。</p>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p><strong>两天研习Python基础</strong>系列文章为“learn by example”编程课程的python部分，原英文Github仓库<a href="https://github.com/learnbyexample/Python_Basics" target="_blank" rel="noopener">点击此处</a>，中文Github仓库<a href="https://github.com/ShixiangWang/Python_Basics" target="_blank" rel="noopener">点击此处</a>，所有内容已发至简书（见章节部分）。</p>
+<div class="github-widget" data-repo="ShixiangWang/Python_Basics"></div>
+
 <a id="more"></a>
-<p>使用的是一组温度数据，每天测5次，连续测量一个星期。</p>
-<p>我们先将其输入R:</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">temp &lt;- list(c(<span class="number">3</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">6</span>, -<span class="number">1</span>), c(<span class="number">6</span>, <span class="number">9</span>, <span class="number">12</span>, <span class="number">13</span>, <span class="number">5</span>), c(<span class="number">4</span>, <span class="number">8</span>, <span class="number">3</span>, -<span class="number">1</span>, -<span class="number">3</span></span><br><span class="line">), c(<span class="number">1</span>, <span class="number">4</span>, <span class="number">7</span>, <span class="number">2</span>, -<span class="number">2</span>), c(<span class="number">5</span>, <span class="number">7</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">2</span>), c(-<span class="number">3</span>, <span class="number">5</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">4</span>), c(<span class="number">3</span>,</span><br><span class="line">                                                             <span class="number">6</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<p>我们进行迭代计算的函数是<code>basics</code>，它计算每一天温度的最小、最大值、平均值以及中位数。</p>
-<figure class="highlight livecodeserver"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Definition of the basics() function</span></span><br><span class="line">basics &lt;- <span class="function"><span class="keyword">function</span>(<span class="title">x</span>) &#123;</span></span><br><span class="line">  c(<span class="built_in">min</span> = <span class="built_in">min</span>(x), mean = mean(x), <span class="built_in">median</span> = <span class="built_in">median</span>(x), <span class="built_in">max</span> = <span class="built_in">max</span>(x))</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p><code>lapply</code>最为常见，以列表为输入，以列表为输出。</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">&gt; lapply(temp, basics)</span><br><span class="line">[[<span class="number">1</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">1.0</span>    <span class="number">4.8</span>    <span class="number">6.0</span>    <span class="number">9.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">2</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">     <span class="number">5</span>      <span class="number">9</span>      <span class="number">9</span>     <span class="number">13</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">3</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">3.0</span>    <span class="number">2.2</span>    <span class="number">3.0</span>    <span class="number">8.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">4</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">2.0</span>    <span class="number">2.4</span>    <span class="number">2.0</span>    <span class="number">7.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">5</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">   <span class="number">2.0</span>    <span class="number">5.4</span>    <span class="number">5.0</span>    <span class="number">9.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">6</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">  -<span class="number">3.0</span>    <span class="number">4.6</span>    <span class="number">5.0</span>    <span class="number">9.0</span></span><br><span class="line"></span><br><span class="line">[[<span class="number">7</span>]]</span><br><span class="line">   min   mean median    max</span><br><span class="line">   <span class="number">1.0</span>    <span class="number">4.6</span>    <span class="number">4.0</span>    <span class="number">9.0</span></span><br></pre></td></tr></table></figure>
-<p>可以看出，如果迭代次数够大，结果会非常冗长，但我们所需要的结果其实可以以比较紧凑的数组（矩阵）展示出来。因此，我们可以使用<code>sapply</code>函数，<code>s</code>前缀即简化之意。</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&gt; sapply(temp, basics)</span><br><span class="line">       [,<span class="number">1</span>] [,<span class="number">2</span>] [,<span class="number">3</span>] [,<span class="number">4</span>] [,<span class="number">5</span>] [,<span class="number">6</span>] [,<span class="number">7</span>]</span><br><span class="line">min    -<span class="number">1.0</span>    <span class="number">5</span> -<span class="number">3.0</span> -<span class="number">2.0</span>  <span class="number">2.0</span> -<span class="number">3.0</span>  <span class="number">1.0</span></span><br><span class="line">mean    <span class="number">4.8</span>    <span class="number">9</span>  <span class="number">2.2</span>  <span class="number">2.4</span>  <span class="number">5.4</span>  <span class="number">4.6</span>  <span class="number">4.6</span></span><br><span class="line">median  <span class="number">6.0</span>    <span class="number">9</span>  <span class="number">3.0</span>  <span class="number">2.0</span>  <span class="number">5.0</span>  <span class="number">5.0</span>  <span class="number">4.0</span></span><br><span class="line">max     <span class="number">9.0</span>   <span class="number">13</span>  <span class="number">8.0</span>  <span class="number">7.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span></span><br></pre></td></tr></table></figure>
-<p>是否已经足够紧凑？</p>
-<p>最后想要介绍的函数<code>vapply</code>其实是为<code>sapply</code>加了一层验证选项:</p>
-<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&gt; vapply(temp, basics, numeric(<span class="number">4</span>))</span><br><span class="line">       [,<span class="number">1</span>] [,<span class="number">2</span>] [,<span class="number">3</span>] [,<span class="number">4</span>] [,<span class="number">5</span>] [,<span class="number">6</span>] [,<span class="number">7</span>]</span><br><span class="line">min    -<span class="number">1.0</span>    <span class="number">5</span> -<span class="number">3.0</span> -<span class="number">2.0</span>  <span class="number">2.0</span> -<span class="number">3.0</span>  <span class="number">1.0</span></span><br><span class="line">mean    <span class="number">4.8</span>    <span class="number">9</span>  <span class="number">2.2</span>  <span class="number">2.4</span>  <span class="number">5.4</span>  <span class="number">4.6</span>  <span class="number">4.6</span></span><br><span class="line">median  <span class="number">6.0</span>    <span class="number">9</span>  <span class="number">3.0</span>  <span class="number">2.0</span>  <span class="number">5.0</span>  <span class="number">5.0</span>  <span class="number">4.0</span></span><br><span class="line">max     <span class="number">9.0</span>   <span class="number">13</span>  <span class="number">8.0</span>  <span class="number">7.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span>  <span class="number">9.0</span></span><br><span class="line">&gt; vapply(temp, basics, numeric(<span class="number">3</span>))</span><br><span class="line">Error <span class="keyword">in</span> vapply(temp, basics, numeric(<span class="number">3</span>)) : 值的长度必需为<span class="number">3</span>，</span><br><span class="line"> 但FUN(X[[<span class="number">1</span>]])结果的长度却是<span class="number">4</span></span><br></pre></td></tr></table></figure>
-<p> 读者可以发现，当第三个参数其实就是验证选项，命名为<code>FUN.VALUE</code>。</p>
- <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"> &gt; args(vapply)</span><br><span class="line"><span class="keyword">function</span> (X, FUN, FUN.VALUE, <span class="keyword">...</span>, USE.NAMES = <span class="literal">TRUE</span>)</span><br><span class="line"><span class="literal">NULL</span></span><br></pre></td></tr></table></figure>
-<p>我们知道每次迭代计算应该返回4个数值型结果，所以当我们设置为<code>numeric(3)</code>时它会报错。这个函数及其选项的设定在我们编写比较大型的迭代计算和整合函数代码时非常有用，可以帮助我们快速检验结果的有效性，尽量避免调试bug带来的苦恼。</p>
+<p>离线学习请克隆：</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">git clone https://github.com/ShixiangWang/Python_Basics</span><br></pre></td></tr></table></figure>
+<p>该系列仅作学习及参考使用，本人能力有限，很多专业术语在学习中，如果错误，还请指正。欢迎大家对仓库fork进行学习、补充和修改等等。</p>
+<h1 id="Python-基础"><a href="#Python-基础" class="headerlink" title="Python 基础"></a>Python 基础</h1><p>Python介绍 - 语法、与shell命令工作、文件、文本处理等等…</p>
+<ul>
+<li>适合Python初学者一两天研习</li>
+<li>更加完整的<a href="https://github.com/ShixiangWang/scripting_course/blob/master/Python_curated_resources.md" target="_blank" rel="noopener">Python整合资源列表</a> 包括初学者教程</li>
+<li>更多相关资源，访问<a href="https://github.com/ShixiangWang/scripting_course" target="_blank" rel="noopener">scripting course</a></li>
+</ul>
+<p><br></p>
+<h1 id="章节"><a href="#章节" class="headerlink" title="章节"></a>章节</h1><ul>
+<li><a href="https://www.jianshu.com/p/043b22c53464" target="_blank" rel="noopener">介绍</a><ul>
+<li>安装、Hello World示例、Python解释器、Python标准库</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/cea74af54c19" target="_blank" rel="noopener">数值和字符串数据类型</a><ul>
+<li>数值、字符串、常量和内置操作符</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/fc17f347094e" target="_blank" rel="noopener">函数</a><ul>
+<li>def、print函数，range函数， type函数，变量作用域</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/01fff554603e" target="_blank" rel="noopener">获取用户输入</a><ul>
+<li>整数输入、浮点输入、字符串输入</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/982ce84fe274" target="_blank" rel="noopener">执行外部命令</a><ul>
+<li>调用Shell命令、用扩展调用Shell命令、获取命令输出和重定向</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/968e00a326e5" target="_blank" rel="noopener">控制结构</a><ul>
+<li>条件检查, if, for, while, continue and break</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/1e2d44b8d060" target="_blank" rel="noopener">列表</a><ul>
+<li>列表变量赋值、切片和修改列表、复制列表、列表方法和杂项、循环、列表推导式、获取列表作为用户输入、随机从列表中获取元素</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/d27050ef63f6" target="_blank" rel="noopener">序列、集合以及字典数据类型</a><ul>
+<li>字符串、元组、集合、字典</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/c1f7abc7371f" target="_blank" rel="noopener">文本处理</a><ul>
+<li>字符串方法、正则表达式、模式匹配和提取、搜索和替换、编译正则表达式、正则表达式进一步阅读</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/294031b710c0" target="_blank" rel="noopener">文件处理</a><ul>
+<li>open函数、读入文件，写入文件</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/a66b046d0c4a" target="_blank" rel="noopener">命令行参数</a><ul>
+<li>已知参数数目、变长参数、在代码中使用程序名、命令行开关</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/571bab3f422e" target="_blank" rel="noopener">意外处理和调试</a><ul>
+<li>意外处理、语法检查、pdb、导入程序</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/62a7bdbf27ba" target="_blank" rel="noopener">文档字符</a><ul>
+<li>风格指南，回文示例</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/c3ecc57adaf9" target="_blank" rel="noopener">测试</a><ul>
+<li>assert语句、使用assert测试程序、使用unittest框架，使用unittest.mock、使用unittest.mock测试用户输入和程序输出、其他测试框架</li>
+</ul>
+</li>
+<li><a href="https://www.jianshu.com/p/d8a4fd109b30" target="_blank" rel="noopener">练习</a></li>
+<li><a href="https://www.jianshu.com/p/188366d88aa5" target="_blank" rel="noopener">进一步阅读</a><ul>
+<li>没有涉及的标准主题，有用的编程链接，python扩展包</li>
+</ul>
+</li>
+</ul>
+<p><br></p>
+<h1 id="电子书"><a href="#电子书" class="headerlink" title="电子书"></a>电子书</h1><ul>
+<li>以电子书方式查看<a href="https://learnbyexample.gitbooks.io/python-basics/content/index.html" target="_blank" rel="noopener">gitbook</a></li>
+<li>下载离线阅读 - <a href="https://www.gitbook.com/book/learnbyexample/python-basics/details" target="_blank" rel="noopener">链接</a></li>
+</ul>
+<p><br></p>
+<h1 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h1><ul>
+<li><a href="https://automatetheboringstuff.com/" target="_blank" rel="noopener">automatetheboringstuff</a> - 让我入门python</li>
+<li><a href="https://www.reddit.com/r/learnpython/" target="_blank" rel="noopener">/r/learnpython/</a> - 帮助初学者和高手的有用论坛</li>
+<li><a href="http://devup.in/" target="_blank" rel="noopener">Devs and Hackers</a> - helpful slack group</li>
+<li><a href="https://www.reddit.com/r/india/search?q=Weekly+Coders%2C+Hackers+%26+All+Tech+related+thread+author%3Aavinassh&amp;restrict_sr=on&amp;sort=new&amp;t=all" target="_blank" rel="noopener">Weekly Coders, Hackers &amp; All Tech related thread</a> - 谢谢建议和评论</li>
+</ul>
+<p><br></p>
+<h1 id="许可证"><a href="#许可证" class="headerlink" title="许可证"></a>许可证</h1><p>本工作基于<a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a></p>
 
       
     </div>
@@ -358,16 +432,16 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="">简单理解lapply,sapply,vapply</a></p>
+        <p><span>本文标题:</span><a href="">两天研习Python基础</a></p>
         <!-- modify author information
         <p><span>文章作者:</span><a href="/" title="回到主页">王诗翔</a></p>
         -->
         <p><span>文章作者:</span>王诗翔</p>
-        <p><span>发布时间:</span>2018-02-10, 15:04:57</p>
-        <p><span>最后更新:</span>2018-02-10, 15:33:47</p>
+        <p><span>发布时间:</span>2018-02-26, 21:01:41</p>
+        <p><span>最后更新:</span>2018-02-26, 21:07:13</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="" title="简单理解lapply,sapply,vapply">https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/　　作者: 王诗翔" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="" title="两天研习Python基础">https://shixiangwang.github.io/2018/02/26/python-basics/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://shixiangwang.github.io/2018/02/26/python-basics/　　作者: 王诗翔" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
         <p>
@@ -379,16 +453,10 @@
 
     <nav id="article-nav">
         
-            <div id="article-nav-newer" class="article-nav-title">
-                <a href="../../12/how-to-create-an-independent-figpath/">
-                    为markdown博文创建独立图片路径
-                </a>
-            </div>
-        
         
             <div id="article-nav-older" class="article-nav-title">
-                <a href="../../07/how-to-do-group-survival-analysis/">
-                    怎么对连续变量分组并进行生存分析
+                <a href="../../12/how-to-create-an-independent-figpath/">
+                    为markdown博文创建独立图片路径
                 </a>
             </div>
         
@@ -401,7 +469,7 @@
     <div id="toc" class="toc-article">
         <strong class="toc-title">文章目录</strong>
         
-            
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#前言"><span class="toc-number">1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Python-基础"><span class="toc-number">2.</span> <span class="toc-text">Python 基础</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#章节"><span class="toc-number">3.</span> <span class="toc-text">章节</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#电子书"><span class="toc-number">4.</span> <span class="toc-text">电子书</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#致谢"><span class="toc-number">5.</span> <span class="toc-text">致谢</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#许可证"><span class="toc-number">6.</span> <span class="toc-text">许可证</span></a></li></ol>
         
     </div>
     <style>
@@ -437,7 +505,7 @@
         </div>
         <script>
             window._bd_share_config={
-                "common":{"bdSnsKey":{},"bdText":"简单理解lapply,sapply,vapply　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+                "common":{"bdSnsKey":{},"bdText":"两天研习Python基础　| Cloudberry　","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
         </script>
     
 
@@ -456,8 +524,8 @@
     <div id="disqus_thread"></div>
     <script>
         var disqus_config = function(){
-            this.page.url = 'https://shixiangwang.github.io/2018/02/10/easy-sapply-apply-vapply/';
-            this.page.identifier = '2018/02/10/easy-sapply-apply-vapply/';
+            this.page.url = 'https://shixiangwang.github.io/2018/02/26/python-basics/';
+            this.page.identifier = '2018/02/26/python-basics/';
         };
         var loadComment = function(){
             var d = document, s = d.createElement('script');
@@ -479,21 +547,19 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="../../12/how-to-create-an-independent-figpath/" title="上一篇: 为markdown博文创建独立图片路径">
-                <i class="fa fa-angle-left"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
 
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
 
         
-            <a href="../../07/how-to-do-group-survival-analysis/" title="下一篇: 怎么对连续变量分组并进行生存分析">
+            <a href="../../12/how-to-create-an-independent-figpath/" title="下一篇: 为markdown博文创建独立图片路径">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
 
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="../../26/python-basics/">两天研习Python基础</a></li><li class="post-list-item"><a class="post-list-link" href="../../12/how-to-create-an-independent-figpath/">为markdown博文创建独立图片路径</a></li><li class="post-list-item"><a class="post-list-link" href="">简单理解lapply,sapply,vapply</a></li><li class="post-list-item"><a class="post-list-link" href="../../07/how-to-do-group-survival-analysis/">怎么对连续变量分组并进行生存分析</a></li><li class="post-list-item"><a class="post-list-link" href="../../06/how-to-write-rmd-documents-in-hexo-system/">怎么在hexo博客系统中用Rmarkdown写文章</a></li><li class="post-list-item"><a class="post-list-link" href="../../../01/31/sed-how-to-filter-rows-before-using-command/">sed如何在执行命令前过滤特定文本行</a></li><li class="post-list-item"><a class="post-list-link" href="../../../01/31/sync-deploy-tools/">Sync deploy 命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/12/25/sed-and-gawk/">初识sed与awk</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/12/08/Git-basic-operation/">学习git</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/11/29/shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/11/26/shell-create-function/">创建和使用shell函数</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/20/OOPinR/">R-面向对象编程</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/15/Class-in-R/">R中的属性与类</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/04/control_shell/">控制脚本</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/03/Linux-data-analysis-tools/">Linux数据处理命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/21/shell-show-data/">Linux脚本编程——呈现数据</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/19/working-with-user-input/">Shell脚本之处理用户输入</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/11/structural-command-of-shell/">Linux结构化命令</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/11/basic-shell/">构建基本shell脚本</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="">两天研习Python基础</a></li><li class="post-list-item"><a class="post-list-link" href="../../12/how-to-create-an-independent-figpath/">为markdown博文创建独立图片路径</a></li><li class="post-list-item"><a class="post-list-link" href="../../10/easy-sapply-apply-vapply/">简单理解lapply,sapply,vapply</a></li><li class="post-list-item"><a class="post-list-link" href="../../07/how-to-do-group-survival-analysis/">怎么对连续变量分组并进行生存分析</a></li><li class="post-list-item"><a class="post-list-link" href="../../06/how-to-write-rmd-documents-in-hexo-system/">怎么在hexo博客系统中用Rmarkdown写文章</a></li><li class="post-list-item"><a class="post-list-link" href="../../../01/31/sed-how-to-filter-rows-before-using-command/">sed如何在执行命令前过滤特定文本行</a></li><li class="post-list-item"><a class="post-list-link" href="../../../01/31/sync-deploy-tools/">Sync deploy 命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/12/25/sed-and-gawk/">初识sed与awk</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/12/08/Git-basic-operation/">学习git</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/11/29/shell-create-text-menu-and-window/">使用shell创建文本菜单和窗口部件</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/11/26/shell-create-function/">创建和使用shell函数</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/20/OOPinR/">R-面向对象编程</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/15/Class-in-R/">R中的属性与类</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/04/control_shell/">控制脚本</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/09/03/Linux-data-analysis-tools/">Linux数据处理命令工具</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/21/shell-show-data/">Linux脚本编程——呈现数据</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/19/working-with-user-input/">Shell脚本之处理用户输入</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/11/structural-command-of-shell/">Linux结构化命令</a></li><li class="post-list-item"><a class="post-list-link" href="../../../../2017/08/11/basic-shell/">构建基本shell脚本</a></li></ul>
 
 
 
