@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Welcome to Jekyll!
 #
 # This config file is meant for settings that affect your whole blog, values
@@ -17,13 +16,11 @@
 title: ZOUZHEN
 email: 996736369@qq.com
 description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+ 念念不忘，必有回响！
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+twitter_username: ZOUZHEN
+github_username:  ZOUZHEN
 
 # Build settings
 markdown: kramdown
@@ -42,19 +39,18 @@ plugins:
 #   - vendor/cache/
 #   - vendor/gems/
 #   - vendor/ruby/
-=======
 # ---------------------------------------------------------------
 # Jekyll & Global Configuration
 ## Docs: https://jekyllrb.com/docs/configuration/
 # ---------------------------------------------------------------
 
 # Site
-title: NexT
+title: ZOUZHEN_BLOG
 subtitle:
 description:
-author: John Doe
+author: ZOUZHEN
 # Support language: de, en, fr-FR, id, ja, ko, pt-BR, pt, ru, zh-Hans, zh-hk, zh-tw
-language: en
+language: zh-Hans
 date_format: '%Y-%m-%d'
 
 # URL
@@ -162,8 +158,8 @@ index_with_subtitle: false
 # When running the site in a subdirectory (e.g. domain.tld/blog), remove the leading slash (/archives -> archives)
 menu:
   home: /
-  #categories: /categories/
-  #about: /about/
+  categories: /categories/
+  about: /about/
   archives: /archives/
   tags: /tags/
   #sitemap: /sitemap.xml
@@ -195,9 +191,9 @@ menu_icons:
 # ---------------------------------------------------------------
 
 # Schemes
-scheme: Muse
+# scheme: Muse
 #scheme: Mist
-#scheme: Pisces
+scheme: Pisces
 
 
 # ---------------------------------------------------------------
@@ -252,7 +248,11 @@ font:
 # ---------------------------------------------------------------
 # Sidebar Settings
 # ---------------------------------------------------------------
+sidebar:
+  position: left
 
+sidebar:
+  display: pos
 
 # Social Links
 # Key is the link label showing to end users.
@@ -276,8 +276,8 @@ social_icons:
 
 
 # Sidebar Avatar
-# in directory: /assets/images/avatar.gif
-#avatar:
+in directory: /assets/images/avatar.png
+# avatar:
 
 
 # Table Of Contents in the Sidebar
@@ -541,9 +541,9 @@ rating:
 # Show number of visitors to each article.
 # You can visit https://leancloud.cn get AppID and AppKey.
 leancloud_visitors:
-  enable: false
-  app_id: #<app_id>
-  app_key: #<app_key>
+  enable: true
+  app_id: Y9d18hQfYRHa1wlGW4p4Kafd-gzGzoHsz
+  app_key: zP0rpyp68LwyIWh1QTyIj6hj
 
 # Show PV/UV of the website/page with busuanzi.
 # Get more information on http://ibruce.info/2015/04/04/busuanzi/
@@ -756,4 +756,3 @@ images: assets/images
 version: 5.1.1
 
 theme: jekyll-theme-cayman
->>>>>>> 8051858f9d888c6c23b5bd93874cc1bf11920c07
