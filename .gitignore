@@ -3,14 +3,7 @@ _site
 .sass-cache
 .jekyll-metadata
 =======
-_site/*
-_theme_packages/*
-
-Thumbs.db
-.DS_Store
-
-!.gitkeep
-
-.rbenv-version
+Gemfile
+Gemfile.lock
 .rvmrc
 >>>>>>> 8051858f9d888c6c23b5bd93874cc1bf11920c07
