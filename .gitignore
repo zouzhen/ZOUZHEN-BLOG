@@ -1,9 +1,10 @@
-<<<<<<< HEAD
-_site
-.sass-cache
-.jekyll-metadata
-=======
-Gemfile
-Gemfile.lock
+_site/*
+_theme_packages/*
+
+Thumbs.db
+.DS_Store
+
+!.gitkeep
+
+.rbenv-version
 .rvmrc
->>>>>>> 8051858f9d888c6c23b5bd93874cc1bf11920c07
