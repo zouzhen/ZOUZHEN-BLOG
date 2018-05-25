@@ -192,8 +192,8 @@ menu_icons:
 
 # Schemes
 # scheme: Muse
-#scheme: Mist
-scheme: Pisces
+scheme: Mist
+# scheme: Pisces
 
 
 # ---------------------------------------------------------------
@@ -248,11 +248,11 @@ font:
 # ---------------------------------------------------------------
 # Sidebar Settings
 # ---------------------------------------------------------------
-sidebar:
-  position: left
+# sidebar:
+#   position: left
 
-sidebar:
-  display: pos
+# sidebar:
+#   display: pos
 
 # Social Links
 # Key is the link label showing to end users.
