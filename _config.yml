@@ -207,20 +207,21 @@ scheme: Mist
 font:
   enable: true
 
-  # Uri of fonts host. E.g. //fonts.googleapis.com (Default)
+  # 外链字体库地址，例如 //fonts.googleapis.com (默认值)
   host:
 
-  # Global font settings used on <body> element.
+  # 全局字体，应用在 body 元素上
   global:
     # external: true will load this font family from host.
     external: true
-    family: Lato
+    # family: Lato
+    family: Monda
 
-  # Font settings for Headlines (h1, h2, h3, h4, h5, h6)
+  # 标题字体 (h1, h2, h3, h4, h5, h6)
   # Fallback to `global` font settings.
   headings:
     external: true
-    family:
+    family: Roboto Slab
 
   # Font settings for posts
   # Fallback to `global` font settings.
@@ -228,18 +229,18 @@ font:
     external: true
     family:
 
-  # Font settings for Logo
+  # Logo 字体
   # Fallback to `global` font settings.
   # The `size` option use `px` as unit
   logo:
     external: true
-    family:
-    size:
+    family: Lobster Two
+    size: 24
 
   # Font settings for <code> and code blocks.
   codes:
     external: true
-    family:
+    family: PT Mono
     size:
 
 
