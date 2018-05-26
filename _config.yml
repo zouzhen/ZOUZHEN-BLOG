@@ -101,7 +101,7 @@ defaults:
 
 # Atom feed
 feed:
-  path: atom.xml
+  path: /atom.xml
 
 # Plugins
 ## Docs: https://help.github.com/articles/configuring-jekyll-plugins/
