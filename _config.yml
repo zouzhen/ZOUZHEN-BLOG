@@ -76,11 +76,11 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 # theme: landscape
 # 设置主题为next
-theme: next
+theme: landscape
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repository: git@github.com:zouzhen/zouzhen.github.io.git
+  repository: https://github.com/zouzhen/ZOUZHEN.github.io.git
   branch: master
