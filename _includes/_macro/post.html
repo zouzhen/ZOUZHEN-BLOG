@@ -326,6 +326,12 @@
     </div>
 
     <div>
+      {% if not is_index %}
+        {% include 'passage-end-tag.html' %}
+      {% endif %}
+    </div>
+
+    <div>
       {% unless is_index %}
         {% include _macro/reward.html %}
       {% endunless %}

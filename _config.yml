@@ -101,7 +101,7 @@ defaults:
 
 # Atom feed
 feed:
-  path: /atom.xml
+  path: atom.xml
 
 # Plugins
 ## Docs: https://help.github.com/articles/configuring-jekyll-plugins/
@@ -124,7 +124,7 @@ keywords: "Jekyll, NexT"
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
 # Set rss to specific value if you have burned your feed already.
-rss: 
+rss: atom.xml
 
 # Specify the date when the site was setup
 #since: 2015
@@ -759,6 +759,10 @@ vendors:
   # https://github.com/ethantw/Han
   han:
 
+
+# 文章末尾添加“本文结束”标记
+passage_end_tag:
+  enabled: true
 
 # Assets
 css: assets/css
