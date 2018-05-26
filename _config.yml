@@ -279,6 +279,8 @@ social_icons:
   # KeyMapsToSocialItemKey: NameOfTheIconFromFontAwesome
   GitHub: github
   知乎: zhihu
+  CSDN: csdn
+  简书: heartbeat
   # Twitter: twitter
   # Weibo: weibo
 
