@@ -459,16 +459,16 @@ changyan:
 
 # Support for LiveRe comments system.
 # You can get your uid from https://livere.com/insight/myCode (General web site)
-livere_uid: MTAyMC8zNjgyNS8xMzM2MQ
+# livere_uid: MTAyMC8zNjgyNS8xMzM2MQ
 
 # Support for gitalk comments system.
 gitalk:
-  enable: false
-  clientID: # 54730ddf7b9420460c03
-  clientSecret: # c05684701b25ff1c19ea0c01ce4d80c125e0707d
-  repo: # colingpt.github.io
-  owner: # colingpt
-  admin: # colingpt
+  enable: true
+  clientID: 00bc648e2633d20c85e6
+  clientSecret: e0533231193f1932dc1a9c8070c9eff7d42d3529
+  repo:  zouzhen.github.io
+  owner: zouzhen
+  admin: zouzhen
 
 # Baidu Share
 # Available value:
