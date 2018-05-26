@@ -124,7 +124,7 @@ keywords: "Jekyll, NexT"
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link.
 # Set rss to specific value if you have burned your feed already.
-rss: atom.xml
+rss: 
 
 # Specify the date when the site was setup
 since: 2017
@@ -459,7 +459,7 @@ changyan:
 
 # Support for LiveRe comments system.
 # You can get your uid from https://livere.com/insight/myCode (General web site)
-#livere_uid: your uid
+livere_uid: MTAyMC8zNjgyNS8xMzM2MQ
 
 # Support for gitalk comments system.
 gitalk:
