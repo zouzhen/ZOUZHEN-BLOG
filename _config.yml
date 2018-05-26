@@ -76,7 +76,7 @@ pagination_dir: page
 ## Themes: https://hexo.io/themes/
 # theme: landscape
 # 设置主题为next
-theme: landscape
+theme: next
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
