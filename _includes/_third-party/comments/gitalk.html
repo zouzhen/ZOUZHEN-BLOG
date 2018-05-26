@@ -6,6 +6,22 @@
 
 {% if site.gitalk.enable %}
 
+<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+<script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: '{{ site.gitalk.clientID }}',
+        clientSecret: '{{ site.gitalk.clientSecret }}',
+        repo: '{{ site.gitalk.repo }}',
+        owner: '{{ site.gitalk.owner }}',
+        admin: ['{{ site.gitalk.owner }}'],
+        id: '{{ page.url }}',
+        labels: ['gitalk'],
+        perPage: 50,
+        distractionFreeMode: true
+      });
+      gitalk.render('gitalk-container');
+</script>
 <!-- <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
 <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
 <script type="text/javascript">
@@ -22,20 +38,6 @@
       });
       gitalk.render('gitalk-container');
 </script> -->
-<div id="gitmentContainer"></div>
-<link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
-<script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
-<script>
-var gitment = new Gitment({
-    owner: 'zouzhen',
-    repo: 'https://github.com/zouzhen/ZOUZHEN.github.io',
-    oauth: {
-        client_id: '00bc648e2633d20c85e6',
-        client_secret: 'e0533231193f1932dc1a9c8070c9eff7d42d3529',
-    },
-});
-gitment.render('gitmentContainer');
-</script>
 
 {% endif %}
 
