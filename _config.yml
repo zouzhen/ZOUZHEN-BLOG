@@ -259,7 +259,7 @@ font:
 # Key is the link label showing to end users.
 # Value is the target link (E.g. GitHub: https://github.com/iissnan)
 social:
-  #LinkLabel: Link
+  # LinkLabel: Link
   GitHub: https://github.com/zouzhen
   知乎: http://www.zhihu.com/people/zou-zhen-8/activities
 
