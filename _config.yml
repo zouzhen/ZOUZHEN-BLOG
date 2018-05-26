@@ -459,14 +459,14 @@ changyan:
 
 # Support for LiveRe comments system.
 # You can get your uid from https://livere.com/insight/myCode (General web site)
-# livere_uid: MTAyMC8zNjgyNS8xMzM2MQ
+# livere_uid: your uid
 
 # Support for gitalk comments system.
 gitalk:
   enable: true
   clientID: 00bc648e2633d20c85e6
   clientSecret: e0533231193f1932dc1a9c8070c9eff7d42d3529
-  repo:  zouzhen.github.io
+  repo:  https://github.com/zouzhen/ZOUZHEN.github.io
   owner: zouzhen
   admin: zouzhen
 
