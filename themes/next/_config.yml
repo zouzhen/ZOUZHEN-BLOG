@@ -136,8 +136,8 @@ menu_settings:
 # ---------------------------------------------------------------
 
 # Schemes
-scheme: Muse
-# scheme: Mist
+# scheme: Muse
+scheme: Mist
 # scheme: Pisces
 # scheme: Gemini
 
@@ -283,9 +283,10 @@ symbols_count_time:
   separated_meta: true
   item_text_post: true
   item_text_total: true
-  totalcount: false
+  # totalcount: true # 新增
   awl: 4
   wpm: 275
+
 
 codeblock:
   # Manual define the border radius in codeblock
@@ -435,7 +436,7 @@ font:
 
 # Math Equations Render Support
 math:
-  enable: false
+  enable: true
 
   # Default(true) will load mathjax/katex script on demand
   # That is it only render those page who has 'mathjax: true' in Front Matter.
@@ -716,7 +717,7 @@ algolia_search:
 # Local search
 # Dependencies: https://github.com/theme-next/hexo-generator-searchdb
 local_search:
-  enable: false
+  enable: true
   # if auto, trigger search by changing input
   # if manual, trigger search by pressing enter key or search button
   trigger: auto
@@ -724,6 +725,12 @@ local_search:
   top_n_per_article: 1
   # unescape html strings to the readable one
   unescape: false
+
+  search:
+     path: search.xml
+     field: post
+     format: html
+     limit: 10000
 
 # Bookmark Support
 # Dependencies: https://github.com/theme-next/theme-next-bookmark
