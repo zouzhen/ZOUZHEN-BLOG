@@ -247,6 +247,7 @@
             </span>
           {% endif %}
 
+
           {% if config.symbols_count_time.symbols or config.symbols_count_time.time %}
             <div class="post-symbolscount">
               {% if not theme.symbols_count_time.separated_meta %}
