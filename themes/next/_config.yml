@@ -55,12 +55,16 @@ favicon:
 # Set rss to false to disable feed link.
 # Leave rss as empty to use site's feed link, and install hexo-generator-feed: `npm install hexo-generator-feed --save`.
 # Set rss to specific value if you have burned your feed already.
-rss:
+rss: /atom.xml
 
 feed:
   type: atom
   path: atom.xml
   limit: 20
+  hub:
+  content:
+  content_limit: 140
+  content_limit_delim: ' '
 
 
 footer:
@@ -538,9 +542,9 @@ gitment:
   cleanly: false # Hide 'Powered by ...' on footer, and more
   language: # Force language, or auto switch by theme
   github_user: zouzhen # MUST HAVE, Your Github Username
-  github_repo: https://github.com/zouzhen/ZOUZHEN.github.io # MUST HAVE, The name of the repo you use to store Gitment comments
-  client_id: a88ac7a985086079c5cd # MUST HAVE, Github client id for the Gitment
-  client_secret: fee45cf8798467011c8cb706ad896be29e447591 # EITHER this or proxy_gateway, Github access secret token for the Gitment
+  github_repo: https://github.com/zouzhen/BLOG-COMMENTS.git # MUST HAVE, The name of the repo you use to store Gitment comments
+  client_id: 592af91de340483297cf # MUST HAVE, Github client id for the Gitment
+  client_secret: c5ddc88e819399f0802f54e8accbb677bdcca567 # EITHER this or proxy_gateway, Github access secret token for the Gitment
   proxy_gateway: # Address of api proxy, See: https://github.com/aimingoo/intersect
   redirect_protocol: # Protocol of redirect_uri with force_redirect_protocol when mint enabled
 
@@ -985,6 +989,18 @@ vendors:
 # 文章末尾添加“本文结束”标记
 passage_end_tag:
   enabled: true
+
+
+index_generator:
+  per_page: 5
+
+archive_generator:
+  per_page: 20
+  yearly: true
+  monthly: true
+
+tag_generator:
+  per_page: 10
 
 
 # Assets
