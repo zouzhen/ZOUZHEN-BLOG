@@ -1,8 +1,8 @@
 ---
 title: MARKDOWN语法熟悉
 date: 2018-05-28 17:03:28
-categories: 编程语言使用
-tags: Markdown
+categories: 工具
+tags: 工具 Markdown
 ---
 # 标题测试
 
