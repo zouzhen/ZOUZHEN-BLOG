@@ -80,4 +80,6 @@ DKMS全称是DynamicKernel ModuleSupport，它可以帮我们维护内核外的�
 
 
 # CUDA&&CUDNN
-　　关于cuda和cudnn的安装，这一点尤其要注意。我在CentOS7.5(更新后的版本，初始装的时候为7.4)上安装CUDA9.2时，无法与NVIDIA的驱动匹配，因此退而求其次，选择了CUDA9.1。
+　　关于cuda和cudnn的安装，这一点尤其要注意。我在CentOS7.5(更新后的版本，初始装的时候为7.4)上安装CUDA9.2时，无法与NVIDIA的驱动匹配，因此退而求其次，选择了CUDA9.1，同时CUDNN选择7.0.5版本。  
+**注意** 不要下载cudnn-9.1-linux-ppc64le-v7.1.tgz，因为ppc64le并不是针对X64的电脑系统    
+CUDA的安装我选择了使用yum安装的方式，因为之前使用命令行，出现了未知的错误，导致系统重装。
