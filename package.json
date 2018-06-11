@@ -20,6 +20,8 @@
     "hexo-renderer-stylus": "^0.3.1",
     "hexo-server": "^0.2.0",
     "hexo-wordcount": "^3.0.2",
+    "katex": "^0.10.0-alpha",
+    "nomnom": "^1.8.1",
     "valine": "^1.1.9-beta9"
   }
 }

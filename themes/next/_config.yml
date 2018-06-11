@@ -454,7 +454,7 @@ math:
   per_page: true
 
   engine: mathjax
-  #engine: katex
+  # engine: katex
 
   # hexo-rendering-pandoc (or hexo-renderer-kramed) needed to full MathJax support.
   mathjax:
