@@ -4,22 +4,24 @@ date: 2018-06-14 17:13:15
 categories:
 tags:
 ---
-字段类型(Field types)
-AutoField
+# 字段类型(Field types)
+### AutoField
 它是一个根据 ID 自增长的 IntegerField 字段。通常，你不必直接使用该字段。如果你没在别的字段上指定主 键，Django 就会自动添加主键字段。
 
-BigIntegerField
+### BigIntegerField
 64位整数，类似于IntegerField，范围从-9223372036854775808 到9223372036854775807。默认的form widget 是TextInput。
 
-BooleanField
+### BooleanField
 一个布尔值(true/false)字段。
 
 默认的form widget是CheckboxInput。
 
 如果要使用null作为空值，可使用NullBooleanField。
 
-CharField
-  class CharField(max_length=None[, **options])
+### CharField  
+
+    class CharField(max_length=None[, **options])
+
 
 它是一个字符串字段，对小字符串和大字符串都适用。
 
@@ -29,13 +31,15 @@ CharField
 
 CharField 有一个必须传入的参数：max_length,字段的最大字符数。它作用于数据库层级和 Django 的数据验证层级。
 
-CommaSeparatedInterField
+### CommaSeparatedInterField
+
 class CommaSeparatedIntegerField(max_length=None[, **options])
 
 它用来存放以逗号间隔的整数序列。和 CharField 一样，必须为它提供 max_length 参数。而且要注意不同数据库对 max_length 的限制。
 
-DateField
-  class DateField([auto_now=False, auto_now_add=False, **options])
+### DateField
+
+    class DateField([auto_now=False, auto_now_add=False, **options])
 
 该字段利用 Python 的 datetime.date 实例来表示日期。下面是它额外的可选参数：
 
@@ -49,15 +53,17 @@ DateField.auto_now_add：在第一次创建对象时，Django 自动将该字段
 
 Note:当auto_now或者auto_now_add设置为True时，字段会有editable=True和blank=True的设定。
 
-DateTimeField
-  class DateTimeField([auto_now=False, auto_now_add=False, **options])
+### DateTimeField
+
+    class DateTimeField([auto_now=False, auto_now_add=False, **options])
 
 该字段利用 datetime.datetime 实例表示日期和时间。该字段所按受的参数和 DateField 一样。
 
 默认的form widget是TextInput。Django 的admin使用两个带有 JavaScript 快捷选项TextInput分别表示日期和时间。
 
-DecimalField
-  class DecimalField(max_digits=None, decimal_places=None[, **options])
+### DecimalField
+
+    class DecimalField(max_digits=None, decimal_places=None[, **options])
 
 它是使用 Decimal 实例表示固定精度的十进制数的字段。它有两个必须的参数：
 
@@ -75,8 +81,9 @@ models.DecimalField(..., max_digits=5, decimal_places=2)
 models.DecimalField(..., max_digits=19, decimal_places=10)
 默认的form widget是TextInput。
 
-EmailField
-  class EmailField([max_length=75, **options])
+### EmailField
+
+    class EmailField([max_length=75, **options])
 
 它是带有 email 合法性检测的A CharField 。
 
@@ -84,8 +91,9 @@ Note：最大长度默认为75，并不能存储所有与RFC3696/5321兼容的em
 
 max_length=254。设置为75是历史遗留问题。
 
-FileField
-class FileField(upload_to=None[, max_length=100, **options])
+### FileField
+
+    class FileField(upload_to=None[, max_length=100, **options])
 
 文件上传字段
 
@@ -248,8 +256,9 @@ FilePathField(path="/home/images", match="foo.*", recursive=True)
 
 默认情况下， FilePathField 实例在数据库中的对应列是varchar(100) 。和其他字段一样，你可以利用 max_length 参数改变字段的最大长度。
 
-FloatField
- class FloatField([**options])
+### FloatField
+
+    class FloatField([**options])
 
 该字段在 Python 中使用float 实例来表示一个浮点数。
 
@@ -257,8 +266,9 @@ FloatField
 
 请注意FloatField与DecimalField的区别。
 
-ImageField
-  class ImageField(upload_to=None[, height_field=None, width_field=None, max_length=100,**options])
+### ImageField
+
+    class ImageField(upload_to=None[, height_field=None, width_field=None, max_length=100,**options])
 
 和 FileField 一样，只是会验证上传对象是不是一个合法的图象文件。
 
@@ -276,18 +286,21 @@ ImageField.width_field
 
 默认情况下， ImageField 实例对应着数据库中的varchar(100) 列。和其他字段一样，你可以使 用 max_length 参数来改变字段的最大长度。
 
-IntegerField
-  class IntegerField([**options])
+### IntegerField
+
+    class IntegerField([**options])
 
 整数字段。默认的form widget是TextInput。
 
-IPAddressField
- class IPAddressField([**options])
+### IPAddressField
+
+    class IPAddressField([**options])
 
 以字符串形式(比如 "192.0.2.30")表示 IP 地址字段。默认的form widget是TextInput。
 
-GenericIPAddressField
- class GenericIPAddressField([**options])
+### GenericIPAddressField
+
+    class GenericIPAddressField([**options])
 
 Django1.4新增。
 
@@ -305,25 +318,29 @@ GenericIPAddressField.unpack_ipv4
 
 解释IPv4映射的地址，像   ::ffff:192.0.2.1  。如果启用该选项，该地址将必解释为 192.0.2.1 。默认是禁止的。只有当 protocol 被设置为 ‘both’ 时才可以启用。
 
-NullBooleanField
- class NullBooleanField([**options])
+### NullBooleanField
+
+    class NullBooleanField([**options])
 
 与 BooleanField 相似，但多了一个 NULL 选项。建议用该字段代替使用 null=True 选项的 BooleanField 。 
 
 默认的form widget是NullBooleanSelect。
 
-PositiveIntegerField
-class PositiveIntegerField([**options])
+### PositiveIntegerField
+
+    class PositiveIntegerField([**options])
 
 和 IntegerField 相似，但字段值必须是非负数。
 
-PositiveSmallIntegerField
- class PositiveSmallIntegerField([**options])
+### PositiveSmallIntegerField
+
+    class PositiveSmallIntegerField([**options])
 
 和 PositiveIntegerField 类似，但数值的取值范围较小，受限于数据库设置。
 
-SlugField
- class SlugField([max_length=50, **options])
+### SlugField
+
+    class SlugField([max_length=50, **options])
 
 Slug 是一个新闻术语，是指某个事件的短标签。它只能由字母，数字，下划线或连字符组成。通赏情况下，它被用做网址的一部分。
 
@@ -333,25 +350,29 @@ Slug 是一个新闻术语，是指某个事件的短标签。它只能由字母
 
 基于其他字段的值来自动填充 Slug 字段是很有用的。你可以在 Django 的管理后台中使用prepopulated_fields 来做到这一点。
 
-SmallIntegerField
- class SmallIntegerField([**options])
+### SmallIntegerField
+
+    class SmallIntegerField([**options])
 
 和 IntegerField 类似，但数值的取值范围较小，受限于数据库的限制。
 
-TextField
- class TextField([**options])
+### TextField
+
+    class TextField([**options])
 
 大文本字段。默认的form widget是Textarea。
 
-TimeField
- class TimeField([auto_now=False, auto_now_add=False, **options])
+### TimeField
+
+    class TimeField([auto_now=False, auto_now_add=False, **options])
 
 该字段使用 Python 的 datetime.time 实例来表示时间。它和 DateField 接受同样的自动填充的参数。
 
 默认的form widget是TextInput。
 
-URLField
- class URLField([max_length=200, **options])
+### URLField
+
+    class URLField([max_length=200, **options])
 
 保存 URL 的 CharField 。
 
