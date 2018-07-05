@@ -57,6 +57,10 @@ favicon:
 # Set rss to specific value if you have burned your feed already.
 rss: /atom.xml
 
+
+plugin:
+- hexo-generator-feed
+
 feed:
   type: atom
   path: atom.xml

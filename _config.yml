@@ -78,6 +78,7 @@ pagination_dir: page
 # 设置主题为next
 theme: next
 
+
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
