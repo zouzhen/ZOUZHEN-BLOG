@@ -25,66 +25,74 @@ MongoDB
 - 基本操作  
     在终端运行mongod命令，启动时，shell将自动连接MongDB数据库，需确保数据库已启动，可充分利用Javascript的标准库，还可定义和调用Javascript函数。
     
-    - 查看当前所处MongoDB  
-        
-        `db`  
+    - 创建数据库
 
-    - 选择数据库  
-        
-        `use databases`  
+      use database_name
 
-        如果数据库存在，则进入指定数据库，否则，创建数据库 此时需要写入数据，数据库才能真正创建成功
+    如果数据库存在，则进入指定数据库，否则，创建数据库
+    此时需要写入数据，数据库才能真正创建成功
 
-    - 查看所有数据库  
-       
-       `show databases | dbs`
+    - 查看所有数据库
 
-    - 创建集合  
-        
-        `db.createCollection(collection_name)`  
+            show databases | dbs
 
-    - 删除数据库 先进入要删除的数据库，然后执行命令  
-        
-        `db.dropDatabase()`
-    
-    - 删除集合  
-        
-        `db.collection_name.drop()`  
-    
-    - 增  
-        
-        `db.collection_name.insert(document)`  
-        or:  
-          `db.students.insert({
-            name:'James',  
-            age: 32,  
-            gender:'man',  
-            career:'player'  
-            })`  
-    
-    - 查  
-        
-        `db.collection.find(<query>,<projection>)`
+    - 创建集合
+
+            db.createCollection(collection_name)
+
+    - 删除数据库
+    先进入要删除的数据库，然后执行命令
+
+            db.dropDatabase()
+
+    - 删除集合
+
+        db.collection_name.drop()
+
+    - 增
+
+        db.collection_name.insert(document)
+
+        exp:
+            
+            db.students.insert({
+            name:'James',
+            age: 32,
+            gender:'man',
+            career:'player'
+            })
+
+    - 查
+
+            db.collection.find(<query>,<projection>)
+            - query: 查询条件
+            - projection: 投影操作
+
+        exp:
+
+            db.students.find()
+
+    - 改
+
+        db.collection.updateOne(<query>,<update>) // 更新第一个符合条件的集合
+        db.collection.updateMany(<query>,<update>)  // 更新所有符合条件的集合
+
         - query: 查询条件
-        - projection: 投影操作  
-    
-    - 改  
-        
-        `db.collection.updateOne(<query>,<update>)` // 更新第一个符合条件的集合
-        `db.collection.updateMany(<query>,<update>)`  // 更新所有符合条件的集合
+        - update： 更新的内容
 
-        - query: 查询条件
-        - update： 更新的内容  
+        exp: 
 
-        or:  
-        `db.students.update({name:'James'},{$set:{gender:'woman'}})`
-    
-    - 删  
-        `db.collection_name.deleteOne(<query>)` // 删除第一个符合条件的集合
-        `db.collection_name.deleteMany(<query>)` // 删除所有符合条件的集合  
-        or:  
-        `db.students.deleteOne({name:'James'})`
-    - 
+            db.students.update({name:'James'},{$set:{gender:'woman'}})
+
+    - 删
+
+        db.collection_name.deleteOne(<query>) // 删除第一个符合条件的集合
+        db.collection_name.deleteMany(<query>) // 删除所有符合条件的集合
+
+        exp:
+
+            db.students.deleteOne({name:'James'})
+
 ## 数据操作（重点）
 
 数据库的核心——CRUD，增加和删除较为简单，查询和修改较复杂
@@ -93,17 +101,17 @@ MongoDB
 
 #### 关系运算符
 
-- `$gt 大于`
+- $gt 大于
 
-- `$lt 小于`
+- $lt 小于
 
-- `$gte  大于等于`
+- $gte  大于等于
 
-- `$lte  小于等于`
+- $lte  小于等于
 
-- `$eq | (key: value)  等于`
+- $eq | (key: value)  等于
 
-- `$ne 不等于`
+- $ne 不等于
 
 先往数据库中添加一些数据
 
@@ -120,23 +128,23 @@ exp:
 
 1. 查询姓名是张三的学生信息
 
-    `db.students.find({name:’张三’}).pretty()`
+        db.students.find({name:’张三’}).pretty()
 
 2. 查询性别是男的学生信息
 
-    `db.students.find({sex:’男’}).pretty()`
+        db.students.find({sex:’男’}).pretty()
 
 3. 查询年龄大于19岁的学生
 
-    `db.students.find({age:{$gt:19}}).pretty()`
+        db.students.find({age:{$gt:19}}).pretty()
 
 4. 查询成绩大于等于60分的学生
 
-    `db.students.find({score:{$gte:60}}).pretty()` 
+        db.students.find({score:{$gte:60}}).pretty() 
 
 5. 查询姓名不是王五的信息
 
-    `db.students.find({name:{$ne:’王五’}}).pretty()`
+        db.students.find({name:{$ne:’王五’}}).pretty()
 
 #### 逻辑运算符
 
@@ -150,7 +158,7 @@ exp:
 
 1. 查询年龄在19 ~ 22岁的学生信息
 
-    `db.students.find({age:{$gte:19,$lte:22}}).pretty()`
+        db.students.find({age:{$gte:19,$lte:22}}).pretty()
 
 逻辑运算中与连接是最容易的，只需要利用`,`分割多个条件即可
 
@@ -176,41 +184,41 @@ exp:
 
 4. 查询年龄小于20岁的学生信息
 
-    `db.students.find({age:{$lt:20}}).pretty()`  
-    `db.students.find({age:{$not:{$gte:20}}}).pretty()`
+        db.students.find({age:{$lt:20}}).pretty()
+        db.students.find({age:{$not:{$gte:20}}}).pretty()
 
 #### 取模
 
 `$mod:[除数，余数]`
 
-exp: 查询年龄除以20余1的学生信息  
+exp: 查询年龄除以20余1的学生信息
 
-`db.students.find({age:{$mod:[20,1]}}).pretty()`
+    db.students.find({age:{$mod:[20,1]}}).pretty()
 
 #### 范围查询
 
-`$in`: 在范围之中
-`$nin`: 不在范围之中
+$in: 在范围之中
+$nin: 不在范围之中
 
 exp:
 
 1. 查询姓名是”张三“、”李四、”王五“的学生
 
-    `db.students.find({name: {$in:['张三','李四','王五']}}).pret ty()`
+        db.students.find({name: {$in:['张三','李四','王五']}}).pret ty()
 
 2. 查询姓名不是”张三“、”李四、”王五“的学生
 
-    `db.students.find({name: {$nin:['张三','李四','王五']}}).pretty()`
+        db.students.find({name: {$nin:['张三','李四','王五']}}).pretty()
 
 #### 数组查询
 
-- `$all` 
+- $all 
 
-- `$size` 
+- $size 
 
-- `$slice` 
+- $slice 
 
-- `$elemMatch`
+- $elemMatch
 
 首先在数据库中新增一些数据
 
@@ -228,13 +236,13 @@ exp:
 
 查询同时参加语文和数学的学生
 
-`db.students.find({course:{$all:['语文','数学']}}).pretty()`
+        db.students.find({course:{$all:['语文','数学']}}).pretty()
 
 数组的操作，可以利用索引，使用`key.index`的方式来定义索引
 
 查询数组中第二个内容是数学的学生(sh)
 
-`db.students.find({'course.1':'数学'}).pretty()`
+        db.students.find({'course.1':'数学'}).pretty()
 
 `$size`: 控制数组元素数量
 
@@ -250,7 +258,7 @@ exp:
 
 查询年龄是19岁的学生，要求之显示两门参加的课程
 
-`db.students.find({age:19},{course:{$slice:2}}).pretty()`
+        db.students.find({age:19},{course:{$slice:2}}).pretty()
 
 此时查询返回的是前两门课程，可以设置参数来取出想要的内容
 
@@ -299,7 +307,7 @@ exp:
 
 查询父母中有人是局长的信息
 
-`db.students.find({parents: {$elemMatch: {job: '局长'}}}).pretty()`
+        db.students.find({parents: {$elemMatch: {job: '局长'}}}).pretty()
 
 #### 判断某个字段是否存在
 
@@ -309,11 +317,11 @@ exp:
 
 1. 查询具有parents成员的学生
 
-    `db.students.find({parents:{$exists: true}}).pretty()`
+        db.students.find({parents:{$exists: true}}).pretty()
 
 2. 查询不具有course成员的学生
 
-    `db.students.find({course: {$exists: false}}).pretty()`
+        db.students.find({course: {$exists: false}}).pretty()
 
 #### 排序
 
@@ -323,7 +331,7 @@ exp:
 
 学生信息按照分数降序排列
 
-`db.students.find().sort({score:-1}).pretty()`
+        db.students.find().sort({score:-1}).pretty()
 
 #### 分页显示
 
@@ -335,11 +343,11 @@ exp:
 
 1. 分页显示，第一页，每页显示5条数据
 
-    `db.students.find({}).skip(0).limit(5).pretty()`
+        db.students.find({}).skip(0).limit(5).pretty()
 
 2. 分页显示，第二页，每页显示5条数据
 
-    `db.students.find({}).skip(5).limit(5).pretty()`
+        db.students.find({}).skip(5).limit(5).pretty()
 
 ### 数据修改 | 更新
 
@@ -462,4 +470,3 @@ exp:
 把张三的name属性名改为姓名
 
         db.students.updateOne({name:'张三'},{$rename:{name:'姓名'}})
-
