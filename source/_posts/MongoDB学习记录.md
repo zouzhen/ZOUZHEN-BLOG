@@ -6,6 +6,7 @@ tags: mongodb
 ---
 MongoDB
 === 
+转载自https://github.com/zxhyJack/MyBlog/blob/master/mongodb/mongodb.md
 
 ###  基本概念
 
@@ -27,7 +28,7 @@ MongoDB
     
     - 创建数据库
 
-      use database_name
+            use database_name
 
     如果数据库存在，则进入指定数据库，否则，创建数据库
     此时需要写入数据，数据库才能真正创建成功
@@ -47,11 +48,11 @@ MongoDB
 
     - 删除集合
 
-        db.collection_name.drop()
+            db.collection_name.drop()
 
     - 增
 
-        db.collection_name.insert(document)
+            db.collection_name.insert(document)
 
         exp:
             
@@ -74,8 +75,8 @@ MongoDB
 
     - 改
 
-        db.collection.updateOne(<query>,<update>) // 更新第一个符合条件的集合
-        db.collection.updateMany(<query>,<update>)  // 更新所有符合条件的集合
+            db.collection.updateOne(<query>,<update>) // 更新第一个符合条件的集合
+            db.collection.updateMany(<query>,<update>)  // 更新所有符合条件的集合
 
         - query: 查询条件
         - update： 更新的内容
@@ -86,8 +87,8 @@ MongoDB
 
     - 删
 
-        db.collection_name.deleteOne(<query>) // 删除第一个符合条件的集合
-        db.collection_name.deleteMany(<query>) // 删除所有符合条件的集合
+            db.collection_name.deleteOne(<query>) // 删除第一个符合条件的集合
+            db.collection_name.deleteMany(<query>) // 删除所有符合条件的集合
 
         exp:
 
