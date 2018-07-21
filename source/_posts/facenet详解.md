@@ -42,7 +42,7 @@ tags: facenet
 
 - 预训练模型测试：  
 
-    python src/validate_on_lfw.py lfw_mtcnnpy_160 models\20180408-102900  
+        python src/validate_on_lfw.py lfw_mtcnnpy_160 models\20180408-102900  
 
 ![算法测试](facenet详解/算法测试.png)  
 
@@ -50,12 +50,12 @@ tags: facenet
 
 - 相似人脸对比结果：  
 
-    python src\compare.py models\20180408-102900 data\images\Anthony_Hopkins_0001.jpg data\images\Anthony_Hopkins_0002.jpg  
+        python src\compare.py models\20180408-102900 data\images\Anthony_Hopkins_0001.jpg data\images\Anthony_Hopkins_0002.jpg  
 
 ![相似人脸对比结果](facenet详解/相似人脸对比结果.png)  
 
 - 不相似人脸对比结果：  
 
-    python src\compare.py models\20180408-102900 data\images\Anthony_Hopkins_0001.jpg lfw_mtcnnpy_160\Aaron_Eckhart\Aaron_Eckhart_0001.png
+        python src\compare.py models\20180408-102900 data\images\Anthony_Hopkins_0001.jpg lfw_mtcnnpy_160\Aaron_Eckhart\Aaron_Eckhart_0001.png
 
-![不相似人脸对比结果](facenet详解/不相似人脸对比结果.png) 
+![不相似人脸对比结果](facenet详解/不相似人脸对比结果.png)
