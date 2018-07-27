@@ -26,3 +26,13 @@ real_time_face_recognize
 * |—— facenet.py（这里存储了facenet的主要函数）
 * |—— real_time_face_recognize.py(实现了实时人脸检测)  
 
+### 运行
+
+1. 从 https://github.com/davidsandberg/facenet 中下载预训练的分类模型，放在model_check_point下  
+2. 使用pip install requirements.txt安装需要的包，建议在virtualenv环境安装  
+3. 在目录下新建picture文件，将需要识别的人的图片放入其中，每人放入一张清晰的图片即可  
+4. 执行python real_time_face_recognize.py 
+
+### 注意  
+
+除可在facenet作者的github中下载模型外，我自己基于lfw训练集训练了一个模型，点击
