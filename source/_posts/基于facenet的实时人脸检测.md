@@ -35,4 +35,4 @@ real_time_face_recognize
 
 ### 注意  
 
-除可在facenet作者的github中下载模型外，我自己基于lfw训练集训练了一个模型，点击
+除可在facenet作者的github中下载模型外，我自己基于lfw训练集训练了一个模型，[点击](https://download.csdn.net/download/zouzhen_id/10568660)
