@@ -4,9 +4,9 @@ date: 2018-07-27 17:33:00
 categories: 项目
 tags: 人脸识别
 ---
-### 参考自https://github.com/shanren7/real_time_face_recognition
+**参考自**  https://github.com/shanren7/real_time_face_recognition  
 
-### 本人的项目代码https://github.com/zouzhen/real_time_face_recognize
+**本人的项目代码**  https://github.com/zouzhen/real_time_face_recognize
 
 ~~虽然名字相同，但里面的内容可是有很大的不同~~  
 由于不能满足当前的tensorflow版本，以及未能满足设计要求，进行了优化与重新设计

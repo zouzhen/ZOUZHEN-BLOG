@@ -2,7 +2,7 @@
 title: Django使用MongoDB数据库
 date: 2018-07-08 20:22:47
 categories: Web开发
-tags: 
+tags: 数据库
 ---
 之前学习使用Django搭建在线教育平台使用的是Mysql数据库，现在考虑到公司以后的发展及当前技术需求，更换为MongoDB数据库。在此记录一下更改操作：  
 
