@@ -1,8 +1,8 @@
 ---
 title: 机器学习——EM算法
 date: 2018-06-10 19:18:20
-categories:
-tags:
+categories: 机器学习算法
+tags: EM算法
 mathjax: true
 ---
 # EM算法
