@@ -1,7 +1,7 @@
 ---
 title: PyTorch入门
 date: 2018-08-01 14:59:07
-categories: 框架
+categories: Pytorch框架
 tags: pytorch
 ---
 ### 基本概念
