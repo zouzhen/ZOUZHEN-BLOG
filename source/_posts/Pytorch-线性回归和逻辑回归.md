@@ -153,7 +153,7 @@ while True:
         break
 ```
 
-```sh
+```py
 '''
 逻辑回归
 '''
