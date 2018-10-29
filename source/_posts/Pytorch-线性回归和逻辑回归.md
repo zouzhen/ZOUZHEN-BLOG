@@ -1,5 +1,5 @@
 ---
-title: '''Pytorch--线性回归和逻辑回归'''
+title: Pytorch--线性回归和逻辑回归
 date: 2018-10-20 13:53:49
 categories: Pytorch框架
 tags: [线性回归,逻辑回归,pytorch]
