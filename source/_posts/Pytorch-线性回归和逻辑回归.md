@@ -45,7 +45,7 @@ class LinearRegression(nn.Module):
 
 
 if torch.cuda.is_available():
-    model = LinearRegression().cuda()
+    model  = LinearRegression().cuda()
 else:
     model = LinearRegression()
 
@@ -207,6 +207,7 @@ for epoch in range(50000):
         print('epoch {}'.format(epoch+1))
         print('loss is {:.4f}'.format(print_loss))
         print('acc is {:.4f}'.format(acc))
+        0
 
 w0, w1 = logistic_model.lr.weight[0]
 w0 = w0.data[0]
