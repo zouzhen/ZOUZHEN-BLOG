@@ -7,7 +7,7 @@ tags: 交通标志识别
 本文是在https://www.jianshu.com/p/d8feaddc7bdf文章的基础上用Pytorch实现的
 
 话不多说，直接上代码，具体的可以看代码中的解释
-### 代码
+### 代码实现
 
 ```py
 import os
@@ -194,7 +194,7 @@ if __name__ == "__main__":
 ```
 
 ### 主要问题——数据读取
-PyTorch中数据读取的一个重要接口是torch.utils.data.DataLoader，该接口定义在dataloader.py脚本中，只要是用PyTorch来训练模型基本都会用到该接口，为了满足pytorch的数据读取要求，写了一个tv.datasets.Traffic的读取文件，是基于mnist数据集进行编写的：
+PyTorch中数据读取的一个重要接口是torch.utils.data.DataLoader，该接口定义在dataloader.py脚本中，只要是用PyTorch来训练模型基本都会用到该接口，为了满足pytorch的数据读取要求，写了一个tv.datasets.Traffic的读取文件，是基于mnist数据集的读取进行编写的：
 
 ```py
 from __future__ import print_function
