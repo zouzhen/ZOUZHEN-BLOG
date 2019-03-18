@@ -40,6 +40,13 @@ tags: [RetinaNet,keras]
     │  
     ├── preprocessing(数据集相关，包括各种数据集的获取、解析等)   
     │  
-    ├── utils(附属工具，包括锚点框、最大值抑制等)   
+    ├── utils(附属工具，包括锚点框、非最大值抑制等)   
     │  
     └── losses.py/initializers.py(损失和初始化等)
+
+
+## 训练模型
+
+关于模型的训练文件，在bin文件夹下，其训练文件的流程大致如下
+
+![图片](框架梳理——RetinaNet-keras/keras-retinanet解析.jpg)
