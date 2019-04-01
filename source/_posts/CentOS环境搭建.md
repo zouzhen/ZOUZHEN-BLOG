@@ -1,8 +1,8 @@
 ---
 title: CentOS环境搭建
 date: 2018-06-05 19:13:28
-categories:
-tags:
+categories: 环境配置
+tags: [centos]
 ---
 
 # 系统安装
