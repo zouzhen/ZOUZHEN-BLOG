@@ -25,6 +25,6 @@
     "hexo-wordcount": "^3.0.2",
     "markdownlint": "^0.10.0",
     "mathjax": "^2.7.4",
-    "valine": "^1.1.9-beta9"
+    "valine": "^1.4.15"
   }
 }
